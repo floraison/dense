@@ -12,11 +12,22 @@ describe Dense::Path do
 
   describe '.new' do
 
-    it 'parses a path string' do
+    {
 
-      pa = Dense::Path.new('0.name')
+      '0.name' => [ 0, 'name' ],
+      'name.0' => [ 'name', 0 ],
+      '11[0]' => [ 11, 0 ],
+      "name['first']" => [ 'name', 'first' ],
+      'name["last"]' => [ 'name', 'last' ],
+      'name[0]' => [ 'name', 0 ],
+      '[0].name' => [ 0, 'name' ],
 
-      expect(pa.to_a).to eq([ 0, 'name' ])
+    }.each do |s, a|
+
+      it "parses #{s.inspect}" do
+
+        expect(Dense::Path.new(s).to_a).to eq(a)
+      end
     end
   end
 end
