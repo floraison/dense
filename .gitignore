@@ -8,6 +8,10 @@ pkg/
 .ruby-version
 #.rspec
 
+.vimrc
+.viminfo
+*.swp
+
 .errors
 .rspec.out
 .bxsinfo.yaml
