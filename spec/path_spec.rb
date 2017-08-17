@@ -14,13 +14,13 @@ describe Dense::Path do
 
     {
 
-      '0.name' => [ 0, 'name' ],
-      'name.0' => [ 'name', 0 ],
-      '11[0]' => [ 11, 0 ],
-      "name['first']" => [ 'name', 'first' ],
-      'name["last"]' => [ 'name', 'last' ],
-      'name[0]' => [ 'name', 0 ],
-      '[0].name' => [ 0, 'name' ],
+      '0.name'         => [ 0, 'name' ],
+      'name.0'         => [ 'name', 0 ],
+      '11[0]'          => [ 11, 0 ],
+      "name['first']"  => [ 'name', 'first' ],
+      'name["last"]'   => [ 'name', 'last' ],
+      'name[0]'        => [ 'name', 0 ],
+      '[0].name'       => [ 0, 'name' ],
 
     }.each do |s, a|
 
