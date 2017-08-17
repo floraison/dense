@@ -24,9 +24,13 @@ describe Dense::Path do
 
       '..name'         => [ '..', 'name' ],
 
+      'name[*]'        => [ 'name', '*' ],
+      'name[::1]'      => [ 'name', [ nil, nil, 1 ] ],
+
     }.each do |s, a|
 
       it "parses #{s.inspect}" do
+      #it "parses #{s.inspect} to #{a.inspect}" do
 
         expect(Dense::Path.new(s).to_a).to eq(a)
       end
