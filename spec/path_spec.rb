@@ -22,6 +22,8 @@ describe Dense::Path do
       'name[0]'        => [ 'name', 0 ],
       '[0].name'       => [ 0, 'name' ],
 
+      '..name'         => [ '..', 'name' ],
+
     }.each do |s, a|
 
       it "parses #{s.inspect}" do

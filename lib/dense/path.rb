@@ -26,6 +26,7 @@ class Dense::Path
     def dq(i); str(nil, i, '"'); end
     def sq(i); str(nil, i, "'"); end
 
+    def dotdot(i); str(:dotdot, i, '.'); end
     def name(i); rex(:name, i, /[a-z0-9_]+/i); end
     def off(i); rex(:off, i, /\d+/); end
 
@@ -33,7 +34,7 @@ class Dense::Path
     def sqname(i); seq(nil, i, :sq, :name, :sq); end
 
     def bindex(i); alt(:index, i, :off, :dqname, :sqname); end
-    def dindex(i); alt(:index, i, :off, :name); end
+    def dindex(i); alt(:index, i, :off, :name, :dotdot); end
 
     def bracket_index(i); seq(nil, i, :bstart, :bindex, :bend); end
     def dot_index(i); seq(nil, i, :dot, :dindex); end
@@ -45,6 +46,7 @@ class Dense::Path
 
     # rewrite parsed tree
 
+    def rewrite_dotdot(t); '..'; end
     def rewrite_name(t); t.string; end
     def rewrite_off(t); t.string.to_i; end
     def rewrite_index(t); rewrite(t.sublookup(nil)); end
