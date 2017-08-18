@@ -63,9 +63,12 @@ Raabro.pp(Parser.parse(s, debug: 3), colors: true) unless @path
     def rewrite_index(t); rewrite(t.sublookup); end
     def rewrite_bindexes(t);
       indexes = t.subgather.collect { |tt| rewrite(tt) }
-      indexes.length == 1 ? indexes[0] : indexes
+      indexes.length == 1 ? indexes[0] : indexes.compact
     end
-    def rewrite_path(t); t.subgather.collect { |tt| rewrite(tt) }; end
+
+    def rewrite_path(t)
+      t.subgather.collect { |tt| rewrite(tt) }
+    end
   end
 end
 
