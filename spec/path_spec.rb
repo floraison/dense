@@ -14,18 +14,26 @@ describe Dense::Path do
 
     {
 
-      '0.name'         => [ 0, 'name' ],
-      'name.0'         => [ 'name', 0 ],
-      '11[0]'          => [ 11, 0 ],
-      "name['first']"  => [ 'name', 'first' ],
-      'name["last"]'   => [ 'name', 'last' ],
-      'name[0]'        => [ 'name', 0 ],
-      '[0].name'       => [ 0, 'name' ],
+      '0.name'             => [ 0, 'name' ],
+      'name.0'             => [ 'name', 0 ],
+      '11[0]'              => [ 11, 0 ],
+      "name['first']"      => [ 'name', 'first' ],
+      'name["last"]'       => [ 'name', 'last' ],
+      'name[0]'            => [ 'name', 0 ],
+      '[0].name'           => [ 0, 'name' ],
 
-      '..name'         => [ '..', 'name' ],
+      '..name'             => [ '..', 'name' ],
 
-      'name[*]'        => [ 'name', '*' ],
-      'name[::1]'      => [ 'name', { start: nil, end: nil, step: 1 } ],
+      'name[*]'            => [ 'name', '*' ],
+      'name[::1]'          => [ 'name', { start: nil, end: nil, step: 1 } ],
+
+      '[\'name\',"age"]'   => [ [ 'name', 'age' ] ],
+      'x[\'name\',"age"]'  => [ 'x', [ 'name', 'age' ] ],
+
+      '[1:2,10:20,99]' => [
+        [ { start: 1, end: 2, step: nil },
+          { start: 10, end: 20, step: nil },
+          99 ] ],
 
     }.each do |s, a|
 
