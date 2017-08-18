@@ -49,7 +49,8 @@ class Dense::Path
     # rewrite parsed tree
 
     def rewrite_ses(t)
-      t.string.split(':').collect { |e| e.empty? ? nil : e.to_i }
+      a = t.string.split(':').collect { |e| e.empty? ? nil : e.to_i }
+      { start: a[0], end: a[1], step: a[2] }
     end
     def rewrite_star(t); '*'; end
     def rewrite_dotdot(t); '..'; end

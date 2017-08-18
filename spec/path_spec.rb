@@ -25,7 +25,7 @@ describe Dense::Path do
       '..name'         => [ '..', 'name' ],
 
       'name[*]'        => [ 'name', '*' ],
-      'name[::1]'      => [ 'name', [ nil, nil, 1 ] ],
+      'name[::1]'      => [ 'name', { start: nil, end: nil, step: 1 } ],
 
     }.each do |s, a|
 
