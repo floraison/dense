@@ -27,7 +27,7 @@ Fetching deep in a dense structure. A kind of bastard of JSONPath.
     "#{s.name}.gemspec",
   ]
 
-  s.add_runtime_dependency 'raabro', '~> 1.1'
+  s.add_runtime_dependency 'raabro', '>= 1.1.5'
 
   s.add_development_dependency 'rspec', '~> 3.4'
 

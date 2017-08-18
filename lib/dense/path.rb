@@ -60,12 +60,12 @@ Raabro.pp(Parser.parse(s, debug: 3), colors: true) unless @path
     def rewrite_dotdot(t); '..'; end
     def rewrite_name(t); t.string; end
     def rewrite_off(t); t.string.to_i; end
-    def rewrite_index(t); rewrite(t.sublookup(nil)); end
+    def rewrite_index(t); rewrite(t.sublookup); end
     def rewrite_bindexes(t);
-      indexes = t.subgather(nil).collect { |tt| rewrite(tt) }
+      indexes = t.subgather.collect { |tt| rewrite(tt) }
       indexes.length == 1 ? indexes[0] : indexes
     end
-    def rewrite_path(t); t.subgather(nil).collect { |tt| rewrite(tt) }; end
+    def rewrite_path(t); t.subgather.collect { |tt| rewrite(tt) }; end
   end
 end
 
