@@ -12,11 +12,6 @@ Raabro.pp(Parser.parse(s, debug: 3), colors: true) unless @path
     ) unless @path
   end
 
-  def to_a
-
-    @path
-  end
-
   module Parser include Raabro
 
     # piece parsers bottom to top
@@ -68,6 +63,27 @@ Raabro.pp(Parser.parse(s, debug: 3), colors: true) unless @path
 
     def rewrite_path(t)
       t.subgather.collect { |tt| rewrite(tt) }
+    end
+  end
+
+  def to_a
+
+    @path
+  end
+
+  def walk(data)
+
+    _walk(data, @path)
+  end
+
+  protected
+
+  def _walk(data, path)
+
+    if path.empty?
+      data
+    else
+      _walk(data[path.first], path[1..-1])
     end
   end
 end
