@@ -34,7 +34,7 @@ class Dense::Path
 
     def bindex(i); alt(:index, i, :dqname, :sqname, :star, :ses); end
     def bindexes(i); jseq(:bindexes, i, :bindex, :comma); end
-    def dindex(i); alt(:index, i, :off, :name, :dotdot); end
+    def dindex(i); alt(:index, i, :off, :star, :name, :dotdot); end
 
     def bracket_index(i); seq(nil, i, :bstart, :bindexes, :bend); end
     def dot_index(i); seq(nil, i, :dot, :dindex); end

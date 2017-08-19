@@ -27,6 +27,8 @@ describe Dense::Path do
       'name[*]'    => [ 'name', '*' ],
       'name[::1]'  => [ 'name', { start: nil, end: nil, step: 1 } ],
 
+      'name.*'    => [ 'name', '*' ],
+
       '[\'name\',"age"]'   => [ [ 'name', 'age' ] ],
       'x[\'name\',"age"]'  => [ 'x', [ 'name', 'age' ] ],
 

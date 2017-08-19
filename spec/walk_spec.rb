@@ -56,7 +56,9 @@ describe Dense::Path do
       'store.book.1.author' => 'Evelyn Waugh',
       'store.book[2].author' => 'Herman Melville',
 
-      #'store.book.*.author' => [],
+      'store.book.*.title' => [
+        'Sayings of the Century', 'Sword of Honour', 'Moby Dick',
+        'The Lord of the Rings' ],
       'store.book[*].author' => [
         'Nigel Rees', 'Evelyn Waugh', 'Herman Melville', 'J. R. R. Tolkien' ],
 
