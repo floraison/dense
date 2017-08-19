@@ -14,7 +14,7 @@ describe Dense::Path do
 
     before :all do
 
-      @data =
+      @data = # taken from http://goessner.net/articles/JsonPath/
         { 'store' => {
             'book' => [
               { 'category' => 'reference',
@@ -52,6 +52,9 @@ describe Dense::Path do
 
       'store.bicycle.color' => 'red',
       'store.bicycle.price' => 19.95,
+
+      'store.book.1.author' => 'Evelyn Waugh',
+      'store.book[2].author' => 'Herman Melville',
 
     }.each do |path, result|
 
