@@ -6,7 +6,7 @@ class Dense::Path
 #Raabro.pp(Parser.parse(s, debug: 3))
     @path = Parser.parse(s)
 
-Raabro.pp(Parser.parse(s, debug: 3), colors: true) unless @path
+#Raabro.pp(Parser.parse(s, debug: 3), colors: true) unless @path
     fail ArgumentError.new(
       "couldn't determine path from #{s.inspect}"
     ) unless @path
@@ -82,6 +82,12 @@ Raabro.pp(Parser.parse(s, debug: 3), colors: true) unless @path
 
     if path.empty?
       data
+    elsif path.first == '*'
+      case data
+      when Array then data.collect { |d| _walk(d, path[1..-1]) }
+      when Hash then data.values.collect { |d| _walk(d, path[1..-1]) }
+      else data
+      end
     else
       _walk(data[path.first], path[1..-1])
     end
