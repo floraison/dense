@@ -80,14 +80,20 @@ class Dense::Path
 
   def _walk(data, path)
 
-    if path.empty?
-      data
-    elsif path.first == '*'
+    return data if path.empty?
+
+    case pa = path.first
+    when '*'
       case data
       when Array then data.collect { |d| _walk(d, path[1..-1]) }
       when Hash then data.values.collect { |d| _walk(d, path[1..-1]) }
       else data
       end
+    when Hash
+      be = pa[:start] || 0
+      en = pa[:end] || data.length - 1
+      st = pa[:step] || 1
+      Range.new(be, en).step(st).collect { |i| _walk(data[i], path[1..-1]) }
     else
       _walk(data[path.first], path[1..-1])
     end
