@@ -66,6 +66,10 @@ describe Dense::Path do
       'store.book[::2].author' => [ 'Nigel Rees', 'Herman Melville' ],
       'store.book[1::2].author' => [ 'Evelyn Waugh', 'J. R. R. Tolkien' ],
 
+      'store.book.-1.title' => 'The Lord of the Rings',
+      'store.book[-1].title' => 'The Lord of the Rings',
+      'store.book[-3:-2].title' => [ 'Sword of Honour', 'Moby Dick' ],
+
     }.each do |path, result|
 
       it "walks #{path.inspect}" do
