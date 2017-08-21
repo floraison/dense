@@ -3,6 +3,8 @@ class Dense::Path
 
   def initialize(s)
 
+    s = ".#{s}" unless s[0, 1] == '[' || s[0, 2] == '.['
+
 #Raabro.pp(Parser.parse(s, debug: 3))
     @path = Parser.parse(s)
 
@@ -23,7 +25,6 @@ class Dense::Path
     def dq(i); str(nil, i, '"'); end
     def sq(i); str(nil, i, "'"); end
 
-    def dotdot(i); str(:dotdot, i, '.'); end
     def name(i); rex(:name, i, /[a-z0-9_]+/i); end
     def off(i); rex(:off, i, /-?\d+/); end
 
@@ -34,15 +35,15 @@ class Dense::Path
 
     def bindex(i); alt(:index, i, :dqname, :sqname, :star, :ses); end
     def bindexes(i); jseq(:bindexes, i, :bindex, :comma); end
-    def dindex(i); alt(:index, i, :off, :star, :name, :dotdot); end
-
     def bracket_index(i); seq(nil, i, :bstart, :bindexes, :bend); end
-    def dot_index(i); seq(nil, i, :dot, :dindex); end
+    def simple_index(i); alt(:index, i, :off, :star, :name); end
 
-    def then_index(i); alt(nil, i, :dot_index, :bracket_index); end
-    def start_index(i); alt(nil, i, :dindex, :bracket_index); end
+    def dotdot(i); str(:dotdot, i, '.'); end
 
-    def path(i); seq(:path, i, :start_index, :then_index, '*'); end
+    def dot_then_index(i); seq(nil, i, :dot, :simple_index); end
+    def index(i); alt(nil, i, :dot_then_index, :bracket_index, :dotdot); end
+
+    def path(i); rep(:path, i, :index, 1); end
 
     # rewrite parsed tree
 
@@ -52,7 +53,7 @@ class Dense::Path
       { start: a[0], end: a[1], step: a[2] }
     end
     def rewrite_star(t); '*'; end
-    def rewrite_dotdot(t); '..'; end
+    def rewrite_dotdot(t); '.'; end
     def rewrite_name(t); t.string; end
     def rewrite_off(t); t.string.to_i; end
     def rewrite_index(t); rewrite(t.sublookup); end
@@ -89,14 +90,21 @@ class Dense::Path
       when Hash then data.values.collect { |d| _walk(d, path[1..-1]) }
       else data
       end
-    when Hash
+    when Hash # start:end:step
       be = pa[:start] || 0
       en = pa[:end] || data.length - 1
       st = pa[:step] || 1
       Range.new(be, en).step(st).collect { |i| _walk(data[i], path[1..-1]) }
+    when '.'
+      _run(data, path[1..-1])
     else
-      _walk(data[path.first], path[1..-1])
+      _walk(data[pa], path[1..-1])
     end
+  end
+
+  def _run(data, path)
+
+    nil
   end
 end
 

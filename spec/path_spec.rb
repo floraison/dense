@@ -22,12 +22,14 @@ describe Dense::Path do
       'name[0]'        => [ 'name', 0 ],
       '[0].name'       => [ 0, 'name' ],
 
-      '..name'  => [ '..', 'name' ],
+      '.name'        => [ '.', 'name' ],
+      '.["name"]'    => [ '.', 'name' ],
+      'store..name'  => [ 'store', '.', 'name' ],
 
       'name[*]'    => [ 'name', '*' ],
       'name[::1]'  => [ 'name', { start: nil, end: nil, step: 1 } ],
 
-      'name.*'    => [ 'name', '*' ],
+      'name.*' => [ 'name', '*' ],
 
       '[\'name\',"age"]'   => [ [ 'name', 'age' ] ],
       'x[\'name\',"age"]'  => [ 'x', [ 'name', 'age' ] ],

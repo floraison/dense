@@ -70,6 +70,8 @@ describe Dense::Path do
       'store.book[-1].title' => 'The Lord of the Rings',
       'store.book[-3:-2].title' => [ 'Sword of Honour', 'Moby Dick' ],
 
+      'store..price' => [ 1, 2, 3, 4, 5 ],
+
     }.each do |path, result|
 
       it "walks #{path.inspect}" do
