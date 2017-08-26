@@ -74,7 +74,7 @@ class Dense::Path
 
   def walk(data)
 
-    _walk(data, @path)
+    catch(:notindexable) { _walk(data, @path) }
   end
 
   protected
@@ -90,15 +90,23 @@ class Dense::Path
       when Hash then data.values.collect { |d| _walk(d, path[1..-1]) }
       else data
       end
+    when '.'
+      _run(data, path[1])
+        .inject([]) { |a, d|
+          a.concat(
+            catch(:notindexable) { [ _walk(d, path[2..-1]) ] } ) }
     when Hash # start:end:step
       be = pa[:start] || 0
       en = pa[:end] || data.length - 1
       st = pa[:step] || 1
       Range.new(be, en).step(st).collect { |i| _walk(data[i], path[1..-1]) }
-    when '.'
-      _run(data, path[1]).collect { |d| _walk(d, path[2..-1]) }
-    else
+    when Integer
+      throw(:notindexable, []) unless data.is_a?(Array)
       _walk(data[pa], path[1..-1])
+    when String
+      _walk(data[pa], path[1..-1])
+    else
+      fail ArgumentError.new("unwalkable index in path: #{pa.inspect}")
     end
   end
 

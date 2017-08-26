@@ -73,8 +73,16 @@ describe Dense::Path do
       'store..price' => [ 8.95, 12.99, 8.99, 22.99, 19.95 ],
       #'store../^pr/' => [ 8.95, 12.99, 8.99, 22.99, 19.95 ],
 
-      #'.book.1' => :xxx,
-      #'.*[0]' => :yyy,
+      '.book.1' => [
+        { 'category' => 'fiction',
+          'author' => 'Evelyn Waugh',
+          'title' => 'Sword of Honour',
+          'price' => 12.99 } ],
+      '.*[0]' => [
+        { 'category' => 'reference',
+          'author' => 'Nigel Rees',
+          'title' => 'Sayings of the Century',
+          'price' => 8.95 } ],
 
     }.each do |path, result|
 
