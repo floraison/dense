@@ -73,6 +73,9 @@ describe Dense::Path do
       'store..price' => [ 8.95, 12.99, 8.99, 22.99, 19.95 ],
       #'store../^pr/' => [ 8.95, 12.99, 8.99, 22.99, 19.95 ],
 
+      #'.book.1' => :xxx,
+      #'.*[0]' => :yyy,
+
     }.each do |path, result|
 
       it "walks #{path.inspect}" do
