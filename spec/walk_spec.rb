@@ -70,7 +70,8 @@ describe Dense::Path do
       'store.book[-1].title' => 'The Lord of the Rings',
       'store.book[-3:-2].title' => [ 'Sword of Honour', 'Moby Dick' ],
 
-      'store..price' => [ 1, 2, 3, 4, 5 ],
+      'store..price' => [ 8.95, 12.99, 8.99, 22.99, 19.95 ],
+      #'store../^pr/' => [ 8.95, 12.99, 8.99, 22.99, 19.95 ],
 
     }.each do |path, result|
 
