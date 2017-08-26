@@ -96,7 +96,6 @@ class Dense::Path
       st = pa[:step] || 1
       Range.new(be, en).step(st).collect { |i| _walk(data[i], path[1..-1]) }
     when '.'
-      #_run(data, path[1..-1])
       _run(data, path[1]).collect { |d| _walk(d, path[2..-1]) }
     else
       _walk(data[pa], path[1..-1])
@@ -106,32 +105,15 @@ class Dense::Path
   def _run(data, key)
 
     case data
-    when Hash then hash_run(data, key)
-    when Array then array_run(data, key)
-    else []
+    when Hash
+      key == '*' ?
+        h.values :
+        h.inject([]) { |a, (k, v)| a.concat(k == key ? [ v ] : _run(v, key)) }
+    when Array
+      a.inject([]) { |r, e| r.concat(_run(e, key)) }
+    else
+      []
     end
-  end
-
-  def hash_run(h, key)
-
-    return h.values if key == '*'
-
-    h
-      .inject([]) { |a, (k, v)|
-        if k == key
-          a << v
-        else
-          a.concat(_run(v, key))
-        end
-        a }
-  end
-
-  def array_run(a, key)
-
-    a
-      .inject([]) { |r, e|
-        r.concat(_run(e, key))
-        r }
   end
 end
 
