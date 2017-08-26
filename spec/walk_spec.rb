@@ -83,6 +83,21 @@ describe Dense::Path do
         expect(pa.walk(@data)).to eq(result)
       end
     end
+
+    it 'walks "store..*"' do
+
+      pa = Dense::Path.new('store..*')
+
+      r = pa.walk(@data)
+#pp r
+
+      expect(r).not_to eq(nil)
+
+      expect(r.size).to eq(27)
+
+      expect(r[0]).to eq(@data['store'])
+      expect(r[26]).to eq(19.95)
+    end
   end
 end
 

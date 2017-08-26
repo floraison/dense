@@ -102,17 +102,20 @@ class Dense::Path
     end
   end
 
-  def _run(data, key)
+  def _run(d, key)
 
-    case data
+    case d
     when Hash
-      key == '*' ?
-        h.values :
-        h.inject([]) { |a, (k, v)| a.concat(k == key ? [ v ] : _run(v, key)) }
+      if key == '*'
+        [ d ] + d.values.inject([]) { |a, v| a.concat(_run(v, key)) }
+      else
+        d.inject([]) { |a, (k, v)| a.concat(k == key ? [ v ] : _run(v, key)) }
+      end
     when Array
-      a.inject([]) { |r, e| r.concat(_run(e, key)) }
+      (key == '*' ? [ d ] : []) +
+      d.inject([]) { |r, e| r.concat(_run(e, key)) }
     else
-      []
+      key == '*' ? [ d ] : []
     end
   end
 end
