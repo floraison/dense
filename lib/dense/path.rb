@@ -72,9 +72,19 @@ class Dense::Path
     @path
   end
 
+  def to_s
+
+    @path.collect { |e| e.to_s }.join('.') # FIXME
+  end
+
   def walk(data)
 
     catch(:notindexable) { _walk(data, @path) }
+  end
+
+  def pop
+
+    @path.pop
   end
 
   protected
