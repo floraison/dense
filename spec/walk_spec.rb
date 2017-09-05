@@ -1,6 +1,6 @@
 
 #
-# Specifying fugit
+# Specifying dense
 #
 # Sun Aug 20 06:58:44 JST 2017
 #

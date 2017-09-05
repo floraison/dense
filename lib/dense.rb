@@ -7,4 +7,5 @@ end
 require 'raabro'
 
 require 'dense/path'
+require 'dense/methods'
 
