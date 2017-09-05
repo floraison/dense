@@ -4,6 +4,7 @@
 
 ## fugit 0.9.0  not yet released
 
+* Accept `.first` and `.last` when indexing arrays
 * Introduce Dense.get(collection, path)
 
 

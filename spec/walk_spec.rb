@@ -84,6 +84,10 @@ describe Dense::Path do
           'title' => 'Sayings of the Century',
           'price' => 8.95 } ],
 
+      'store.book.first.author' => 'Nigel Rees',
+      'store.book.First.author' => 'Nigel Rees',
+      'store.book.last.author' => 'J. R. R. Tolkien',
+
     }.each do |path, result|
 
       it "walks #{path.inspect}" do
