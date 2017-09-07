@@ -94,23 +94,23 @@ describe Dense do
       expect(r).to eq(1)
     end
 
-    it 'sets array first' #do
-#
-#      o = { 'h' => { 'a' => [ 1, 2, 3 ] } }
-#      r = Dense.set(o, 'h.a.first', 'one')
-#
-#      expect(o).to eq({ 'h' => { 'a' => [ "one", 2, 3 ] } })
-#      expect(r).to eq('one')
-#    end
+    it 'sets array first' do
 
-    it 'sets array last' #do
-#
-#      o = { 'h' => { 'a' => [ 1, 2, 3 ] } }
-#      r = Dense.set(o, 'h.a.last', 'three')
-#
-#      expect(o).to eq({ 'h' => { 'a' => [ 1, 2, 'three' ] } })
-#      expect(r).to eq('three')
-#    end
+      o = { 'h' => { 'a' => [ 1, 2, 3 ] } }
+      r = Dense.set(o, 'h.a.first', 'one')
+
+      expect(o).to eq({ 'h' => { 'a' => [ "one", 2, 3 ] } })
+      expect(r).to eq('one')
+    end
+
+    it 'sets array last' do
+
+      o = { 'h' => { 'a' => [ 1, 2, 3 ] } }
+      r = Dense.set(o, 'h.a.last', 'three')
+
+      expect(o).to eq({ 'h' => { 'a' => [ 1, 2, 'three' ] } })
+      expect(r).to eq('three')
+    end
 
     it 'fails if it cannot set (mismatch)' #do
 #
