@@ -30,7 +30,8 @@ module Dense; class << self
     case k
     when 'first' then a[0] = v
     when 'last' then a[-1] = v
-    else a[k] = v
+    when Integer then a[k] = v
+    else fail IndexError.new("Cannot set index #{k.inspect} of an array")
     end
   end
 end; end

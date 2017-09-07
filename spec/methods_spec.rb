@@ -112,18 +112,18 @@ describe Dense do
       expect(r).to eq('three')
     end
 
-    it 'fails if it cannot set (mismatch)' #do
-#
-#      c = { 'a' => [] }
-#
-#      expect {
-#        Dense.set(c, 'a.b', 1)
-#      }.to raise_error(
-#        IndexError, 'xxx'
-#      )
-#
-#      expect(c).to eq({ 'a' => [] })
-#    end
+    it 'fails if it cannot set (mismatch)' do
+
+      c = { 'a' => [] }
+
+      expect {
+        Dense.set(c, 'a.b', 1)
+      }.to raise_error(
+        IndexError, 'Cannot set index "b" of an array'
+      )
+
+      expect(c).to eq({ 'a' => [] })
+    end
 
     it 'fails if it cannot set (mismatch 2)' #do
 #
