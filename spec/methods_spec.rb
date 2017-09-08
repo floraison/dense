@@ -125,18 +125,14 @@ describe Dense do
       expect(c).to eq({ 'a' => [] })
     end
 
-    it 'fails if it cannot set (mismatch 2)' #do
-#
-#      c = { 'a' => {} }
-#
-#      expect {
-#        Dense.set(c, 'a.1', 1)
-#      }.to raise_error(
-#        IndexError, 'xxx'
-#      )
-#
-#      expect(c).to eq({ 'a' => [] })
-#    end
+    it 'turns a int index into a string key when setting in a Hash' do
+
+      c = { 'a' => {} }
+
+      Dense.set(c, 'a.1', 1)
+
+      expect(c).to eq({ 'a' => { '1' => 1 } })
+    end
 
     it 'fails if it cannot set (no coll 2)' do
 
