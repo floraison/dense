@@ -37,24 +37,41 @@ module Dense; class << self
 
   protected
 
+  def array_index(a, k)
+
+    i =
+      case k
+      when 'first' then 0
+      when 'last' then -1
+      when Integer then k
+      else nil
+      end
+
+    fail IndexError.new(
+      "Cannot unset index #{k.inspect} of an array"
+    ) unless i
+
+    i = a.length + i if i < 0
+
+    fail IndexError.new(
+      "Array has length of #{a.length}, index #{k.inspect}"
+    ) if i < 0 || i >= a.length
+
+    i
+  end
+
   def array_set(a, k, v)
 
-    case k
-    when 'first' then a[0] = v
-    when 'last' then a[-1] = v
-    when Integer then a[k] = v
-    else fail IndexError.new("Cannot set index #{k.inspect} of an array")
-    end
+    i = array_index(a, k)
+
+    a[i] = v
   end
 
   def array_unset(a, k)
 
-    case k
-    when 'first' then a.delete_at(0)
-    when 'last' then a.delete_at(-1)
-    when Integer then a.delete_at(k)
-    else fail IndexError.new("Cannot unset index #{k.inspect} of an array")
-    end
+    i = array_index(a, k)
+
+    a.delete_at(i)
   end
 end; end
 
