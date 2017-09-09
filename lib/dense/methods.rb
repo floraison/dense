@@ -23,6 +23,18 @@ module Dense; class << self
     value
   end
 
+  def unset(o, path)
+
+    path = Dense::Path.new(path)
+    key = path.pop
+
+    case c = path.walk(o)
+    when Array then array_unset(c, key)
+    when Hash then c.delete(key.to_s)
+    else fail IndexError.new("Found no collection at #{path.to_s.inspect}")
+    end
+  end
+
   protected
 
   def array_set(a, k, v)
@@ -32,6 +44,16 @@ module Dense; class << self
     when 'last' then a[-1] = v
     when Integer then a[k] = v
     else fail IndexError.new("Cannot set index #{k.inspect} of an array")
+    end
+  end
+
+  def array_unset(a, k)
+
+    case k
+    when 'first' then a.delete_at(0)
+    when 'last' then a.delete_at(-1)
+    when Integer then a.delete_at(k)
+    else fail IndexError.new("Cannot unset index #{k.inspect} of an array")
     end
   end
 end; end

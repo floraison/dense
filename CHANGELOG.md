@@ -5,6 +5,8 @@
 ## fugit 0.9.0  not yet released
 
 * Accept `.first` and `.last` when indexing arrays
+* Introduce Dense.unset(collection, path)
+* Introduce Dense.set(collection, path, value)
 * Introduce Dense.get(collection, path)
 
 

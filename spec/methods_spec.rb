@@ -147,5 +147,48 @@ describe Dense do
       expect(c).to eq({})
     end
   end
+
+  describe '.unset' do
+
+    [
+
+      [ { 'a' => 1 }, 'a', 1, {} ],
+      [ { 'h' => { 'i' => 1 } }, 'h.i', 1, { 'h' => {} } ],
+      [ { 'a' => [ 1, 2, 3 ] }, 'a.1', 2, { 'a' => [ 1, 3 ] } ],
+
+      [ { 'h' => { 'a' => [ 1, 2, 3 ] } },
+        'h.a.first',
+        1,
+        { 'h' => { 'a' => [ 2, 3 ] } } ],
+
+      [ { 'h' => { 'a' => [ 1, 2, 3 ] } },
+        'h.a.last',
+        3,
+        { 'h' => { 'a' => [ 1, 2 ] } } ],
+
+    ].each do |col0, path, result, col1|
+
+      it "unsets #{path.inspect}" do
+
+        r = Dense.unset(col0, path)
+
+        expect(r).to eq(result)
+        expect(col0).to eq(col1)
+      end
+    end
+
+#    it 'returns false if it cannot unset' do
+#
+#      c = {}
+#      r = Flor.deep_unset(c, 'a.b')
+#      expect(c).to eq({})
+#      expect(r).to eq(:a)
+#
+#      c = []
+#      r = Flor.deep_unset(c, 'a')
+#      expect(c).to eq([])
+#      expect(r).to eq(:'')
+#    end
+  end
 end
 
