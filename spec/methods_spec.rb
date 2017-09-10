@@ -119,7 +119,7 @@ describe Dense do
       expect {
         Dense.set(c, 'a.b', 1)
       }.to raise_error(
-        IndexError, 'Cannot set index "b" of an array'
+        IndexError, 'Cannot index array at "b"'
       )
 
       expect(c).to eq({ 'a' => [] })

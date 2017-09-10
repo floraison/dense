@@ -48,7 +48,7 @@ module Dense; class << self
       end
 
     fail IndexError.new(
-      "Cannot unset index #{k.inspect} of an array"
+      "Cannot index array at #{k.inspect}"
     ) unless i
 
     i = a.length + i if i < 0
