@@ -177,18 +177,32 @@ describe Dense do
       end
     end
 
-#    it 'returns false if it cannot unset' do
-#
-#      c = {}
-#      r = Flor.deep_unset(c, 'a.b')
-#      expect(c).to eq({})
-#      expect(r).to eq(:a)
-#
-#      c = []
-#      r = Flor.deep_unset(c, 'a')
-#      expect(c).to eq([])
-#      expect(r).to eq(:'')
-#    end
+    it 'fails if it cannot unset in a Hash' do
+
+      expect {
+        Dense.unset({}, 'a')
+      }.to raise_error(
+        IndexError, 'No key "a" for hash'
+      )
+    end
+
+    it 'fails if it cannot unset in a Array' do
+
+      expect {
+        Dense.unset([], 'a')
+      }.to raise_error(
+        IndexError, 'Cannot index array at "a"'
+      )
+    end
+
+    it 'fails if it cannot unset in a Array (2)' do
+
+      expect {
+        Dense.unset([], '1')
+      }.to raise_error(
+        IndexError, 'Array has length of 0, index is at 1'
+      )
+    end
   end
 end
 

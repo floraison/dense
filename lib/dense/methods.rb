@@ -30,7 +30,8 @@ module Dense; class << self
 
     case c = path.walk(o)
     when Array then array_unset(c, key)
-    when Hash then c.delete(key.to_s)
+    #when Hash then c.delete(key.to_s)
+    when Hash then hash_unset(c, key.to_s)
     else fail IndexError.new("Found no collection at #{path.to_s.inspect}")
     end
   end
@@ -54,7 +55,7 @@ module Dense; class << self
     i = a.length + i if i < 0
 
     fail IndexError.new(
-      "Array has length of #{a.length}, index #{k.inspect}"
+      "Array has length of #{a.length}, index is at #{k.inspect}"
     ) if i < 0 || i >= a.length
 
     i
@@ -72,6 +73,13 @@ module Dense; class << self
     i = array_index(a, k)
 
     a.delete_at(i)
+  end
+
+  def hash_unset(h, k)
+
+    fail IndexError.new("No key #{k.inspect} for hash") unless h.has_key?(k)
+
+    h.delete(k)
   end
 end; end
 

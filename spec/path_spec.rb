@@ -12,6 +12,15 @@ describe Dense::Path do
 
   describe '.new' do
 
+    it "fails if the input path is not a String" do
+
+      expect {
+        Dense::Path.new(1)
+      }.to raise_error(
+        ArgumentError, "Argument is a Fixnum, not a String"
+      )
+    end
+
     {
 
       '0.name'         => [ 0, 'name' ],
