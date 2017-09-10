@@ -17,8 +17,9 @@ describe Dense::Path do
       expect {
         Dense::Path.new(1)
       }.to raise_error(
-        ArgumentError, "Argument is a Fixnum, not a String"
+        ArgumentError, /\AArgument is a (Integer|Fixnum), not a String\z/
       )
+        # >= 2.4 Integer
     end
 
     {
