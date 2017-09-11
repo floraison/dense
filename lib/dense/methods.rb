@@ -36,22 +36,35 @@ module Dense; class << self
     end
   end
 
+  def insert(o, path, value)
+
+    path = Dense::Path.new(path)
+    key = path.pop
+
+    case c = path.walk(o)
+    when Array then array_insert(c, key, value)
+    when Hash then c[key.to_s] = value
+    else fail IndexError.new("Found no collection at #{path.to_s.inspect}")
+    end
+
+    value
+  end
+
   protected
+
+  def array_i(k)
+
+    case k
+    when 'first' then 0
+    when 'last' then -1
+    when Integer then k
+    else fail IndexError.new("Cannot index array at #{k.inspect}")
+    end
+  end
 
   def array_index(a, k)
 
-    i =
-      case k
-      when 'first' then 0
-      when 'last' then -1
-      when Integer then k
-      else nil
-      end
-
-    fail IndexError.new(
-      "Cannot index array at #{k.inspect}"
-    ) unless i
-
+    i = array_i(k)
     i = a.length + i if i < 0
 
     fail IndexError.new(
@@ -80,6 +93,13 @@ module Dense; class << self
     fail IndexError.new("No key #{k.inspect} for hash") unless h.has_key?(k)
 
     h.delete(k)
+  end
+
+  def array_insert(a, k, v)
+
+    i = array_i(k)
+
+    a.insert(i, v)
   end
 end; end
 

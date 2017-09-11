@@ -204,5 +204,49 @@ describe Dense do
       )
     end
   end
+
+  describe '.insert' do
+
+    [
+
+      [ {}, 'a', 1,
+        { 'a' => 1 } ],
+
+      [ { 'h' => {} }, 'h.i', 1,
+        { 'h' => { 'i' => 1 } } ],
+
+      [ { 'a' => [ 1, 2, 3 ] }, 'a.1', 1,
+        { 'a' => [ 1, 1, 2, 3 ] } ],
+
+      [ { 'a' => [ 'one', [ 2, 3, 4 ], 'three' ] }, 'a.1.first', 1,
+        { 'a' => [ 'one', [ 1, 2, 3, 4 ], 'three' ] } ],
+
+      [ { 'a' => [ 'one', [ 2, 3, 4 ], 'three' ] }, 'a.1.last', 5,
+        { 'a' => [ 'one', [ 2, 3, 4, 5 ], 'three' ] } ],
+
+    ].each do |col, path, value, col1|
+
+      it "inserts at #{path.inspect}" do
+
+        r = Dense.insert(col, path, value)
+
+        expect(col).to eq(col1)
+        expect(r).to eq(value)
+      end
+    end
+
+#    it 'returns false if it cannot set' do
+#
+#      c = {}
+#      r = Flor.deep_insert(c, 'a.b', 1)
+#      expect(c).to eq({})
+#      expect(r).to eq(:a)
+#
+#      c = []
+#      r = Flor.deep_insert(c, 'a', 1)
+#      expect(c).to eq([])
+#      expect(r).to eq(:'')
+#    end
+  end
 end
 
