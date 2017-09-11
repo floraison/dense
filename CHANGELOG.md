@@ -2,7 +2,7 @@
 # dense
 
 
-## fugit 0.9.0  not yet released
+## fugit 1.0.0  not yet released
 
 * Introduce Dense.insert(collection, path, value)
 * Accept `.first` and `.last` when indexing arrays
