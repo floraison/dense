@@ -235,18 +235,23 @@ describe Dense do
       end
     end
 
-#    it 'returns false if it cannot set' do
-#
-#      c = {}
-#      r = Flor.deep_insert(c, 'a.b', 1)
-#      expect(c).to eq({})
-#      expect(r).to eq(:a)
-#
-#      c = []
-#      r = Flor.deep_insert(c, 'a', 1)
-#      expect(c).to eq([])
-#      expect(r).to eq(:'')
-#    end
+    it 'fails if it cannot insert' do
+
+      expect {
+        Dense.insert({}, 'a.b', 1)
+      }.to raise_error(
+        IndexError, 'Found no collection at "a"'
+      )
+    end
+
+    it 'fails if it cannot insert into an array' do
+
+      expect {
+        Dense.insert([], 'a', 1)
+      }.to raise_error(
+        IndexError, 'Cannot index array at "a"'
+      )
+    end
   end
 end
 
