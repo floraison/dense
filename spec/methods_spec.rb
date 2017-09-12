@@ -40,7 +40,8 @@ describe Dense do
             ],
             'bicycle' => {
               'color' => 'red',
-              'price' => 19.95
+              'price' => 19.95,
+              '7' => 'seven'
             }
           }
         }
@@ -52,9 +53,13 @@ describe Dense do
 
       [ 'store.book.1.title',
         'Sword of Honour' ],
+
       [ 'store.book.*.title',
         [ 'Sayings of the Century', 'Sword of Honour', 'Moby Dick',
           'The Lord of the Rings'] ],
+
+      [ 'store.bicycle.7',
+        'seven' ],
 
     ].each do |path, result|
 
@@ -290,12 +295,12 @@ describe Dense do
       end
     end
 
-#    it 'works with stringified int keys' do
-#
-#      expect(
-#        Flor.deep_has_key?({ '7' => 'seven' }, '7')
-#      ).to be true
-#    end
+    it 'works with stringified int keys' do
+
+      expect(
+        Dense.has_key?({ '7' => 'seven' }, '7')
+      ).to be true
+    end
   end
 end
 

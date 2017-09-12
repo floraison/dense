@@ -11,9 +11,6 @@ module Dense; class << self
     path = Dense::Path.new(path)
     key = path.pop
 
-#p path.walk(o)
-#p key
-#p value
     case c = path.walk(o)
     when Array then array_set(c, key, value)
     when Hash then c[key.to_s] = value
@@ -30,7 +27,6 @@ module Dense; class << self
 
     case c = path.walk(o)
     when Array then array_unset(c, key)
-    #when Hash then c.delete(key.to_s)
     when Hash then hash_unset(c, key.to_s)
     else fail IndexError.new("Found no collection at #{path.to_s.inspect}")
     end
@@ -57,7 +53,7 @@ module Dense; class << self
 
     case c = path.walk(o)
     when Array then array_has_key?(c, key)
-    when Hash then c.has_key?(key)
+    when Hash then hash_has_key?(c, key)
     else fail IndexError.new("Found no collection at #{path.to_s.inspect}")
     end
   end
@@ -131,6 +127,12 @@ module Dense; class << self
       end
 
     i > -1 && i < a.length
+  end
+
+  def hash_has_key?(h, k)
+
+    return true if k.is_a?(Integer) && h.has_key?(k.to_s)
+    h.has_key?(k)
   end
 end; end
 

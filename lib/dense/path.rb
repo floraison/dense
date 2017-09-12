@@ -150,8 +150,15 @@ class Dense::Path
 
   def _walk_int(data, pa, path)
 
-    throw(:notindexable, []) unless data.is_a?(Array)
-    _walk(data[pa], path[1..-1])
+    if data.is_a?(Array)
+      return _walk(data[pa], path[1..-1])
+    end
+    if data.is_a?(Hash)
+      return _walk(data[pa], path[1..-1]) if data.has_key?(pa)
+      pa = pa.to_s
+      return _walk(data[pa], path[1..-1]) if data.has_key?(pa)
+    end
+    throw(:notindexable, [])
   end
 
   def _run(d, key)

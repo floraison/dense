@@ -42,7 +42,8 @@ describe Dense::Path do
             ],
             'bicycle' => {
               'color' => 'red',
-              'price' => 19.95
+              'price' => 19.95,
+              '7' => 'seven'
             }
           }
         }
@@ -88,6 +89,8 @@ describe Dense::Path do
       'store.book.First.author' => 'Nigel Rees',
       'store.book.last.author' => 'J. R. R. Tolkien',
 
+      'store.bicycle.7' => 'seven'
+
     }.each do |path, result|
 
       it "walks #{path.inspect}" do
@@ -108,7 +111,7 @@ describe Dense::Path do
 
       expect(r).not_to eq(nil)
 
-      expect(r.size).to eq(27)
+      expect(r.size).to eq(28)
 
       expect(r[0]).to eq(@data['store'])
       expect(r[26]).to eq(19.95)
