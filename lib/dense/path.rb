@@ -114,47 +114,68 @@ class Dense::Path
     return data if path.empty?
 
     case pa = path.first
-    when '*'
-      case data
-      when Array then data.collect { |d| _walk(d, path[1..-1]) }
-      when Hash then data.values.collect { |d| _walk(d, path[1..-1]) }
-      else data
-      end
-    when '.'
-      _run(data, path[1])
-        .inject([]) { |a, d|
-          a.concat(
-            catch(:notindexable) { [ _walk(d, path[2..-1]) ] } ) }
-    when Hash # start:end:step
-      be = pa[:start] || 0
-      en = pa[:end] || data.length - 1
-      st = pa[:step] || 1
-      Range.new(be, en).step(st).collect { |i| _walk(data[i], path[1..-1]) }
-    when Integer
-      throw(:notindexable, []) unless data.is_a?(Array)
-      _walk(data[pa], path[1..-1])
-    when String
-      _walk(_sindex(data, pa), path[1..-1])
-    else
-      fail IndexError.new("Unwalkable index in path: #{pa.inspect}")
+    when '*' then _walk_star(data, pa, path)
+    when '.' then _walk_dot(data, pa, path)
+    when Hash then _walk_start_end_step(data, pa, path)
+    when Integer then _walk_int(data, pa, path)
+    when String then _walk(_sindex(data, pa), path[1..-1])
+    else fail IndexError.new("Unwalkable index in path: #{pa.inspect}")
     end
+  end
+
+  def _walk_star(data, pa, path)
+
+    case data
+    when Array then data.collect { |d| _walk(d, path[1..-1]) }
+    when Hash then data.values.collect { |d| _walk(d, path[1..-1]) }
+    else data
+    end
+  end
+
+  def _walk_dot(data, pa, path)
+
+    _run(data, path[1])
+      .inject([]) { |a, d|
+        a.concat(
+          catch(:notindexable) { [ _walk(d, path[2..-1]) ] } ) }
+  end
+
+  def _walk_start_end_step(data, pa, path)
+
+    be = pa[:start] || 0
+    en = pa[:end] || data.length - 1
+    st = pa[:step] || 1
+    Range.new(be, en).step(st).collect { |i| _walk(data[i], path[1..-1]) }
+  end
+
+  def _walk_int(data, pa, path)
+
+    throw(:notindexable, []) unless data.is_a?(Array)
+    _walk(data[pa], path[1..-1])
   end
 
   def _run(d, key)
 
     case d
-    when Hash
-      if key == '*'
-        [ d ] + d.values.inject([]) { |a, v| a.concat(_run(v, key)) }
-      else
-        d.inject([]) { |a, (k, v)| a.concat(k == key ? [ v ] : _run(v, key)) }
-      end
-    when Array
-      (key == '*' ? [ d ] : []) +
-      d.inject([]) { |r, e| r.concat(_run(e, key)) }
-    else
-      key == '*' ? [ d ] : []
+    when Hash then _run_hash(d, key)
+    when Array then _run_array(d, key)
+    else key == '*' ? [ d ] : []
     end
+  end
+
+  def _run_hash(d, key)
+
+    if key == '*'
+      [ d ] + d.values.inject([]) { |a, v| a.concat(_run(v, key)) }
+    else
+      d.inject([]) { |a, (k, v)| a.concat(k == key ? [ v ] : _run(v, key)) }
+    end
+  end
+
+  def _run_array(d, key)
+
+    (key == '*' ? [ d ] : []) +
+    d.inject([]) { |r, e| r.concat(_run(e, key)) }
   end
 end
 
