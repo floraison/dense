@@ -253,5 +253,49 @@ describe Dense do
       )
     end
   end
+
+  describe '.has_path?' do
+  end
+
+  describe '.has_key?' do
+
+    before :all do
+
+      @cars = {
+        'alpha' => { 'id' => 'FR1' },
+        'bentley' => %w[ blower spur markv ] }
+    end
+
+    [
+
+      [ 'nada', false ],
+      [ 'alpha.nada', false ],
+      [ 'bentley.nada', false ],
+      [ 'bentley.3', false ],
+      [ 'bentley.-4', false ],
+
+      [ 'alpha', true ],
+      [ 'alpha.id', true ],
+      [ 'bentley', true ],
+      [ 'bentley.0', true ],
+      [ 'bentley.-1', true ],
+      [ 'bentley.first', true ],
+      [ 'bentley.last', true ],
+
+    ].each do |path, result|
+
+      it "works for #{path.inspect} (#{result})" do
+
+        expect(Dense.has_key?(@cars, path)).to eq(result)
+      end
+    end
+
+#    it 'works with stringified int keys' do
+#
+#      expect(
+#        Flor.deep_has_key?({ '7' => 'seven' }, '7')
+#      ).to be true
+#    end
+  end
 end
 

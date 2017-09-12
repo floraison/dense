@@ -50,15 +50,30 @@ module Dense; class << self
     value
   end
 
+  def has_key?(o, path)
+
+    path = Dense::Path.new(path)
+    key = path.pop
+
+    case c = path.walk(o)
+    when Array then array_has_key?(c, key)
+    when Hash then c.has_key?(key)
+    else fail IndexError.new("Found no collection at #{path.to_s.inspect}")
+    end
+  end
+
   protected
 
-  def array_i(k)
+  def array_i(k, may_fail=true)
 
     case k
     when 'first' then 0
     when 'last' then -1
     when Integer then k
-    else fail IndexError.new("Cannot index array at #{k.inspect}")
+    else
+      may_fail ?
+        fail(IndexError.new("Cannot index array at #{k.inspect}")) :
+        nil
     end
   end
 
@@ -100,6 +115,22 @@ module Dense; class << self
     i = array_i(k)
 
     a.insert(i, v)
+  end
+
+  def array_has_key?(a, k)
+
+    i =
+      array_i(k, false)
+    i =
+      if i.nil?
+        -1
+      elsif i < 0
+        a.length + i
+      else
+        i
+      end
+
+    i > -1 && i < a.length
   end
 end; end
 
