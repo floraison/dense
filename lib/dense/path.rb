@@ -78,7 +78,16 @@ class Dense::Path
 
   def to_s
 
-    @path.collect { |e| e.to_s }.join('.') # FIXME
+    o = StringIO.new
+
+    @path.each { |e|
+      s = _to_s(e)
+      o << '.' unless o.size == 0 || '[.'.index(s[0, 1])
+      o << s }
+
+    s = o.string
+
+    s[0, 2] == '..' ? s[1..-1] : s
   end
 
   def walk(data)
@@ -92,6 +101,21 @@ class Dense::Path
   end
 
   protected
+
+  def _to_s(elt, in_array=false)
+
+    case elt
+    when Hash
+      s = [ "#{elt[:start]}:#{elt[:end]}", elt[:step] ].compact.join(':')
+      in_array ? s : "[#{s}]"
+    when Array
+      "[#{elt.map { |e| _to_s(e, true) }.join(',')}#{elt.size < 2 ? ',' : ''}]"
+    when String
+      in_array ? elt.inspect : elt.to_s
+    else
+      elt.to_s
+    end
+  end
 
   def _sindex(data, key)
 

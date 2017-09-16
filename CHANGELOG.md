@@ -4,6 +4,7 @@
 
 ## fugit 1.0.0  not yet released
 
+* Provide Path.to_s
 * Introduce Dense.has_key?(collection, path)
 * Introduce Dense.insert(collection, path, value)
 * Accept `.first` and `.last` when indexing arrays

@@ -65,5 +65,48 @@ describe Dense::Path do
       end
     end
   end
+
+  describe '#to_s' do
+
+    {
+
+      '0.name'         => '0.name',
+      'name.0'         => 'name.0',
+      '11[0]'          => '11.0',
+      "name.first"     => 'name.first',
+      "name['first']"  => 'name.first',
+      'name["last"]'   => 'name.last',
+      'name[0]'        => 'name.0',
+      '[0].name'       => '0.name',
+
+      '.name'        => '.name',
+      '.["name"]'    => '.name',
+      'store..name'  => 'store..name',
+
+      'name[*]'    => 'name.*',
+      'name[::1]'  => 'name[::1]',
+
+      'name.*' => 'name.*',
+
+      '[\'name\',"age"]'   => '["name","age"]',
+      'x[\'name\',"age"]'  => 'x["name","age"]',
+
+      '11.name'      => '11.name',
+      '11["name"]'   => '11.name',
+      '11["name",]'  => '11["name",]',
+      '11[0,]'       => '11[0,]',
+
+      '[1:2,10:20,99]' => '[1:2,10:20,99]',
+
+    }.each do |path, result|
+
+      it "turns #{path} into #{result}" do
+
+        pa = Dense::Path.new(path)
+
+        expect(pa.to_s).to eq(result)
+      end
+    end
+  end
 end
 
