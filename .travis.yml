@@ -9,6 +9,11 @@ rvm:
   - 2.4.1
   #- jruby-19mode # ARGH, Travis no friend
   #- jruby-20mode # ARGH, Travis no friend
+matrix:
+  include:
+    - rvm: jruby-9.1.13.0
+    #- env: JRUBY_OPTS="--profile.api"
+#before_install: gem install bundler
 script: bundle exec rspec
 branches:
   only:
