@@ -117,22 +117,6 @@ class Dense::Path
     end
   end
 
-  def _sindex(data, key)
-
-    case data
-    when Hash
-      data[key]
-    when Array
-      case key
-        when /\Afirst\z/i then data[0]
-        when /\Alast\z/i then data[-1]
-        else fail IndexError.new("Cannot index array with #{key.inspect}")
-      end
-    else
-      fail IndexError.new("Cannot index #{data.class} with #{key.inspect}")
-    end
-  end
-
   def _walk(data, path)
 
     return data if path.empty?
@@ -183,6 +167,22 @@ class Dense::Path
       return _walk(data[pa], path[1..-1]) if data.has_key?(pa)
     end
     throw(:notindexable, [])
+  end
+
+  def _sindex(data, key)
+
+    case data
+    when Hash
+      data[key]
+    when Array
+      case key
+        when /\Afirst\z/i then data[0]
+        when /\Alast\z/i then data[-1]
+        else fail IndexError.new("Cannot index array with #{key.inspect}")
+      end
+    else
+      fail IndexError.new("Cannot index #{data.class} with #{key.inspect}")
+    end
   end
 
   def _run(d, key)
