@@ -26,18 +26,36 @@ class Dense::Path
 
     # piece parsers bottom to top
 
+    def dqname(i)
+
+      rex(:qname, i, %r{
+        "(
+          \\["\\\/bfnrt] |
+          \\u[0-9a-fA-F]{4} |
+          [^"\\\b\f\n\r\t]
+        )*"
+      }x)
+    end
+
+    def sqname(i)
+
+      rex(:qname, i, %r{
+        '(
+          \\['\\\/bfnrt] |
+          \\u[0-9a-fA-F]{4} |
+          [^'\\\b\f\n\r\t]
+        )*'
+      }x)
+    end
+
     def dot(i); str(nil, i, '.'); end
     def comma(i); rex(nil, i, / *, */); end
     def bend(i); str(nil, i, ']'); end
     def bstart(i); str(nil, i, '['); end
-    def dq(i); str(nil, i, '"'); end
-    def sq(i); str(nil, i, "'"); end
 
     def name(i); rex(:name, i, /[a-z0-9_]+/i); end
     def off(i); rex(:off, i, /-?\d+/); end
 
-    def dqname(i); seq(nil, i, :dq, :name, :dq); end
-    def sqname(i); seq(nil, i, :sq, :name, :sq); end
     def star(i); str(:star, i, '*'); end
     def ses(i); rex(:ses, i, /-?\d*(:-?\d*){0,2}/); end
 
@@ -60,9 +78,8 @@ class Dense::Path
       return a[0] if a[1] == nil && a[2] == nil
       { start: a[0], end: a[1], step: a[2] }
     end
-    def rewrite_star(t); '*'; end
-    def rewrite_dotdot(t); '.'; end
-    def rewrite_name(t); t.string; end
+    def rewrite_star(t); :star; end
+    def rewrite_dotdot(t); :dot; end
     def rewrite_off(t); t.string.to_i; end
     def rewrite_index(t); rewrite(t.sublookup); end
     def rewrite_bindexes(t);
@@ -70,9 +87,13 @@ class Dense::Path
       indexes.length == 1 ? indexes[0] : indexes.compact
     end
 
+    def rewrite_qname(t); t.string[1..-2]; end
+    def rewrite_name(t); t.string; end
+
     def rewrite_path(t)
       t.subgather.collect { |tt| rewrite(tt) }
     end
+
   end
 
   def to_a
@@ -85,7 +106,7 @@ class Dense::Path
     o = StringIO.new
 
     @path.each { |e|
-      s = _to_s(e)
+      s = _to_s(e, false)
       o << '.' unless o.size == 0 || '[.'.index(s[0, 1])
       o << s }
 
@@ -113,7 +134,7 @@ class Dense::Path
 
   protected
 
-  def _to_s(elt, in_array=false)
+  def _to_s(elt, in_array)
 
     case elt
     when Hash
@@ -122,7 +143,24 @@ class Dense::Path
     when Array
       "[#{elt.map { |e| _to_s(e, true) }.join(',')}#{elt.size < 2 ? ',' : ''}]"
     when String
-      in_array ? elt.inspect : elt.to_s
+      #in_array ? elt.inspect : elt.to_s
+      #in_array ? _quote_s(elt) : _maybe_quote_s(elt)
+      _str_to_s(elt, in_array)
+    when :star
+      '*'
+    when :dot
+      '.'
+    else
+      elt.to_s
+    end
+  end
+
+  def _str_to_s(elt, in_array)
+
+    if in_array
+      elt.inspect
+    elsif elt.to_s =~ /["'.]/
+      "[#{elt.inspect}]"
     else
       elt.to_s
     end
@@ -133,8 +171,8 @@ class Dense::Path
     return data if path.empty?
 
     case pa = path.first
-    when '*' then _walk_star(data, pa, path)
-    when '.' then _walk_dot(data, pa, path)
+    when :dot then _walk_dot(data, pa, path)
+    when :star then _walk_star(data, pa, path)
     when Hash then _walk_start_end_step(data, pa, path)
     when Integer then _walk_int(data, pa, path)
     when String then _walk(_sindex(data, pa), path[1..-1])
@@ -201,13 +239,13 @@ class Dense::Path
     case d
     when Hash then _run_hash(d, key)
     when Array then _run_array(d, key)
-    else key == '*' ? [ d ] : []
+    else key == :star ? [ d ] : []
     end
   end
 
   def _run_hash(d, key)
 
-    if key == '*'
+    if key == :star
       [ d ] + d.values.inject([]) { |a, v| a.concat(_run(v, key)) }
     else
       d.inject([]) { |a, (k, v)| a.concat(k == key ? [ v ] : _run(v, key)) }
@@ -216,7 +254,7 @@ class Dense::Path
 
   def _run_array(d, key)
 
-    (key == '*' ? [ d ] : []) +
+    (key == :star ? [ d ] : []) +
     d.inject([]) { |r, e| r.concat(_run(e, key)) }
   end
 end
