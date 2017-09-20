@@ -53,16 +53,18 @@ class Dense::Path
     def bend(i); str(nil, i, ']'); end
     def bstart(i); str(nil, i, '['); end
 
-    def name(i); rex(:name, i, /[a-z0-9_]+/i); end
+    def name(i); rex(:name, i, /[-+%^<>a-zA-Z0-9_\/\\]+/); end
     def off(i); rex(:off, i, /-?\d+/); end
 
     def star(i); str(:star, i, '*'); end
     def ses(i); rex(:ses, i, /-?\d*(:-?\d*){0,2}/); end
 
+    def escape(i); rex(:esc, i, /\\[.*]/); end
+
     def bindex(i); alt(:index, i, :dqname, :sqname, :star, :ses); end
     def bindexes(i); jseq(:bindexes, i, :bindex, :comma); end
     def bracket_index(i); seq(nil, i, :bstart, :bindexes, :bend); end
-    def simple_index(i); alt(:index, i, :off, :star, :name); end
+    def simple_index(i); alt(:index, i, :off, :escape, :star, :name); end
 
     def dotdot(i); str(:dotdot, i, '.'); end
 
@@ -78,6 +80,7 @@ class Dense::Path
       return a[0] if a[1] == nil && a[2] == nil
       { start: a[0], end: a[1], step: a[2] }
     end
+    def rewrite_esc(t); t.string[1, 1]; end
     def rewrite_star(t); :star; end
     def rewrite_dotdot(t); :dot; end
     def rewrite_off(t); t.string.to_i; end
@@ -157,13 +160,13 @@ class Dense::Path
 
   def _str_to_s(elt, in_array)
 
-    if in_array
-      elt.inspect
-    elsif elt.to_s =~ /["'.]/
-      "[#{elt.inspect}]"
-    else
-      elt.to_s
-    end
+    return elt.inspect if in_array
+
+    s = elt.to_s
+
+    return "\\#{s}" if s == '.' || s == '*'
+    return "[#{elt.inspect}]" if s =~ /["']/
+    s
   end
 
   def _walk(data, path)
