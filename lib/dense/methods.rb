@@ -3,7 +3,12 @@ module Dense; class << self
 
   def get(o, path)
 
-    Dense::Path.new(path).walk(o)
+    Dense::Path.new(path).walk(o) { nil }
+  end
+
+  def fetch(o, path, default=IndexError)
+
+    Dense::Path.new(path).walk(o, default)
   end
 
   def set(o, path, value)

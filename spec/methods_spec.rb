@@ -68,6 +68,38 @@ describe Dense do
         expect(Dense.get(@data, path)).to eq(result)
       end
     end
+
+    it 'returns nil if it cannot find' do
+
+      expect(Dense.get(@data, 'nada.inferno')).to eq(nil)
+    end
+  end
+
+  describe '.fetch' do
+
+    [
+
+      [ 'store.book.1.title',
+        'Sword of Honour' ],
+
+      [ 'store.book.*.title',
+        [ 'Sayings of the Century', 'Sword of Honour', 'Moby Dick',
+          'The Lord of the Rings'] ],
+
+      [ 'store.bicycle.7',
+        'seven' ],
+
+    ].each do |path, result|
+
+      it "fetches #{path.inspect}" do
+
+        expect(Dense.fetch(@data, path)).to eq(result)
+      end
+    end
+
+    it 'raises a KeyError if it cannot find'
+    it 'returns the given default value if it cannot find'
+    it 'returns the value of the given block if it cannot find'
   end
 
   describe '.set' do

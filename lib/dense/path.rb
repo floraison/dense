@@ -1,7 +1,11 @@
 
 class Dense::Path
 
+  attr_reader :original
+
   def initialize(s)
+
+    @original = s
 
     fail ArgumentError.new(
       "Argument is a #{s.class}, not a String"
@@ -90,9 +94,16 @@ class Dense::Path
     s[0, 2] == '..' ? s[1..-1] : s
   end
 
-  def walk(data)
+  def walk(data, default=nil, &block)
 
     catch(:notindexable) { _walk(data, @path) }
+
+  rescue IndexError => ie
+
+    return yield(@original, self) if block
+    return default if default != nil
+
+    raise
   end
 
   def pop
