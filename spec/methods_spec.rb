@@ -73,6 +73,11 @@ describe Dense do
 
       expect(Dense.get(@data, 'nada.inferno')).to eq(nil)
     end
+
+    it 'returns nil if it cannot find' do
+
+      expect(Dense.get({}, 'a.0.b')).to eq(nil)
+    end
   end
 
   describe '.fetch' do
@@ -97,9 +102,30 @@ describe Dense do
       end
     end
 
-    it 'raises a KeyError if it cannot find'
-    it 'returns the given default value if it cannot find'
-    it 'returns the value of the given block if it cannot find'
+    it 'raises a KeyError if it cannot find' do
+
+      expect {
+        Dense.fetch({}, 'a.0.b')
+      }.to raise_error(
+        IndexError, 'Cannot index instance of NilClass with "0.b"'
+      )
+    end
+
+    it 'returns the given default value if it cannot find' do
+
+      expect(
+        Dense.fetch({}, 'a.0.b', -1)
+      ).to eq(-1)
+    end
+
+    it 'returns the value of the given block if it cannot find' do
+
+      a = -2
+
+      expect(
+        Dense.fetch({}, 'a.0.b') { a }
+      ).to eq(-2)
+    end
   end
 
   describe '.set' do

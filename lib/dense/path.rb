@@ -22,6 +22,15 @@ class Dense::Path
     ) unless @path
   end
 
+  def self.make(path_array)
+
+    path = Dense::Path.allocate
+    path.instance_eval { @path = path_array }
+    path.instance_eval { @original = path.to_s }
+
+    path
+  end
+
   module Parser include Raabro
 
     # piece parsers bottom to top
@@ -120,12 +129,12 @@ class Dense::Path
 
   def walk(data, default=nil, &block)
 
-    catch(:notindexable) { _walk(data, @path) }
+    _walk(data, @path)
 
   rescue IndexError => ie
 
     return yield(@original, self) if block
-    return default if default != nil
+    return default if default != nil && default != IndexError
 
     raise
   end
@@ -136,6 +145,8 @@ class Dense::Path
   end
 
   protected
+
+  class NotIndexableError < IndexError; end
 
   def _to_s(elt, in_array)
 
@@ -197,7 +208,11 @@ class Dense::Path
     _run(data, path[1])
       .inject([]) { |a, d|
         a.concat(
-          catch(:notindexable) { [ _walk(d, path[2..-1]) ] } ) }
+          begin
+            [ _walk(d, path[2..-1]) ]
+          rescue NotIndexableError
+            []
+          end) }
   end
 
   def _walk_start_end_step(data, pa, path)
@@ -213,12 +228,16 @@ class Dense::Path
     if data.is_a?(Array)
       return _walk(data[pa], path[1..-1])
     end
+
     if data.is_a?(Hash)
       return _walk(data[pa], path[1..-1]) if data.has_key?(pa)
       pa = pa.to_s
       return _walk(data[pa], path[1..-1]) if data.has_key?(pa)
     end
-    throw(:notindexable, [])
+
+    fail NotIndexableError.new(
+      "Cannot index instance of #{data.class} " +
+      "with #{Dense::Path.make(path).original.inspect}")
   end
 
   def _sindex(data, key)

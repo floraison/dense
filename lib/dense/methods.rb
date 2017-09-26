@@ -6,9 +6,9 @@ module Dense; class << self
     Dense::Path.new(path).walk(o) { nil }
   end
 
-  def fetch(o, path, default=IndexError)
+  def fetch(o, path, default=IndexError, &block)
 
-    Dense::Path.new(path).walk(o, default)
+    Dense::Path.new(path).walk(o, default, &block)
   end
 
   def set(o, path, value)
