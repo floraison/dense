@@ -107,7 +107,7 @@ describe Dense do
       expect {
         Dense.fetch({}, 'a.0.b')
       }.to raise_error(
-        IndexError, 'Cannot index instance of NilClass with "0.b"'
+        KeyError, 'Found nothing at "a" ("0.b" remains)'
       )
     end
 

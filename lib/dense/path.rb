@@ -136,6 +136,11 @@ class Dense::Path
     return yield(@original, self) if block
     return default if default != nil && default != IndexError
 
+    fail KeyError.new(
+      "Found nothing at #{(self - ie.remaining_path).to_s.inspect} " +
+      "(#{ie.remaining_path.to_s.inspect} remains)"
+    ) if ie.is_a?(Dense::Path::NotIndexableError)
+
     raise
   end
 
@@ -144,9 +149,37 @@ class Dense::Path
     @path.pop
   end
 
+  def -(path)
+
+    self.class.make(subtract(@path.dup, path.to_a.dup))
+  end
+
   protected
 
-  class NotIndexableError < IndexError; end
+  class NotIndexableError < IndexError
+
+    attr_reader :container_class, :remaining_path
+
+    def initialize(container, remaining_path)
+
+      @container_class = container.class
+      @remaining_path = Dense::Path.make(remaining_path)
+
+      super(
+        "Cannot index instance of #{container_class} " +
+        "with #{@remaining_path.original.inspect}")
+    end
+  end
+
+  def subtract(apath0, apath1)
+
+    while apath0.any? && apath1.any? && apath0.last == apath1.last
+      apath0.pop
+      apath1.pop
+    end
+
+    apath0
+  end
 
   def _to_s(elt, in_array)
 
@@ -235,9 +268,7 @@ class Dense::Path
       return _walk(data[pa], path[1..-1]) if data.has_key?(pa)
     end
 
-    fail NotIndexableError.new(
-      "Cannot index instance of #{data.class} " +
-      "with #{Dense::Path.make(path).original.inspect}")
+    fail NotIndexableError.new(data, path)
   end
 
   def _sindex(data, key)
