@@ -147,6 +147,23 @@ class Dense::Path
     raise
   end
 
+  def [](offset, count=nil)
+
+    if count == nil && offset.is_a?(Integer)
+      @path[offset]
+    elsif count
+      self.class.make(@path[offset, count])
+    else
+      self.class.make(@path[offset])
+    end
+  end
+
+  def ==(other)
+
+    other.class == self.class &&
+    other.to_a == @path
+  end
+
   def pop
 
     @path.pop

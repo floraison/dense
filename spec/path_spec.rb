@@ -82,6 +82,46 @@ describe Dense::Path do
     end
   end
 
+  describe '#[]' do
+
+    context '(int)' do
+
+      it 'returns a key' do
+
+        expect(Dense::Path.new('a.b.c.d')[1]).to eq('b')
+      end
+
+      it 'returns a key' do
+
+        expect(Dense::Path.new('a["b","B"].c.d')[1]).to eq(%w[ b B ])
+      end
+    end
+
+    context '(int..int)' do
+
+      it 'returns a Path instance' do
+
+        expect(
+          Dense::Path.new('a.b.c.d')[1..2]
+        ).to eq(
+          Dense::Path.new('b.c')
+        )
+      end
+    end
+
+    context '(int, int)' do
+
+      it 'returns a Path instance' do
+
+        expect(
+          Dense::Path.new('a["b","B"].c.d')[1, 1]
+        ).to eq(
+          Dense::Path.new('["b","B"]')
+        )
+      end
+    end
+  end
+
   describe '#to_s' do
 
     {

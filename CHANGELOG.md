@@ -4,6 +4,7 @@
 
 ## fugit 1.0.0  not yet released
 
+* Introduce Dense::Path indexation and equality
 * Introduce Dense::Path #length and #size
 * Introduce Dense::Path::NotIndexableError#relabel
 * Introduce Dense::Path::NotIndexableError
