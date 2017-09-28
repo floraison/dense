@@ -164,6 +164,11 @@ class Dense::Path
     other.to_a == @path
   end
 
+  def last
+
+    @path.last
+  end
+
   def pop
 
     @path.pop
