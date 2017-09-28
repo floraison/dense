@@ -4,6 +4,7 @@
 
 ## fugit 1.0.0  not yet released
 
+* Introduce Dense::Path::NotIndexableError#relabel
 * Introduce Dense::Path::NotIndexableError
 * Differentiate `Dense.get(col, path)` from `Dense.fetch(col, path[, default])`
 * Provide Dense::Path.to_s
