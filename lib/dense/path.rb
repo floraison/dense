@@ -116,6 +116,9 @@ class Dense::Path
     @path
   end
 
+  def length; @path.length; end
+  alias size length
+
   def to_s
 
     o = StringIO.new
