@@ -107,7 +107,7 @@ describe Dense do
       expect {
         Dense.fetch({}, 'a.0.b')
       }.to raise_error(
-        KeyError, 'Found nothing at "a" ("0.b" remains)'
+        Dense::Path::NotIndexableError, 'Found nothing at "a" ("0.b" remains)'
       )
     end
 

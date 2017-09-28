@@ -24,6 +24,9 @@ class Dense::Path
 
   def self.make(path_array)
 
+    return nil if path_array.nil?
+    return path_array if path_array.is_a?(Dense::Path)
+
     path = Dense::Path.allocate
     path.instance_eval { @path = path_array }
     path.instance_eval { @original = path.to_s }
@@ -136,10 +139,7 @@ class Dense::Path
     return yield(@original, self) if block
     return default if default != nil && default != IndexError
 
-    fail KeyError.new(
-      "Found nothing at #{(self - ie.remaining_path).to_s.inspect} " +
-      "(#{ie.remaining_path.to_s.inspect} remains)"
-    ) if ie.is_a?(Dense::Path::NotIndexableError)
+    fail ie.expand(self) if ie.respond_to?(:expand)
 
     raise
   end
@@ -156,18 +156,39 @@ class Dense::Path
 
   protected
 
-  class NotIndexableError < IndexError
+  class NotIndexableError < ::IndexError
 
-    attr_reader :container_class, :remaining_path
+    attr_reader :container_class, :root_path, :remaining_path
 
-    def initialize(container, remaining_path)
+    def initialize(container, root_path, remaining_path)
 
-      @container_class = container.class
+      @container_class = container.is_a?(Class) ? container : container.class
+
+      @root_path = Dense::Path.make(root_path)
       @remaining_path = Dense::Path.make(remaining_path)
 
-      super(
-        "Cannot index instance of #{container_class} " +
-        "with #{@remaining_path.original.inspect}")
+      if @root_path
+        super(
+          "Found nothing at #{fail_path.to_s.inspect} " +
+          "(#{@remaining_path.original.inspect} remains)")
+      else
+        super(
+          "Cannot index instance of #{container_class} " +
+          "with #{@remaining_path.original.inspect}")
+      end
+    end
+
+    def expand(root_path)
+
+      err = self.class.new(container_class, root_path, remaining_path)
+      err.set_backtrace(self.backtrace)
+
+      err
+    end
+
+    def fail_path
+
+      @fail_path ||= (@root_path ? @root_path - @remaining_path : nil)
     end
   end
 
@@ -268,7 +289,7 @@ class Dense::Path
       return _walk(data[pa], path[1..-1]) if data.has_key?(pa)
     end
 
-    fail NotIndexableError.new(data, path)
+    fail NotIndexableError.new(data, nil, path)
   end
 
   def _sindex(data, key)
