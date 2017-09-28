@@ -4,6 +4,7 @@
 
 ## fugit 1.0.0  not yet released
 
+* Accept "=" in key names
 * Introduce Dense::Path#last
 * Introduce Dense::Path indexation and equality
 * Introduce Dense::Path #length and #size
