@@ -65,7 +65,7 @@ class Dense::Path
     def bend(i); str(nil, i, ']'); end
     def bstart(i); str(nil, i, '['); end
 
-    def name(i); rex(:name, i, /[-+%^<>a-zA-Z0-9_\/\\=]+/); end
+    def name(i); rex(:name, i, /[-+%^<>a-zA-Z0-9_\/\\=?]+/); end
     def off(i); rex(:off, i, /-?\d+/); end
 
     def star(i); str(:star, i, '*'); end
