@@ -64,16 +64,27 @@ class Dense::Path
     def comma(i); rex(nil, i, / *, */); end
     def bend(i); str(nil, i, ']'); end
     def bstart(i); str(nil, i, '['); end
+    def blank(i); str(:blank, i, ''); end
 
     def name(i); rex(:name, i, /[-+%^<>a-zA-Z0-9_\/\\=?]+/); end
     def off(i); rex(:off, i, /-?\d+/); end
 
     def star(i); str(:star, i, '*'); end
-    def ses(i); rex(:ses, i, /-?\d*(:-?\d*){0,2}/); end
+
+    def ses(i) # start:end:step
+      rex(
+        :ses,
+        i,
+        /(
+          (-?\d+)?:(-?\d+)?:(-?\d+)? |
+          (-?\d+)?:(-?\d+)? |
+          -?\d+
+        )/x)
+    end
 
     def escape(i); rex(:esc, i, /\\[.*]/); end
 
-    def bindex(i); alt(:index, i, :dqname, :sqname, :star, :ses); end
+    def bindex(i); alt(:index, i, :dqname, :sqname, :star, :ses, :name, :blank); end
     def bindexes(i); jseq(:bindexes, i, :bindex, :comma); end
     def bracket_index(i); seq(nil, i, :bstart, :bindexes, :bend); end
     def simple_index(i); alt(:index, i, :off, :escape, :star, :name); end
@@ -101,6 +112,8 @@ class Dense::Path
       indexes = t.subgather.collect { |tt| rewrite(tt) }
       indexes.length == 1 ? indexes[0] : indexes.compact
     end
+
+    def rewrite_blank(t); nil; end
 
     def rewrite_qname(t); t.string[1..-2]; end
     def rewrite_name(t); t.string; end

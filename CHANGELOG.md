@@ -4,6 +4,7 @@
 
 ## fugit 1.0.0  not yet released
 
+* Accept `owner[age]` (unquoted key name in bracket index)
 * Accept '=' and '?' in key names
 * Introduce Dense::Path#last
 * Introduce Dense::Path indexation and equality

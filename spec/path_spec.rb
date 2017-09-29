@@ -45,10 +45,12 @@ describe Dense::Path do
       '[\'name\',"age"]'   => [ [ 'name', 'age' ] ],
       'x[\'name\',"age"]'  => [ 'x', [ 'name', 'age' ] ],
 
-      '11.name'      => [ 11, 'name' ],
-      '11["name"]'   => [ 11, 'name' ],
-      '11["name",]'  => [ 11, [ 'name' ] ],
-      '11[0,]'       => [ 11, [ 0 ] ],
+      '11.name'       => [ 11, 'name' ],
+      '11["name"]'    => [ 11, 'name' ],
+      '11[age]'       => [ 11, 'age' ],
+      '11[name,age]'  => [ 11, [ 'name', 'age' ] ],
+      '11["name",]'   => [ 11, [ 'name' ] ],
+      '11[0,]'        => [ 11, [ 0 ] ],
 
       '[1:2,10:20,99]' => [
         [ { start: 1, end: 2, step: nil },
@@ -149,10 +151,12 @@ describe Dense::Path do
       '[\'name\',"age"]'   => '["name","age"]',
       'x[\'name\',"age"]'  => 'x["name","age"]',
 
-      '11.name'      => '11.name',
-      '11["name"]'   => '11.name',
-      '11["name",]'  => '11["name",]',
-      '11[0,]'       => '11[0,]',
+      '11.name'       => '11.name',
+      '11["name"]'    => '11.name',
+      '11[age]'       => '11.age',
+      '11[name,age]'  => '11["name","age"]',
+      '11["name",]'   => '11["name",]',
+      '11[0,]'        => '11[0,]',
 
       '[1:2,10:20,99]' => '[1:2,10:20,99]',
 
