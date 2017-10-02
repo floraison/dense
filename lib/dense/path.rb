@@ -132,6 +132,9 @@ class Dense::Path
   def length; @path.length; end
   alias size length
 
+  def any?; @path.any?; end
+  def empty?; @path.empty?; end
+
   def to_s
 
     o = StringIO.new
@@ -210,8 +213,10 @@ class Dense::Path
           message)
       elsif @root_path
         super(
-          "Found nothing at #{fail_path.to_s.inspect} " +
-          "(#{@remaining_path.original.inspect} remains)")
+          "Found nothing at #{fail_path.to_s.inspect}" +
+          (@remaining_path.any? ?
+           " (#{@remaining_path.original.inspect} remains)" :
+           ''))
       else
         super(
           "Cannot index instance of #{container_class} " +
@@ -260,8 +265,6 @@ class Dense::Path
     when Array
       "[#{elt.map { |e| _to_s(e, true) }.join(',')}#{elt.size < 2 ? ',' : ''}]"
     when String
-      #in_array ? elt.inspect : elt.to_s
-      #in_array ? _quote_s(elt) : _maybe_quote_s(elt)
       _str_to_s(elt, in_array)
     when :star
       '*'
@@ -285,14 +288,15 @@ class Dense::Path
 
   def _walk(data, path)
 
+#p [ 'd:', data, 'p:', path ]
     return data if path.empty?
 
     case pa = path.first
     when :dot then _walk_dot(data, pa, path)
     when :star then _walk_star(data, pa, path)
     when Hash then _walk_start_end_step(data, pa, path)
+    when String then _walk(_sindex(data, path), path[1..-1])
     when Integer then _walk_int(data, pa, path)
-    when String then _walk(_sindex(data, pa), path[1..-1])
     else fail IndexError.new("Unwalkable index in path: #{pa.inspect}")
     end
   end
@@ -338,13 +342,17 @@ class Dense::Path
       return _walk(data[pa], path[1..-1]) if data.has_key?(pa)
     end
 
-    fail NotIndexableError.new(data, nil, path)
+    fail NotIndexableError.new(data, nil, path[1..-1])
   end
 
-  def _sindex(data, key)
+  def _sindex(data, path)
+
+    key = path.first
 
     case data
     when Hash
+      fail NotIndexableError.new(
+        data, nil, path[1..-1]) unless data.has_key?(key)
       data[key]
     when Array
       case key

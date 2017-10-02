@@ -61,6 +61,9 @@ describe Dense do
       [ 'store.bicycle.7',
         'seven' ],
 
+      [ 'store.bicycle[7]',
+        'seven' ],
+
     ].each do |path, result|
 
       it "gets #{path.inspect}" do
@@ -69,14 +72,18 @@ describe Dense do
       end
     end
 
-    it 'returns nil if it cannot find' do
+    [
+      'nada.inferno',
+      'store.bicycle.seven',
+      'store.bicycle[seven]',
+      'store.bicycle["seven"]',
+      'store.book.999',
+    ].each do |path|
 
-      expect(Dense.get(@data, 'nada.inferno')).to eq(nil)
-    end
+      it "returns nil if it cannot find #{path.inspect}" do
 
-    it 'returns nil if it cannot find' do
-
-      expect(Dense.get({}, 'a.0.b')).to eq(nil)
+        expect(Dense.get(@data, path)).to eq(nil)
+      end
     end
   end
 
@@ -94,6 +101,9 @@ describe Dense do
       [ 'store.bicycle.7',
         'seven' ],
 
+      [ 'store.bicycle[7]',
+        'seven' ],
+
     ].each do |path, result|
 
       it "fetches #{path.inspect}" do
@@ -102,29 +112,58 @@ describe Dense do
       end
     end
 
-    it 'raises a KeyError if it cannot find' do
+    [
 
-      expect {
-        Dense.fetch({}, 'a.0.b')
-      }.to raise_error(
-        Dense::Path::NotIndexableError, 'Found nothing at "a" ("0.b" remains)'
-      )
+      [ 'a.0.b',
+        Dense::Path::NotIndexableError,
+        'Found nothing at "a" ("0.b" remains)' ],
+      [ 'store.0.b',
+        Dense::Path::NotIndexableError,
+        'Found nothing at "store.0" ("b" remains)' ],
+      [ 'store.bike.b',
+        Dense::Path::NotIndexableError,
+        'Found nothing at "store.bike" ("b" remains)' ],
+      [ 'store.bicycle.seven',
+        Dense::Path::NotIndexableError,
+        'Found nothing at "store.bicycle.seven"' ],
+      [ 'store.bicycle[seven]',
+        Dense::Path::NotIndexableError,
+        'Found nothing at "store.bicycle.seven"' ],
+      [ 'store.bicycle["seven"]',
+        Dense::Path::NotIndexableError,
+        'Found nothing at "store.bicycle.seven"' ],
+
+    ].each do |path, error_klass, error_message|
+
+      it "raises a #{error_klass} if it cannot find #{path.inspect}" do
+
+        expect {
+          Dense.fetch(@data, path)
+        }.to raise_error(
+          error_klass, error_message
+        )
+      end
     end
 
-    it 'returns the given default value if it cannot find' do
+    [
 
-      expect(
-        Dense.fetch({}, 'a.0.b', -1)
-      ).to eq(-1)
-    end
+      [ 'a.0.b', -1, -1 ],
+      [ 'a.0.b', lambda { |x, y| -2 }, -2 ],
+      [ 'store.bicycle.seven', -3, -3 ],
+      [ 'store.bicycle.seven', lambda { |x, y| -3 }, -3 ],
 
-    it 'returns the value of the given block if it cannot find' do
+    ].each do |path, default, result|
 
-      a = -2
+      it "returns the given default #{default.inspect}" do
 
-      expect(
-        Dense.fetch({}, 'a.0.b') { a }
-      ).to eq(-2)
+        expect(
+          if default.is_a?(::Proc)
+            Dense.fetch(@data, path, &default)
+          else
+            Dense.fetch(@data, path, default)
+          end
+        ).to eq(result)
+      end
     end
   end
 
@@ -204,7 +243,7 @@ describe Dense do
       expect {
         Dense.set(c, 'a.0', 1)
       }.to raise_error(
-        IndexError, 'Found no collection at "a"'
+        Dense::Path::NotIndexableError, 'Found nothing at "a"'
       )
 
       expect(c).to eq({})
@@ -303,7 +342,7 @@ describe Dense do
       expect {
         Dense.insert({}, 'a.b', 1)
       }.to raise_error(
-        IndexError, 'Found no collection at "a"'
+        Dense::Path::NotIndexableError, 'Found nothing at "a"'
       )
     end
 
@@ -315,9 +354,6 @@ describe Dense do
         IndexError, 'Cannot index array at "a"'
       )
     end
-  end
-
-  describe '.has_path?' do
   end
 
   describe '.has_key?' do
