@@ -8,8 +8,7 @@ Fetching deep in a dense structure. A kind of bastard of [JSONPath](http://goess
 
 ## usage
 
-### `Dense.get(collection, path)`
-
+Let
 ```ruby
   data = # taken from http://goessner.net/articles/JsonPath/
     { 'store' => {
@@ -44,7 +43,11 @@ Fetching deep in a dense structure. A kind of bastard of [JSONPath](http://goess
         }
       }
     }
+```
 
+### `Dense.get(collection, path)`
+
+```ruby
 Dense.get(data, 'store.book.1.title')
   # => "Sword of Honour"
 
@@ -61,7 +64,12 @@ Dense.get(data, 'store.bicycle.7')
 
 ### `Dense.has_key?(collection, path)`
 
-TODO
+```ruby
+Dense.has_key?(data, 'store.book.1.title')
+  # => true
+Dense.has_key?(data, 'store.book.1["social security number"]')
+  # => false
+```
 
 ### `Dense.fetch(collection, path)`
 
