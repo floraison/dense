@@ -1,6 +1,7 @@
 
 # dense
 
+## dense 1.0.1  not yet released
 
 ## dense 1.0.0  released 2017-09-29
 
