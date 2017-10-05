@@ -73,23 +73,23 @@ Dense.has_key?(data, 'store.book.1["social security number"]')
 
 ### `Dense.fetch(collection, path)`
 
-TODO
+TODO document
 
 ### `Dense.fetch(collection, path, default)`
 
-TODO
+TODO document
 
 ### `Dense.fetch(collection, path) { block }`
 
-TODO
+TODO document
 
 ### `Dense.set(collection, path, value)`
 
-TODO
+TODO document
 
 ### `Dense.insert(collection, path, value)`
 
-TODO
+TODO document
 
 
 ## LICENSE
