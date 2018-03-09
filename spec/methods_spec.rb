@@ -96,7 +96,7 @@ describe Dense do
 
       [ 'store.book.*.title',
         [ 'Sayings of the Century', 'Sword of Honour', 'Moby Dick',
-          'The Lord of the Rings'] ],
+          'The Lord of the Rings' ] ],
 
       [ 'store.bicycle.7',
         'seven' ],

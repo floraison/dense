@@ -62,6 +62,9 @@ Dense.get(data, 'store.bicycle.7')
   # => "seven"
 ```
 
+When `Dense.get(collection, path)` doesn't find, it returns `nil`.
+
+
 ### `Dense.has_key?(collection, path)`
 
 ```ruby
@@ -71,21 +74,56 @@ Dense.has_key?(data, 'store.book.1["social security number"]')
   # => false
 ```
 
+
 ### `Dense.fetch(collection, path)`
 
-TODO document
+`Dense.fetch` is modelled after `Hash.fetch`.
+
+```ruby
+Dense.fetch(data, 'store.book.1.title')
+  # => 'Sword of Honour'
+
+Dense.fetch(data, 'store.book.*.title')
+  # => [ 'Sayings of the Century', 'Sword of Honour', 'Moby Dick',
+  #      'The Lord of the Rings' ]
+
+Dense.fetch(data, 'store.bicycle.7')
+  # => 'seven'
+
+Dense.fetch(data, 'store.bicycle[7]')
+  # => 'seven'
+```
+
+When it doesn't find, it raises an instance of `Dense::Path::NotIndexableError`.
+
+```ruby
+Dense.fetch(data, 'a.0.b')
+  # raises
+  #   Dense::Path::NotIndexableError
+  #   'Found nothing at "a" ("0.b" remains)'
+```
+
+`Dense.fetch(collection, path)` raises when it doesn't find, while `Dense.get(collection, path)` returns `nil`.
+
 
 ### `Dense.fetch(collection, path, default)`
 
+`Dense.fetch` is modelled after `Hash.fetch` so it features a `default` optional argument.
+
 TODO document
+
 
 ### `Dense.fetch(collection, path) { block }`
 
+`Dense.fetch` is modelled after `Hash.fetch` so it features a 'default' optional block.
+
 TODO document
+
 
 ### `Dense.set(collection, path, value)`
 
 TODO document
+
 
 ### `Dense.insert(collection, path, value)`
 
