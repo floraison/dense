@@ -110,14 +110,42 @@ Dense.fetch(data, 'a.0.b')
 
 `Dense.fetch` is modelled after `Hash.fetch` so it features a `default` optional argument.
 
-TODO document
+If `fetch` doesn't find, it will return the provided default value.
+
+```
+Dense.fetch(data, 'store.book.1.title', -1)
+  # => "Sword of Honour" (found)
+Dense.fetch(data, 'a.0.b', -1)
+  # => -1
+Dense.fetch(data, 'store.nada', 'x')
+  # => "x"
+Dense.fetch(data, 'store.bicycle.seven', false)
+  # => false
+```
 
 
 ### `Dense.fetch(collection, path) { block }`
 
 `Dense.fetch` is modelled after `Hash.fetch` so it features a 'default' optional block.
 
-TODO document
+```
+Dense.fetch(data, 'store.book.1.title') do |coll, path|
+  "len:#{coll.length},path:#{path}"
+end
+  # => "Sword of Honour" (found)
+
+Dense.fetch(@data, 'store.bicycle.otto') do |coll, path|
+  "len:#{coll.length},path:#{path}"
+end
+  # => "len:18,path:store.bicycle.otto" (not found)
+
+not_found = lambda { |coll, path| "not found!" }
+  #
+Dense.fetch(@data, 'store.bicycle.otto', not_found)
+  # => "not found!"
+Dense.fetch(@data, 'store.bicycle.sept', not_found)
+  # => "not found!"
+```
 
 
 ### `Dense.set(collection, path, value)`

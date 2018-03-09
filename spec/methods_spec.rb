@@ -148,9 +148,11 @@ describe Dense do
     [
 
       [ 'a.0.b', -1, -1 ],
-      [ 'a.0.b', lambda { |x, y| -2 }, -2 ],
+      [ 'store.nada', 'x', 'x' ],
+      [ 'a.0.b', lambda { |coll, path| -2 }, -2 ],
       [ 'store.bicycle.seven', -3, -3 ],
-      [ 'store.bicycle.seven', lambda { |x, y| -3 }, -3 ],
+      [ 'store.bicycle.seven', false, false ],
+      [ 'store.bicycle.seven', lambda { |coll, path| -3 }, -3 ],
 
     ].each do |path, default, result|
 
@@ -164,6 +166,24 @@ describe Dense do
           end
         ).to eq(result)
       end
+    end
+
+    it 'ignores the block if not necessary' do
+
+      expect(
+        Dense.fetch(@data, 'store.book.1.title') do |coll, path|
+          "len:#{coll.length},path:#{path}"
+        end
+      ).to eq('Sword of Honour')
+    end
+
+    it 'returns the given block default' do
+
+      expect(
+        Dense.fetch(@data, 'store.bicycle.otto') do |coll, path|
+          "len:#{coll.length},path:#{path}"
+        end
+      ).to eq('len:18,path:store.bicycle.otto')
     end
   end
 
