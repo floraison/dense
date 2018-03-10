@@ -112,7 +112,7 @@ Dense.fetch(data, 'a.0.b')
 
 If `fetch` doesn't find, it will return the provided default value.
 
-```
+```ruby
 Dense.fetch(data, 'store.book.1.title', -1)
   # => "Sword of Honour" (found)
 Dense.fetch(data, 'a.0.b', -1)
@@ -128,7 +128,7 @@ Dense.fetch(data, 'store.bicycle.seven', false)
 
 `Dense.fetch` is modelled after `Hash.fetch` so it features a 'default' optional block.
 
-```
+```ruby
 Dense.fetch(data, 'store.book.1.title') do |coll, path|
   "len:#{coll.length},path:#{path}"
 end
@@ -150,7 +150,47 @@ Dense.fetch(@data, 'store.bicycle.sept', not_found)
 
 ### `Dense.set(collection, path, value)`
 
-TODO document
+Sets a value "deep" in a collection. Returns the value if successful.
+
+```ruby
+c = {}
+r = Dense.set(c, 'a', 1)
+c   # => { 'a' => 1 }
+r   # => 1
+
+c = { 'h' => {} }
+r = Dense.set(c, 'h.i', 1)
+c   # => { 'h' => { 'i' => 1 } }
+r   # => 1
+
+c = { 'a' => [ 1, 2, 3 ] }
+r = Dense.set(c, 'a.1', 1)
+c   # => { 'a' => [ 1, 1, 3 ] }
+r   # => 1
+
+c = { 'h' => { 'a' => [ 1, 2, 3 ] } }
+r = Dense.set(c, 'h.a.first', 'one')
+c   # => { 'h' => { 'a' => [ "one", 2, 3 ] } }
+r   # => 'one'
+
+c = { 'h' => { 'a' => [ 1, 2, 3 ] } }
+r = Dense.set(c, 'h.a.last', 'three')
+c   # => { 'h' => { 'a' => [ 1, 2, 'three' ] } }
+r   # => 'three'
+
+c = { 'a' => [] }
+Dense.set(c, 'a.b', 1)
+  # => IndexError 'Cannot index array at "b"'
+
+c = { 'a' => {} }
+r = Dense.set(c, 'a.1', 1)
+c   # => { 'a' => { '1' => 1 } }
+r   # => 1
+
+c = {}
+Dense.set(c, 'a.0', 1)
+  # => Dense::Path::NotIndexableError 'Found nothing at "a"'
+```
 
 
 ### `Dense.insert(collection, path, value)`
