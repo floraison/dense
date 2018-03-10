@@ -191,46 +191,46 @@ describe Dense do
 
     it 'sets at the first level' do
 
-      o = {}
-      r = Dense.set(o, 'a', 1)
+      c = {}
+      r = Dense.set(c, 'a', 1)
 
-      expect(o).to eq({ 'a' => 1 })
+      expect(c).to eq({ 'a' => 1 })
       expect(r).to eq(1)
     end
 
     it 'sets at the second level in a hash' do
 
-      o = { 'h' => {} }
-      r = Dense.set(o, 'h.i', 1)
+      c = { 'h' => {} }
+      r = Dense.set(c, 'h.i', 1)
 
-      expect(o).to eq({ 'h' => { 'i' => 1 } })
+      expect(c).to eq({ 'h' => { 'i' => 1 } })
       expect(r).to eq(1)
     end
 
     it 'sets at the second level in an array ' do
 
-      o = { 'a' => [ 1, 2, 3 ] }
-      r = Dense.set(o, 'a.1', 1)
+      c = { 'a' => [ 1, 2, 3 ] }
+      r = Dense.set(c, 'a.1', 1)
 
-      expect(o).to eq({ 'a' => [ 1, 1, 3 ] })
+      expect(c).to eq({ 'a' => [ 1, 1, 3 ] })
       expect(r).to eq(1)
     end
 
     it 'sets array first' do
 
-      o = { 'h' => { 'a' => [ 1, 2, 3 ] } }
-      r = Dense.set(o, 'h.a.first', 'one')
+      c = { 'h' => { 'a' => [ 1, 2, 3 ] } }
+      r = Dense.set(c, 'h.a.first', 'one')
 
-      expect(o).to eq({ 'h' => { 'a' => [ "one", 2, 3 ] } })
+      expect(c).to eq({ 'h' => { 'a' => [ "one", 2, 3 ] } })
       expect(r).to eq('one')
     end
 
     it 'sets array last' do
 
-      o = { 'h' => { 'a' => [ 1, 2, 3 ] } }
-      r = Dense.set(o, 'h.a.last', 'three')
+      c = { 'h' => { 'a' => [ 1, 2, 3 ] } }
+      r = Dense.set(c, 'h.a.last', 'three')
 
-      expect(o).to eq({ 'h' => { 'a' => [ 1, 2, 'three' ] } })
+      expect(c).to eq({ 'h' => { 'a' => [ 1, 2, 'three' ] } })
       expect(r).to eq('three')
     end
 
@@ -250,10 +250,10 @@ describe Dense do
     it 'turns a int index into a string key when setting in a Hash' do
 
       c = { 'a' => {} }
-
-      Dense.set(c, 'a.1', 1)
+      r = Dense.set(c, 'a.1', 1)
 
       expect(c).to eq({ 'a' => { '1' => 1 } })
+      expect(r).to eq(1)
     end
 
     it 'fails if it cannot set (no coll 2)' do
