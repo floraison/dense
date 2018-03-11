@@ -198,6 +198,47 @@ Dense.set(c, 'a.0', 1)
 TODO document
 
 
+### `Dense.unset(collection, path)`
+
+Removes an element deep in a collection.
+```ruby
+c = { 'a' => 1 }
+r = Dense.unset(c, 'a')
+c   # => {}
+r   # => 1
+
+c = { 'h' => { 'i' => 1 } }
+r = Dense.unset(c, 'h.i')
+c   # => { 'h' => {} }
+r   # => 1
+
+c = { 'a' => [ 1, 2, 3 ] }
+r = Dense.unset(c, 'a.1')
+c   # => { 'a' => [ 1, 3 ] }
+r   # => 2
+
+c = { 'h' => { 'a' => [ 1, 2, 3 ] } }
+r = Dense.unset(c, 'h.a.first')
+c   # => { 'h' => { 'a' => [ 2, 3 ] } }
+r   # => 1
+
+c = { 'h' => { 'a' => [ 1, 2, 3 ] } }
+r = Dense.unset(c, 'h.a.last')
+c   # => { 'h' => { 'a' => [ 1, 2 ] } }
+r   # => 3
+```
+
+It fails with an `IndexError` if it cannot unset.
+```ruby
+Dense.unset({}, 'a')
+  # => IndexError 'No key "a" for hash'
+Dense.unset([], 'a')
+  # => IndexError 'Cannot index array at "a"'
+Dense.unset([], '1')
+  # => IndexError 'Array has length of 0, index is at 1'
+```
+
+
 ## LICENSE
 
 MIT, see [LICENSE.txt](LICENSE.txt)
