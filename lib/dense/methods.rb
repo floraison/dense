@@ -78,30 +78,48 @@ module Dense; class << self
     end
   end
 
-  def array_index(a, k)
+  def array_r(k)
 
-    i = array_i(k)
-    i = a.length + i if i < 0
+    case k
+    when 'first' then { start: 0, end: 0, step: 1 }
+    when 'last' then { start: -1, end: -1, step: 1 }
+    when Integer then { start: k, end: k, step: 1 }
+    when Hash then k
+    else fail(IndexError.new("Cannot index array at #{k.inspect}"))
+    end
+  end
+
+  def array_indexes(a, k)
+
+    r = array_r(k)
+    r = (r[:start]..r[:end]).step(r[:step] || 1)
+
+    is = []
+    r.each { |i| is << i if i < a.length }
 
     fail IndexError.new(
-      "Array has length of #{a.length}, index is at #{k.inspect}"
-    ) if i < 0 || i >= a.length
+      "Array has length of #{a.length}, index is at #{r.to_a.last}"
+    ) if is.empty?
 
-    i
+    is.reverse
   end
 
   def array_set(a, k, v)
 
-    i = array_index(a, k)
+    array_indexes(a, k)
+      .each { |i| a[i] = v }
 
-    a[i] = v
+    v
   end
 
   def array_unset(a, k)
 
-    i = array_index(a, k)
+    r = nil
 
-    a.delete_at(i)
+    array_indexes(a, k)
+      .each_with_index { |i, j| rr = a.delete_at(i); r = rr if j == 0 }
+
+    r
   end
 
   def hash_unset(h, k)

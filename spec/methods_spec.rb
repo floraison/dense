@@ -288,6 +288,11 @@ describe Dense do
         3,
         { 'h' => { 'a' => [ 1, 2 ] } } ],
 
+      [ { 'h' => { 'a' => [ 1, 2, 3, 4, 5, 'six' ] } },
+        'h.a[2:4]',
+        5,
+        { 'h' => { 'a' => [ 1, 2, 'six' ] } } ],
+
     ].each do |col0, path, result, col1|
 
       it "unsets #{path.inspect}" do
