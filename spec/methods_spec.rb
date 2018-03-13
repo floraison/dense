@@ -292,7 +292,7 @@ describe Dense do
         { 'h' => { 'a' => [ 1, 2 ] } } ],
       [ { 'h' => { 'a' => [ 1, 2, 3, 4, 5, 'six' ] } },
         'h.a[2:4]',
-        5,
+        [ 3, 4, 5 ],
         { 'h' => { 'a' => [ 1, 2, 'six' ] } } ],
 
     ].each do |col0, path, result, col1|
@@ -312,6 +312,10 @@ describe Dense do
         'h.i',
         1,
         { 'h' => {} } ],
+      #[ { 'h' => { 'i' => 1, 'j' => 2, 'k' => 3 } },
+      #  'h[i,k]',
+      #  [ 1, 3 ],
+      #  { 'h' => { 'j' => 2 } } ],
 
     ].each do |col0, path, result, col1|
 

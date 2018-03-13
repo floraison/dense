@@ -47,6 +47,7 @@ describe Dense::Path do
 
       '11.name'       => [ 11, 'name' ],
       '11["name"]'    => [ 11, 'name' ],
+      '11["name"]'    => [ 11, 'name' ],
       '11[age]'       => [ 11, 'age' ],
       '11[name,age]'  => [ 11, [ 'name', 'age' ] ],
       '11["name",]'   => [ 11, [ 'name' ] ],

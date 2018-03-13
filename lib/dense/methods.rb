@@ -114,12 +114,11 @@ module Dense; class << self
 
   def array_unset(a, k)
 
-    r = nil
+    r = array_indexes(a, k)
+      .collect { |i| a.delete_at(i) }
+      .reverse
 
-    array_indexes(a, k)
-      .each_with_index { |i, j| rr = a.delete_at(i); r = rr if j == 0 }
-
-    r
+    k.is_a?(Hash) ? r : r.first
   end
 
   def hash_unset(h, k)
