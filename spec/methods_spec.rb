@@ -274,20 +274,22 @@ describe Dense do
 
     [
 
-      [ { 'a' => 1 }, 'a', 1, {} ],
-      [ { 'h' => { 'i' => 1 } }, 'h.i', 1, { 'h' => {} } ],
-      [ { 'a' => [ 1, 2, 3 ] }, 'a.1', 2, { 'a' => [ 1, 3 ] } ],
-
+      [ { 'a' => 1 },
+        'a',
+        1,
+        {} ],
+      [ { 'a' => [ 1, 2, 3 ] },
+        'a.1',
+        2,
+        { 'a' => [ 1, 3 ] } ],
       [ { 'h' => { 'a' => [ 1, 2, 3 ] } },
         'h.a.first',
         1,
         { 'h' => { 'a' => [ 2, 3 ] } } ],
-
       [ { 'h' => { 'a' => [ 1, 2, 3 ] } },
         'h.a.last',
         3,
         { 'h' => { 'a' => [ 1, 2 ] } } ],
-
       [ { 'h' => { 'a' => [ 1, 2, 3, 4, 5, 'six' ] } },
         'h.a[2:4]',
         5,
@@ -295,7 +297,25 @@ describe Dense do
 
     ].each do |col0, path, result, col1|
 
-      it "unsets #{path.inspect}" do
+      it "unsets (in array) #{path.inspect}" do
+
+        r = Dense.unset(col0, path)
+
+        expect(r).to eq(result)
+        expect(col0).to eq(col1)
+      end
+    end
+
+    [
+
+      [ { 'h' => { 'i' => 1 } },
+        'h.i',
+        1,
+        { 'h' => {} } ],
+
+    ].each do |col0, path, result, col1|
+
+      it "unsets (in hash) #{path.inspect}" do
 
         r = Dense.unset(col0, path)
 
