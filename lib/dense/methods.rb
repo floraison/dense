@@ -32,7 +32,7 @@ module Dense; class << self
 
     case c = path.walk(o)
     when Array then array_unset(c, key)
-    when Hash then hash_unset(c, key.to_s)
+    when Hash then hash_unset(c, key)
     else fail KeyError.new("Found no collection at #{path.to_s.inspect}")
     end
   end
@@ -123,9 +123,12 @@ module Dense; class << self
 
   def hash_unset(h, k)
 
-    fail KeyError.new("No key #{k.inspect} for hash") unless h.has_key?(k)
+    r = Array(k)
+      .collect { |kk|
+        fail KeyError.new("No key #{kk.inspect} for hash") unless h.has_key?(kk)
+        h.delete(kk) }
 
-    h.delete(k)
+    k.is_a?(Array) ? r : r.first
   end
 
   def array_insert(a, k, v)
