@@ -105,7 +105,39 @@ class Dense::Path
     self.class.make(subtract(@path.dup, path.to_a.dup))
   end
 
+  def gather(data)
+
+    _gather(data, [], @path)
+  end
+
   protected
+
+  def _index(data, range)
+
+    be = range[:start] || 0
+    en = range[:end] || data.length - 1
+    st = range[:step] || 1
+
+    Range.new(be, en).step(st).collect { |i| data[i] }
+  end
+
+  def _gather(data, acc, path)
+
+    return acc if data == nil
+    return acc.push([ data, path.first ]) if path.length == 1
+#pp({ data: data, acc: acc, path: path })
+
+    key = path[0]; ath = path[1..-1]
+    case key
+    when String then _gather(data[key], acc, ath)
+    when Integer then _gather(data[key], acc, ath)
+    when :star then data.each { |e| _gather(e, acc, ath) }
+    when Hash then _index(data, key).each { |e| _gather(e, acc, ath) }
+else fail "CAN'T DEAL WITH #{key.inspect}"
+    end
+
+    acc
+  end
 
   def subtract(apath0, apath1)
 
