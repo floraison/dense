@@ -121,8 +121,7 @@ class Dense::Path
     def rewrite_path(t)
       t.subgather.collect { |tt| rewrite(tt) }
     end
-
-  end
+  end # Parser
 
   def to_a
 
@@ -244,7 +243,7 @@ class Dense::Path
 
       @fail_path ||= (@root_path ? @root_path - @remaining_path : nil)
     end
-  end
+  end # NotIndexableError
 
   def subtract(apath0, apath1)
 
@@ -388,5 +387,5 @@ class Dense::Path
     (key == :star ? [ d ] : []) +
     d.inject([]) { |r, e| r.concat(_run(e, key)) }
   end
-end
+end # Dense::Path
 

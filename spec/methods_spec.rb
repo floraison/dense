@@ -10,7 +10,7 @@ require 'spec_helper'
 
 describe Dense do
 
-    before :all do
+    before :each do
 
       @data = # taken from http://goessner.net/articles/JsonPath/
         { 'store' => {

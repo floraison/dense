@@ -159,5 +159,5 @@ module Dense; class << self
     return true if k.is_a?(Integer) && h.has_key?(k.to_s)
     h.has_key?(k)
   end
-end; end
+end; end # Dense
 
