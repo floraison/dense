@@ -355,12 +355,13 @@ class Dense::Path
       data[key]
     when Array
       case key
-        when /\Afirst\z/i then data[0]
-        when /\Alast\z/i then data[-1]
-        else fail IndexError.new("Cannot index array with #{key.inspect}")
+      when /\Afirst\z/i then data[0]
+      when /\Alast\z/i then data[-1]
+      else fail IndexError.new("Cannot index array with #{key.inspect}")
       end
     else
-      fail IndexError.new("Cannot index #{data.class} with #{key.inspect}")
+      fail IndexError.new(
+        "Cannot index #{data.class} with #{key.inspect}")
     end
   end
 
