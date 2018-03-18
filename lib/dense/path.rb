@@ -121,19 +121,47 @@ class Dense::Path
     Range.new(be, en).step(st).collect { |i| data[i] }
   end
 
+  def _has_key?(data, key)
+
+    case key
+    when String
+      data.is_a?(Hash) && data[key]
+    when Integer
+      data.is_a?(Array) &&
+      ((l = data.length) > 0) &&
+      (k = key < 0 ? l + key : key) &&
+      (k > -1)
+    #when :star
+    #when :dot # really?
+    #when Hash
+    else
+      false
+    end
+  end
+
+  def _dot(data, acc, path)
+
+    return acc unless data.is_a?(Hash) || data.is_a?(Array)
+    return _gather(data, acc, path) if _has_key?(data, path[0])
+
+    (data.is_a?(Hash) ? data.values : data)
+      .each { |e| _dot(e, acc, path) }
+  end
+
   def _gather(data, acc, path)
 
     return acc if data == nil
     return acc.push([ data, path.first ]) if path.length == 1
-#pp({ data: data, acc: acc, path: path })
 
     key = path[0]; ath = path[1..-1]
+
     case key
-    when String then _gather(data[key], acc, ath)
-    when Integer then _gather(data[key], acc, ath)
+    when String, Integer then _gather(data[key], acc, ath)
     when :star then data.each { |e| _gather(e, acc, ath) }
     when Hash then _index(data, key).each { |e| _gather(e, acc, ath) }
-else fail "CAN'T DEAL WITH #{key.inspect}"
+    when :dot then _dot(data, acc, ath)
+    else
+fail "CAN'T DEAL WITH #{key.inspect}"
     end
 
     acc

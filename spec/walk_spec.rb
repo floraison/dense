@@ -192,14 +192,44 @@ describe Dense::Path do
             'price' => 8.99 },
           'title' ] ],
 
-#      'store..price' => [ 8.95, 12.99, 8.99, 22.99, 19.95 ],
+      'store..price' => [
+        [ { 'category' => 'reference', 'author' => 'Nigel Rees',
+            'title' => 'Sayings of the Century', 'price' => 8.95 },
+          'price' ],
+        [ { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
+            'title' => 'Sword of Honour', 'price' => 12.99 },
+          'price' ],
+        [ { 'category' => 'fiction', 'author' => 'Herman Melville',
+            'title' => 'Moby Dick', 'isbn' => '0-553-21311-3',
+            'price' => 8.99 },
+          'price' ],
+        [ { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
+            'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
+            'price' => 22.99 },
+          'price' ],
+        [ { 'color' => 'red', 'price' => 19.95, '7' => 'seven' },
+          'price' ] ],
+
 #      #'store../^pr/' => [ 8.95, 12.99, 8.99, 22.99, 19.95 ],
-#
-#      '.book.1' => [
-#        { 'category' => 'fiction',
-#          'author' => 'Evelyn Waugh',
-#          'title' => 'Sword of Honour',
-#          'price' => 12.99 } ],
+
+      '.book.1' => [
+        [ [ { 'category' => 'reference', 'author' => 'Nigel Rees',
+              'title' => 'Sayings of the Century', 'price' => 8.95
+            },
+            { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
+              'title' => 'Sword of Honour', 'price' => 12.99
+            },
+            { 'category' => 'fiction', 'author' => 'Herman Melville',
+              'title' => 'Moby Dick', 'isbn' => '0-553-21311-3', 'price' => 8.99
+            },
+            { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
+              'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
+              'price' => 22.99
+            } ],
+        1 ] ],
+
+      '.*[0]' => [
+        :xxx ],
 #      '.*[0]' => [
 #        { 'category' => 'reference',
 #          'author' => 'Nigel Rees',
