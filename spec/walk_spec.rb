@@ -226,19 +226,31 @@ describe Dense::Path do
               'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
               'price' => 22.99
             } ],
-        1 ] ],
+          1 ] ],
 
 #      '.*[0]' => [
 #        { 'category' => 'reference',
 #          'author' => 'Nigel Rees',
 #          'title' => 'Sayings of the Century',
 #          'price' => 8.95 } ],
-#
-#      'store.book.first.author' => 'Nigel Rees',
-#      'store.book.First.author' => 'Nigel Rees',
-#      'store.book.last.author' => 'J. R. R. Tolkien',
-#
-#      'store.bicycle.7' => 'seven'
+
+      'store.book.first.author' => [
+        [ { 'category' => 'reference', 'author' => 'Nigel Rees',
+            'title' => 'Sayings of the Century', 'price' => 8.95 },
+          'author' ] ],
+      'store.book.First.author' => [
+        [ { 'category' => 'reference', 'author' => 'Nigel Rees',
+            'title' => 'Sayings of the Century', 'price' => 8.95 },
+          'author' ] ],
+      'store.book.last.author' => [
+        [ { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
+            'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
+            'price' => 22.99 },
+          'author' ] ],
+
+      'store.bicycle.7' => [
+        [ { 'color' => 'red', 'price' => 19.95, '7' => 'seven' },
+          7 ] ],
 
     }.each do |path, result|
 

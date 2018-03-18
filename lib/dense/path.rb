@@ -148,6 +148,22 @@ class Dense::Path
       .each { |e| _dot(e, acc, path) }
   end
 
+  def _s_index(data, key)
+
+    case data
+    when Hash
+      data[key]
+    when Array
+      case key
+      when /\Afirst\z/i then data[0]
+      when /\Alast\z/i then data[-1]
+      else fail IndexError.new("Cannot index array with #{key.inspect}")
+      end
+    else
+      fail IndexError.new("Cannot index #{data.class} with #{key.inspect}")
+    end
+  end
+
   def _gather(data, acc, path)
 
     return acc if data == nil
@@ -156,7 +172,8 @@ class Dense::Path
     key = path[0]; ath = path[1..-1]
 
     case key
-    when String, Integer then _gather(data[key], acc, ath)
+    when String then _gather(_s_index(data, key), acc, ath)
+    when Integer then _gather(data[key], acc, ath)
     when :star then data.each { |e| _gather(e, acc, ath) }
     when Hash then _index(data, key).each { |e| _gather(e, acc, ath) }
     when :dot then _dot(data, acc, ath)
