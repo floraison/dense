@@ -228,8 +228,6 @@ describe Dense::Path do
             } ],
         1 ] ],
 
-      '.*[0]' => [
-        :xxx ],
 #      '.*[0]' => [
 #        { 'category' => 'reference',
 #          'author' => 'Nigel Rees',
