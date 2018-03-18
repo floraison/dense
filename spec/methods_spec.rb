@@ -10,61 +10,63 @@ require 'spec_helper'
 
 describe Dense do
 
-    before :each do
+  before :each do
 
-      @data = # taken from http://goessner.net/articles/JsonPath/
-        { 'store' => {
-            'book' => [
-              { 'category' => 'reference',
-                'author' => 'Nigel Rees',
-                'title' => 'Sayings of the Century',
-                'price' => 8.95
-              },
-              { 'category' => 'fiction',
-                'author' => 'Evelyn Waugh',
-                'title' => 'Sword of Honour',
-                'price' => 12.99
-              },
-              { 'category' => 'fiction',
-                'author' => 'Herman Melville',
-                'title' => 'Moby Dick',
-                'isbn' => '0-553-21311-3',
-                'price' => 8.99
-              },
-              { 'category' => 'fiction',
-                'author' => 'J. R. R. Tolkien',
-                'title' => 'The Lord of the Rings',
-                'isbn' => '0-395-19395-8',
-                'price' => 22.99
-              }
-            ],
-            'bicycle' => {
-              'color' => 'red',
-              'price' => 19.95,
-              '7' => 'seven'
+    @data = # taken from http://goessner.net/articles/JsonPath/
+      { 'store' => {
+          'book' => [
+            { 'category' => 'reference',
+              'author' => 'Nigel Rees',
+              'title' => 'Sayings of the Century',
+              'price' => 8.95
+            },
+            { 'category' => 'fiction',
+              'author' => 'Evelyn Waugh',
+              'title' => 'Sword of Honour',
+              'price' => 12.99
+            },
+            { 'category' => 'fiction',
+              'author' => 'Herman Melville',
+              'title' => 'Moby Dick',
+              'isbn' => '0-553-21311-3',
+              'price' => 8.99
+            },
+            { 'category' => 'fiction',
+              'author' => 'J. R. R. Tolkien',
+              'title' => 'The Lord of the Rings',
+              'isbn' => '0-395-19395-8',
+              'price' => 22.99
             }
+          ],
+          'bicycle' => {
+            'color' => 'red',
+            'price' => 19.95,
+            '7' => 'seven',
+            '8' => [ 'ei', 'gh', 't' ]
           }
         }
-    end
+      }
+  end
 
   describe '.get' do
 
-    [
+    {
 
-      [ 'store.book.1.title',
-        'Sword of Honour' ],
-
-      [ 'store.book.*.title',
+      'store.book.1.title' =>
+        'Sword of Honour',
+      'store.book.*.title' =>
         [ 'Sayings of the Century', 'Sword of Honour', 'Moby Dick',
-          'The Lord of the Rings'] ],
+          'The Lord of the Rings' ],
+      'store.bicycle.7' =>
+        'seven',
+      'store.bicycle[7]' =>
+        'seven',
+      'store.bicycle.8' =>
+        %w[ ei gh t ],
+      'store.bicycle.8.last' =>
+        't',
 
-      [ 'store.bicycle.7',
-        'seven' ],
-
-      [ 'store.bicycle[7]',
-        'seven' ],
-
-    ].each do |path, result|
+    }.each do |path, result|
 
       it "gets #{path.inspect}" do
 

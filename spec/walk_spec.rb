@@ -41,7 +41,8 @@ describe Dense::Path do
           'bicycle' => {
             'color' => 'red',
             'price' => 19.95,
-            '7' => 'seven'
+            '7' => 'seven',
+            '8' => [ 'ei', 'gh', 't' ]
           }
         }
       }
@@ -83,19 +84,22 @@ describe Dense::Path do
         { 'category' => 'reference',
           'author' => 'Nigel Rees',
           'title' => 'Sayings of the Century',
-          'price' => 8.95 } ],
+          'price' => 8.95 },
+        'ei' ],
       '.*[-1]' => [
         { 'category' => 'fiction',
           'author' => 'J. R. R. Tolkien',
           'title' => 'The Lord of the Rings',
           'isbn' => '0-395-19395-8',
-          'price' => 22.99 } ],
+          'price' => 22.99 },
+        't' ],
 
       'store.book.first.author' => 'Nigel Rees',
       'store.book.First.author' => 'Nigel Rees',
       'store.book.last.author' => 'J. R. R. Tolkien',
 
-      'store.bicycle.7' => 'seven'
+      'store.bicycle.7' => 'seven',
+      'store.bicycle.8.1' => 'gh',
 
     }.each do |path, result|
 
@@ -117,10 +121,11 @@ describe Dense::Path do
 
       expect(r).not_to eq(nil)
 
-      expect(r.size).to eq(28)
+      expect(r.size).to eq(32)
 
       expect(r[0]).to eq(@data['store'])
       expect(r[26]).to eq(19.95)
+      expect(r[31]).to eq('t')
     end
   end
 
@@ -129,10 +134,12 @@ describe Dense::Path do
     {
 
       'store.bicycle.color' => [
-        [ { 'color' => 'red', 'price' => 19.95, '7' => 'seven' },
+        [ { 'color' => 'red', 'price' => 19.95, '7' => 'seven',
+            '8' => %w[ ei gh t ] },
           'color' ] ],
       'store.bicycle.price' => [
-        [ { 'color' => 'red', 'price' => 19.95, '7' => 'seven' },
+        [ { 'color' => 'red', 'price' => 19.95, '7' => 'seven',
+            '8' => %w[ ei gh t ] },
           'price' ] ],
 
       'store.book.1.author' => [
@@ -207,7 +214,8 @@ describe Dense::Path do
             'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
             'price' => 22.99 },
           'price' ],
-        [ { 'color' => 'red', 'price' => 19.95, '7' => 'seven' },
+        [ { 'color' => 'red', 'price' => 19.95, '7' => 'seven',
+            '8' => %w[ ei gh t ] },
           'price' ] ],
 
 #      #'store../^pr/' => [ 8.95, 12.99, 8.99, 22.99, 19.95 ],
@@ -249,8 +257,12 @@ describe Dense::Path do
           'author' ] ],
 
       'store.bicycle.7' => [
-        [ { 'color' => 'red', 'price' => 19.95, '7' => 'seven' },
+        [ { 'color' => 'red', 'price' => 19.95, '7' => 'seven',
+            '8' => %w[ ei gh t ] },
           7 ] ],
+
+      'store.bicycle.8.1' => [
+        [ %w[ ei gh t ], 1 ] ],
 
     }.each do |path, result|
 
