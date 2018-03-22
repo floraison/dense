@@ -37,8 +37,9 @@ describe Dense::Path do
       '.["name"]'    => [ :dot, 'name' ],
       'store..name'  => [ 'store', :dot, 'name' ],
 
-      'name[*]'    => [ 'name', :star ],
-      'name[::1]'  => [ 'name', { start: nil, end: nil, step: 1 } ],
+      'name[*]'        => [ 'name', :star ],
+      'name[::1]'      => [ 'name', { start: nil, end: nil, step: 1 } ],
+      'book[*].title'  => [ 'book', :star, 'title' ],
 
       'name.*' => [ 'name', :star ],
 
