@@ -112,56 +112,13 @@ class Dense::Path
 
   protected
 
-  def _index(data, range)
+  def _h_index(data, range)
 
     be = range[:start] || 0
     en = range[:end] || data.length - 1
     st = range[:step] || 1
 
     Range.new(be, en).step(st).collect { |i| data[i] }
-  end
-
-  def _has_key?(data, key)
-
-    case key
-    when String
-      data.is_a?(Hash) && data[key]
-    when Integer
-      data.is_a?(Array) &&
-      ((l = data.length) > 0) &&
-      (k = key < 0 ? l + key : key) &&
-      (k > -1)
-    #when :star
-    #when :dot # really?
-    #when Hash
-    else
-      false
-    end
-  end
-
-  def _dot(data, acc, path)
-
-    return acc unless data.is_a?(Hash) || data.is_a?(Array)
-    return _gather(data, acc, path) if _has_key?(data, path[0])
-
-    (data.is_a?(Hash) ? data.values : data)
-      .each { |e| _dot(e, acc, path) }
-  end
-
-  def _s_index(data, key)
-
-    case data
-    when Hash
-      data[key]
-    when Array
-      case key
-      when /\Afirst\z/i then data[0]
-      when /\Alast\z/i then data[-1]
-      else fail IndexError.new("Cannot index array with #{key.inspect}")
-      end
-    else
-      fail IndexError.new("Cannot index #{data.class} with #{key.inspect}")
-    end
   end
 
   def _i_index(data, key)
@@ -173,19 +130,86 @@ class Dense::Path
     end
   end
 
+  def _s_index(data, key)
+
+    case data
+    when Hash
+      data[key]
+    when Array
+      case key
+      when /\Afirst\z/i then data[0]
+      when /\Alast\z/i then data[-1]
+      else nil
+      end
+    else
+      nil
+    end
+  end
+
+  def _star(data)
+
+    case data
+    when Array then data
+    when Hash then data.values
+    else []
+    end
+  end
+
+  def collection?(data)
+
+    data.is_a?(Array) || data.is_a?(Hash)
+  end
+
+  def _dot(data)
+
+    return [] unless collection?(data)
+
+    values = _star(data)
+      .select { |v| collection?(v) }
+
+    #values
+    #  .inject(values) { |a, v| a.concat(_dot(v)) }
+      #
+      # deep first
+
+    values
+      .inject([]) { |a, v|
+        a << v
+        a.concat(_dot(v)) }
+          #
+          # broad first
+  end
+
+  def indexes?(data, key)
+
+    case data
+    when Hash
+      true
+    when Array
+      key.is_a?(Integer) || key.is_a?(Hash) || key.match(/\A(first|last)\z/i)
+    else
+      false
+    end
+  end
+
   def _gather(data, acc, path)
 
     return acc if data == nil
-    return acc.push([ data, path.first ]) if path.length == 1
+
+    if path.length == 1
+      key = path.first
+      return acc.push([ data, key ]) if indexes?(data, key)
+      return acc
+    end
 
     key = path[0]; ath = path[1..-1]
 
     case key
     when String then _gather(_s_index(data, key), acc, ath)
     when Integer then _gather(_i_index(data, key), acc, ath)
-    when :star then data.each { |e| _gather(e, acc, ath) }
-    when Hash then _index(data, key).each { |e| _gather(e, acc, ath) }
-    when :dot then _dot(data, acc, ath)
+    when Hash then _h_index(data, key).each { |e| _gather(e, acc, ath) }
+    when :star then _star(data).each { |e| _gather(e, acc, ath) }
+    when :dot then _dot(data).each { |e| _gather(e, acc, ath) }
     else
 fail "CAN'T DEAL WITH #{key.inspect}"
     end
