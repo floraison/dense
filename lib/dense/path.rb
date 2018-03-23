@@ -34,6 +34,16 @@ class Dense::Path
     path
   end
 
+  def single?
+
+    ! @path.find { |e| e == :star || e == :dot || e.is_a?(Hash) }
+  end
+
+  def multiple?
+
+    ! single?
+  end
+
   def to_a
 
     @path
