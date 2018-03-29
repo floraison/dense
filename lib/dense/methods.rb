@@ -87,6 +87,7 @@ module Dense; class << self
       key = key.to_s
       return key if o.has_key?(key)
     end
+
     nil
   end
 
