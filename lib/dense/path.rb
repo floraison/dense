@@ -263,6 +263,13 @@ class Dense::Path
     nil
   end
 
+  def _range_gather(path0, data, keys, path1, dot)
+
+    keys
+      .inject([]) { |a, k|
+        a.concat(_gather(path0, data, data[k], path1, dot, [])) }
+  end
+
   def _gather(path0, data0, data, path, dot, acc)
 
 puts ("-" * 70) + " _gather()"
@@ -277,10 +284,7 @@ print "dot: "; pp dot
 puts "key: " + [ k, key ].inspect
 
     return acc.concat(
-      key
-        .inject([]) { |a, kk|
-          a.concat(
-            _gather(path0.dup.push(k), data, data[kk], path[1..-1], dot, [])) }
+      _range_gather(path0.dup.push(k), data, key, path[1..-1], dot)
     ) if key.is_a?(Array)
 
     return acc.push([ false, data, path[1..-1] ]) unless _has_key?(data, key)
