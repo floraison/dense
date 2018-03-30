@@ -3,15 +3,7 @@ module Dense; class << self
 
   def get(o, path)
 
-    pat = Dense::Path.new(path)
-    cks = pat.gather(o)
-
-    if pat.multiple?
-      cks.inject([]) { |a, (c, k)| k = _narrow(c, k); a << c[k] if k; a }
-    else
-      cks.each { |c, k| k = _narrow(c, k); return c[k] if k }
-      nil
-    end
+    Dense::Path.new(path).walk(o) { nil }
   end
 
   def fetch(o, path, default=IndexError, &block)
@@ -72,24 +64,6 @@ module Dense; class << self
   end
 
   protected
-
-  def _narrow(o, key)
-
-    return key.to_s if o.is_a?(Hash) && o.has_key?(key.to_s)
-
-    if o.is_a?(Array)
-      return 0 if key == 'first'
-      return -1 if key == 'last'
-      len = o.length
-      return key if key.is_a?(Integer) && (key > 0 ? (key < len) : (len + key > 0))
-    else
-      return key if o.has_key?(key)
-      key = key.to_s
-      return key if o.has_key?(key)
-    end
-
-    nil
-  end
 
   def array_i(k, may_fail=true)
 

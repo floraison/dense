@@ -126,33 +126,47 @@ describe Dense::Path do
     {
 
       'store.bicycle.color' => [
-        [ { 'color' => 'red', 'price' => 19.95, '7' => 'seven',
+        [ true,
+          { 'color' => 'red', 'price' => 19.95, '7' => 'seven',
             '8' => %w[ ei gh t ] },
+          'color',
           'color' ] ],
       'store.bicycle.price' => [
-        [ { 'color' => 'red', 'price' => 19.95, '7' => 'seven',
+        [ true,
+          { 'color' => 'red', 'price' => 19.95, '7' => 'seven',
             '8' => %w[ ei gh t ] },
+          'price',
           'price' ] ],
 
       'store.book.1.author' => [
-        [ { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
+        [ true,
+          { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
             'title' => 'Sword of Honour', 'price' => 12.99 },
+          'author',
           'author' ] ],
 
       'store.book.*.title' => [
-        [ { 'category' => 'reference', 'author' => 'Nigel Rees',
+        [ true,
+          { 'category' => 'reference', 'author' => 'Nigel Rees',
             'title' => 'Sayings of the Century', 'price' => 8.95 },
+          'title',
           'title' ],
-        [ { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
+        [ true,
+          { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
             'title' => 'Sword of Honour', 'price' => 12.99 },
+          'title',
           'title' ],
-        [ { 'category' => 'fiction', 'author' => 'Herman Melville',
+        [ true,
+          { 'category' => 'fiction', 'author' => 'Herman Melville',
             'title' => 'Moby Dick', 'isbn' => '0-553-21311-3',
             'price' => 8.99 },
+          'title',
           'title' ],
-        [ { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
+        [ true,
+          { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
             'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
             'price' => 22.99 },
+          'title',
           'title' ] ],
 
       'store.book[2:3].author' => [
@@ -278,26 +292,34 @@ describe Dense::Path do
         [["ei", "gh", "t"], 0]],
 
       'store.book.first.author' => [
-        [ { 'category' => 'reference', 'author' => 'Nigel Rees',
+        [ true,
+          { 'category' => 'reference', 'author' => 'Nigel Rees',
             'title' => 'Sayings of the Century', 'price' => 8.95 },
+          'author',
           'author' ] ],
       'store.book.First.author' => [
-        [ { 'category' => 'reference', 'author' => 'Nigel Rees',
+        [ true,
+          { 'category' => 'reference', 'author' => 'Nigel Rees',
             'title' => 'Sayings of the Century', 'price' => 8.95 },
+          'author',
           'author' ] ],
       'store.book.last.author' => [
-        [ { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
+        [ true,
+          { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
             'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
             'price' => 22.99 },
+          'author',
           'author' ] ],
 
       'store.bicycle.7' => [
-        [ { 'color' => 'red', 'price' => 19.95, '7' => 'seven',
+        [ true,
+          { 'color' => 'red', 'price' => 19.95, '7' => 'seven',
             '8' => %w[ ei gh t ] },
-          7 ] ],
+          7,
+          '7' ] ],
 
       'store.bicycle.8.1' => [
-        [ %w[ ei gh t ], 1 ] ],
+        [ true, %w[ ei gh t ], 1, 1 ] ],
 
     }.each do |path, result|
 
