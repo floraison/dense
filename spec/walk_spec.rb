@@ -170,39 +170,53 @@ describe Dense::Path do
           'title' ] ],
 
       'store.book[2:3].author' => [
-        [ { 'category' => 'fiction', 'author' => 'Herman Melville',
+        [ true,
+          { 'category' => 'fiction', 'author' => 'Herman Melville',
             'title' => 'Moby Dick', 'isbn' => '0-553-21311-3',
             'price' => 8.99 },
+          'author',
           'author' ],
-        [ { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
+        [ true,
+          { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
             'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
             'price' => 22.99 },
+          'author',
           'author' ] ],
 
       'store.book[::2].author' => [
-        [ { 'category' => 'reference', 'author' => 'Nigel Rees',
+        [ true,
+          { 'category' => 'reference', 'author' => 'Nigel Rees',
             'title' => 'Sayings of the Century', 'price' => 8.95 },
+          'author',
           'author' ],
-        [ { 'category' => 'fiction', 'author' => 'Herman Melville',
+        [ true,
+          { 'category' => 'fiction', 'author' => 'Herman Melville',
             'title' => 'Moby Dick', 'isbn' => '0-553-21311-3',
             'price' => 8.99 },
+          'author',
           'author' ] ],
 
 #      'store.book[1::2].author' => [ 'Evelyn Waugh', 'J. R. R. Tolkien' ],
 
       'store.book.-1.title' => [
-        [ { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
+        [ true,
+          { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
             'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
             'price' => 22.99 },
+          'title',
           'title' ] ],
 
       'store.book[-3:-2].title' => [
-        [ { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
+        [ true,
+          { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
             'title' => 'Sword of Honour', 'price' => 12.99 },
+          'title',
           'title' ],
-        [ { 'category' => 'fiction', 'author' => 'Herman Melville',
+        [ true,
+          { 'category' => 'fiction', 'author' => 'Herman Melville',
             'title' => 'Moby Dick', 'isbn' => '0-553-21311-3',
             'price' => 8.99 },
+          'title',
           'title' ] ],
 
       'store..price' => [

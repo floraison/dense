@@ -118,121 +118,6 @@ class Dense::Path
 
   protected
 
-#  def _h_index(data, range)
-#
-#    be = range[:start] || 0
-#    en = range[:end] || data.length - 1
-#    st = range[:step] || 1
-#
-#    Range.new(be, en).step(st).collect { |i| data[i] }
-#  end
-
-#  def _i_index(data, key)
-#
-#    case data
-#    when Hash then data[key.to_s]
-#    when Array then data[key]
-#    else fail IndexError.new("Cannot index #{data.class} with #{key.inspect}")
-#    end
-#  end
-
-#  def _s_index(data, key)
-#
-#    case data
-#    when Hash
-#      data[key]
-#    when Array
-#      case key
-#      when /\Afirst\z/i then data[0]
-#      when /\Alast\z/i then data[-1]
-#      else nil
-#      end
-#    else
-#      nil
-#    end
-#  end
-
-#  def _star(data)
-#
-#    case data
-#    when Array then data
-#    when Hash then data.values
-#    else []
-#    end
-#  end
-
-#  def collection?(data)
-#
-#    data.is_a?(Array) || data.is_a?(Hash)
-#  end
-#
-#  def _dot(data)
-#
-#    return [] unless collection?(data)
-#
-#    values = _star(data)
-#      .select { |v| collection?(v) }
-#
-#    #values
-#    #  .inject(values) { |a, v| a.concat(_dot(v)) }
-#      #
-#      # deep first
-#
-#    values
-#      .inject([]) { |a, v|
-#        a << v
-#        a.concat(_dot(v)) }
-#          #
-#          # broad first
-#  end
-
-#  def indexes?(data, key)
-#
-#    case data
-#    when Hash
-#      true
-#    when Array
-#      key.is_a?(Integer) || key.is_a?(Hash) || key.match(/\A(first|last)\z/i)
-#    else
-#      false
-#    end
-#  end
-
-#  def _has_key?(o, k)
-#
-#    case o
-#    when Hash
-#      o.has_key?(k) || o.has_key?(k.to_s)
-#    when Array
-#      k =
-#        case k
-#        when Integer then k
-#        when /\Afirst\z/i then 0
-#        when /\Alast\z/i then -1
-#        else o.
-#    else
-#      false
-#    end
-#  end
-#
-#  def _narrow(o, key)
-#
-#    return key.to_s if o.is_a?(Hash) && o.has_key?(key.to_s)
-#
-#    if o.is_a?(Array)
-#      return 0 if key == 'first'
-#      return -1 if key == 'last'
-#      len = o.length
-#      return key if key.is_a?(Integer) && (key > 0 ? (key < len) : (len + key > 0))
-#    else
-#      return key if o.has_key?(key)
-#      key = key.to_s
-#      return key if o.has_key?(key)
-#    end
-#
-#    nil
-#  end
-
   def _has_key?(o, rk)
 
     return false unless o && rk
@@ -243,13 +128,28 @@ class Dense::Path
     !! o[rk]
   end
 
-  def _refine_key(o, k)
+  def _resolve_star_key(o, k)
 
-    if k == :star
-      return (0..o.length - 1).to_a if o.is_a?(Array)
-      return o.keys if o.is_a?(Hash)
-      return nil
-    end
+    return (0..o.length - 1).to_a if o.is_a?(Array)
+    return o.keys if o.is_a?(Hash)
+    nil
+  end
+
+  def _resolve_hash_key(o, k)
+
+    return nil unless o.is_a?(Array)
+
+    be = k[:start] || 0
+    en = k[:end] || o.length - 1
+    st = k[:step] || 1
+
+    Range.new(be, en).step(st).to_a
+  end
+
+  def _resolve_key(o, k)
+
+    return _resolve_star_key(o, k) if k == :star
+    return _resolve_hash_key(o, k) if k.is_a?(Hash)
 
     return k.to_s if o.is_a?(Hash)
     return nil unless o.is_a?(Array)
@@ -272,16 +172,16 @@ class Dense::Path
 
   def _gather(path0, data0, data, path, dot, acc)
 
-puts ("-" * 70) + " _gather()"
-print "path0: "; pp path0
-#print "data0: "; p data0
-print "data: "; p data
-print "path: "; pp path
-print "dot: "; pp dot
-#print "acc: "; pp acc
+#puts ("-" * 70) + " _gather()"
+#print "path0: "; pp path0
+##print "data0: "; p data0
+#print "data: "; p data
+#print "path: "; pp path
+#print "dot: "; pp dot
+##print "acc: "; pp acc
     k = path.first
-    key = _refine_key(data, k)
-puts "key: " + [ k, key ].inspect
+    key = _resolve_key(data, k)
+#puts "key: " + [ k, key ].inspect
 
     return acc.concat(
       _range_gather(path0.dup.push(k), data, key, path[1..-1], dot)
