@@ -163,11 +163,11 @@ class Dense::Path
     nil
   end
 
-  def _range_gather(d1, path0, data, keys, path1)
+  def _range_gather(depth, path0, data, keys, path)
 
     keys
       .inject([]) { |a, k|
-        a.concat(_gather(d1, path0, data, data[k], path1, [])) }
+        a.concat(_gather(depth, path0, data, data[k], path, [])) }
   end
 
   def _sub_dot_gather(depth, path0, data, path)
