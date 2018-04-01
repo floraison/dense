@@ -12,7 +12,7 @@ describe Dense::Path do
 
   before :all do
 
-    @data = # taken from http://goessner.net/articles/JsonPath/
+    @data0 = # taken from http://goessner.net/articles/JsonPath/
       { 'store' => {
           'book' => [
             { 'category' => 'reference',
@@ -38,6 +38,18 @@ describe Dense::Path do
             'price' => 19.95,
             '7' => 'seven',
             '8' => [ 'ei', 'gh', 't' ] } } }
+
+    @data1 = { # taken from http://jsonpath.com/
+      'firstName' => 'John',
+      'lastName' => 'doe',
+      'age' => 26,
+      'address' => {
+        'streetAddress' => 'naist street',
+        'city' => 'Nara',
+        'postalCode' => '630-0192' },
+      'phoneNumbers' => [
+        { 'type' => 'iPhone', 'number' => '0123-4567-8888' },
+        { 'type' => 'home', 'number' => '0123-4567-8910' } ] }
   end
 
   describe '#walk' do
@@ -100,7 +112,7 @@ describe Dense::Path do
         pa = Dense::Path.new(path)
 
         expect(pa).not_to eq(nil)
-        expect(pa.walk(@data)).to eq(result)
+        expect(pa.walk(@data0)).to eq(result)
       end
     end
 
@@ -108,14 +120,14 @@ describe Dense::Path do
 
       pa = Dense::Path.new('store..*')
 
-      r = pa.walk(@data)
+      r = pa.walk(@data0)
 #pp r
 
       expect(r).not_to eq(nil)
 
       expect(r.size).to eq(32)
 
-      expect(r[0]).to eq(@data['store'])
+      expect(r[0]).to eq(@data0['store'])
       expect(r[26]).to eq(19.95)
       expect(r[31]).to eq('t')
     end
@@ -347,8 +359,34 @@ describe Dense::Path do
         pa = Dense::Path.new(path)
 
         expect(pa).not_to eq(nil)
-#pp pa.gather(@data)
-        expect(pa.gather(@data)).to eq(result)
+#pp pa.gather(@data0)
+        expect(pa.gather(@data0)).to eq(result)
+      end
+    end
+
+    {
+      'nickName' => [
+        [ false,
+          [],
+          { 'firstName'=>'John',
+            'lastName'=>'doe',
+            'age'=>26,
+            'address'=>
+              { 'streetAddress'=>'naist street', 'city'=>'Nara',
+                'postalCode'=>'630-0192' },
+            'phoneNumbers'=> [
+              { 'type'=>'iPhone', 'number'=>'0123-4567-8888' },
+              { 'type'=>'home', 'number'=>'0123-4567-8910' } ] },
+          [ 'nickName' ] ] ],
+    }.each do |path, result|
+
+      it "gathers false leaves for #{path.inspect}" do
+
+        pa = Dense::Path.new(path)
+
+        expect(pa).not_to eq(nil)
+#pp pa.gather(@data1)
+        expect(pa.gather(@data1)).to eq(result)
       end
     end
   end
