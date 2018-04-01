@@ -170,6 +170,13 @@ class Dense::Path
         a.concat(_gather(d1, path0, data, data[k], path1, [])) }
   end
 
+  def _sub_dot_gather(depth, path0, data, path)
+
+    (data.is_a?(Hash) ? data.values : data)
+      .inject([]) { |a, e|
+        a.concat(_dot_gather(depth, path0, data, e, path, [])) }
+  end
+
   def _dot_gather(depth, path0, data0, data, path, acc)
 
     k = path.first
@@ -188,15 +195,8 @@ class Dense::Path
     return acc.concat(r) if r.find { |e| e[0] }
 
     return acc.concat(
-      data
-        .inject([]) { |a, e|
-          a.concat(_dot_gather(d1, path0, data, e, path, [])) }
-    ) if data.is_a?(Array)
-    return acc.concat(
-      data.values
-        .inject([]) { |a, e|
-          a.concat(_dot_gather(d1, path0, data, e, path, [])) }
-    ) if data.is_a?(Hash)
+      _sub_dot_gather(d1, path0, data, path)
+    ) if data.is_a?(Hash) || data.is_a?(Array)
 
     acc.push([ false, path0, data0, path ])
   end
