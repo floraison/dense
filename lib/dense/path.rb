@@ -113,7 +113,7 @@ class Dense::Path
 
   def gather(data)
 
-    _gather(0, [], nil, data, @path, false, [])
+    _gather(0, [], nil, data, @path, [])
   end
 
   protected
@@ -128,7 +128,7 @@ class Dense::Path
     !! o[rk]
   end
 
-  def _resolve_star_key(o, k)
+  def _resolve_star_key(o)
 
     return (0..o.length - 1).to_a if o.is_a?(Array)
     return o.keys if o.is_a?(Hash)
@@ -148,7 +148,7 @@ class Dense::Path
 
   def _resolve_key(o, k)
 
-    return _resolve_star_key(o, k) if k == :star || k == :dot
+    return _resolve_star_key(o) if k == :star
     return _resolve_hash_key(o, k) if k.is_a?(Hash)
 
     return k.to_s if o.is_a?(Hash)
@@ -163,38 +163,71 @@ class Dense::Path
     nil
   end
 
-  def _range_gather(d1, path0, data, keys, path1, dot)
+  def _range_gather(d1, path0, data, keys, path1)
 
-    keys
+    (keys || data.is_a?(Hash) ? data.values : Range.new(0, data.length - 1))
       .inject([]) { |a, k|
-        a.concat(_gather(d1, path0, data, data[k], path1, dot, [])) }
+        a.concat(_gather(d1, path0, data, data[k], path1, [])) }
   end
 
-  def _gather(depth, path0, data0, data, path, dot, acc)
+  def _dot_gather(depth, path0, data0, data, path, acc)
+
+    k = path.first
+    key = _resolve_key(data, k)
+    d1 = depth + 1
+
+ind = '  ' * depth
+puts ind + "+... _dot_gather()"
+puts ind + "| path0: #{path0.inspect}"
+puts ind + "| data: #{data.inspect}"
+puts ind + "| depth: #{depth} / path: #{path}"
+puts ind + "| k: " + k.inspect
+puts ind + "| key: " + key.inspect
+
+    r = _gather(depth, path0, data0, data, path, [])
+    return acc.concat(r) if r.find { |e| e[0] }
+
+    ##return acc.concat(
+    ##  _range_gather(d1, path0.dup.push(k), data, key, path[1..-1])
+    ##) if key.is_a?(Array)
+    #return acc.concat(
+    #  _range_gather(d1, path0, data, nil, path[1..-1])
+    #) if data.is_a?(Array) || data.is_a?(Hash)
+    return acc.concat(
+      data.collect { |e| _dot_gather(d1, path0, data, e, path, []) }
+    ) if data.is_a?(Array)
+    return acc.concat(
+      data.values.collect { |e| _dot_gather(d1, path0, data, e, path, []) }
+    ) if data.is_a?(Hash)
+
+    acc.push([ false, data0, path0 ])
+  end
+
+  def _gather(depth, path0, data0, data, path, acc)
+
+    k = path.first
+    d1 = depth + 1
+
+    return _dot_gather(d1, path0.push(:dot), data0, data, path[1..-1], acc) \
+      if k == :dot
+
+    key = _resolve_key(data, k)
 
 ind = '  ' * depth
 puts ind + "+--- _gather()"
-#puts ind + "| path0: #{path0.inspect}"
-#puts ind + "| data0: #{data0.inspect}"
 puts ind + "| data: #{data}"
-puts ind + "| depth: #{depth} / dot: #{dot} / path: #{path}"
-#print ind + "acc: "; pp acc
-    k = path.first
+puts ind + "| depth: #{depth} / path: #{path}"
 puts ind + "| k: " + k.inspect
-#    dot = true if k == :dot
-    key = _resolve_key(data, k)
-puts ind + "| 0 key: " + key.inspect
-#    key = _resolve_key(data, :star) if key == nil && dot == true
-#puts ind + "| 1 key: " + key.inspect
+puts ind + "| key: " + key.inspect
 
     return acc.concat(
-      _range_gather(depth + 1, path0.dup.push(k), data, key, path[1..-1], dot)
+      _range_gather(d1, path0.dup.push(k), data, key, path[1..-1])
     ) if key.is_a?(Array)
 
     return acc.push([ false, data, path[1..-1] ]) unless _has_key?(data, key)
     return acc.push([ true, data, k, key ]) if path.length == 1
 
-    _gather(depth + 1, path0.push(k), data, data[key], path[1..-1], false, acc)
+    _gather(d1, path0.push(k), data, data[key], path[1..-1], acc)
   end
 
   def subtract(apath0, apath1)
