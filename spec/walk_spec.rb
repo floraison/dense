@@ -365,6 +365,7 @@ describe Dense::Path do
     end
 
     {
+
       'nickName' => [
         [ false,
           [],
@@ -378,6 +379,14 @@ describe Dense::Path do
               { 'type'=>'iPhone', 'number'=>'0123-4567-8888' },
               { 'type'=>'home', 'number'=>'0123-4567-8910' } ] },
           [ 'nickName' ] ] ],
+
+      'address.country' => [
+        [ false,
+          [ 'address' ],
+          { 'streetAddress'=>'naist street', 'city'=>'Nara',
+            'postalCode'=>'630-0192' },
+          [ 'country' ] ] ],
+
     }.each do |path, result|
 
       it "gathers false leaves for #{path.inspect}" do
