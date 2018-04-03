@@ -193,12 +193,17 @@ class Dense::Path
 
     r = _gather(depth, path0, data0, data, path, [])
     return acc.concat(r) if r.find { |e| e[0] }
+#puts ind + "| r: #{r.inspect}"
+
+    acc.push([ true, data, :star, :star ]) if path == [ :star ]
 
     return acc.concat(
       _sub_dot_gather(d1, path0, data, path)
     ) if data.is_a?(Hash) || data.is_a?(Array)
 
-    acc.push([ false, path0, data0, path ])
+    acc.push([ false, path0, data0, path, :d ]) if path != [ :star ]
+
+    acc
   end
 
   def _gather(depth, path0, data0, data, path, acc)
@@ -210,6 +215,7 @@ class Dense::Path
       if k == :dot
 
     key = _resolve_key(data, k)
+#p [ data, key, k ] if k == :star
 
 #ind = '  ' * depth
 #puts ind + "+--- _gather()"

@@ -6,7 +6,7 @@
 #
 
 require 'pp'
-#require 'ostruct'
+require 'json'
 
 require 'dense'
 

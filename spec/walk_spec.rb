@@ -208,7 +208,22 @@ describe Dense::Path do
           'author',
           'author' ] ],
 
-#      'store.book[1::2].author' => [ 'Evelyn Waugh', 'J. R. R. Tolkien' ],
+      'store.book[1::2].author' => [
+        [ true,
+          { 'category' => 'fiction',
+            'author' => 'Evelyn Waugh',
+            'title' => 'Sword of Honour',
+            'price' => 12.99 },
+          'author',
+          'author' ],
+        [ true,
+          { 'category' => 'fiction',
+            'author' => 'J. R. R. Tolkien',
+            'title' => 'The Lord of the Rings',
+            'isbn' => '0-395-19395-8',
+            'price' => 22.99 },
+          'author',
+          'author' ] ],
 
       'store.book.-1.title' => [
         [ true,
@@ -362,6 +377,19 @@ describe Dense::Path do
 #pp pa.gather(@data0)
         expect(pa.gather(@data0)).to eq(result)
       end
+    end
+
+    it 'gathers for "store..*"' do
+
+      pa = Dense::Path.new('store..*')
+
+      r = pa.gather(@data0)
+#pp r
+
+      expect(r.size).to eq(32)
+
+      expect(r[0]).to eq([ true, @data0['store'], :star, :star ])
+      expect(r[31]).to eq([ true, 't', :star, :star ])
     end
 
     {
