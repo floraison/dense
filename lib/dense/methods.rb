@@ -3,7 +3,12 @@ module Dense; class << self
 
   def get(o, path)
 
-    Dense::Path.new(path).walk(o) { nil }
+    #Dense::Path.new(path).walk(o) { nil }
+
+    pa = Dense::Path.new(path)
+    r = pa.gather(o).inject([]) { |a, m| a << m[1][m[3]] if m[0]; a }
+
+    pa.single? ? r.first : r
   end
 
   def fetch(o, path, default=IndexError, &block)
