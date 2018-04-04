@@ -415,6 +415,13 @@ describe Dense::Path do
             'postalCode'=>'630-0192' },
           [ 'country' ] ] ],
 
+      'phoneNumbers.-3' => [
+        [ false,
+          [ "phoneNumbers" ],
+          [ { "type"=>"iPhone", "number"=>"0123-4567-8888" },
+            { "type"=>"home", "number"=>"0123-4567-8910" } ],
+          [ -3 ] ] ],
+
     }.each do |path, result|
 
       it "gathers false leaves for #{path.inspect}" do

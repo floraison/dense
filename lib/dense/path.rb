@@ -124,7 +124,6 @@ class Dense::Path
     return o.has_key?(rk) if o.is_a?(Hash)
     return false unless o.is_a?(Array)
     return false unless rk.is_a?(Integer)
-    return !! o[o.length + rk] if rk < 0
     !! o[rk]
   end
 
