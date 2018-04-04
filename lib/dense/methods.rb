@@ -5,10 +5,10 @@ module Dense; class << self
 
     #Dense::Path.new(path).walk(o) { nil }
 
-    pa = Dense::Path.new(path)
-    r = pa.gather(o).inject([]) { |a, m| a << m[1][m[3]] if m[0]; a }
+    path = Dense::Path.new(path)
+    r = path.gather(o).inject([]) { |a, m| a << m[1][m[3]] if m[0]; a }
 
-    pa.single? ? r.first : r
+    path.single? ? r.first : r
   end
 
   def fetch(o, path, default=IndexError, &block)
@@ -58,14 +58,16 @@ module Dense; class << self
 
   def has_key?(o, path)
 
-    path = Dense::Path.new(path)
-    key = path.pop
+#    path = Dense::Path.new(path)
+#    key = path.pop
+#
+#    case c = path.walk(o)
+#    when Array then array_has_key?(c, key)
+#    when Hash then hash_has_key?(c, key)
+#    else fail IndexError.new("Found no collection at #{path.to_s.inspect}")
+#    end
 
-    case c = path.walk(o)
-    when Array then array_has_key?(c, key)
-    when Hash then hash_has_key?(c, key)
-    else fail IndexError.new("Found no collection at #{path.to_s.inspect}")
-    end
+    !! Dense::Path.new(path).gather(o).find { |m| m[0] }
   end
 
   protected
@@ -143,26 +145,26 @@ module Dense; class << self
     a.insert(i, v)
   end
 
-  def array_has_key?(a, k)
-
-    i =
-      array_i(k, false)
-    i =
-      if i.nil?
-        -1
-      elsif i < 0
-        a.length + i
-      else
-        i
-      end
-
-    i > -1 && i < a.length
-  end
-
-  def hash_has_key?(h, k)
-
-    return true if k.is_a?(Integer) && h.has_key?(k.to_s)
-    h.has_key?(k)
-  end
+#  def array_has_key?(a, k)
+#
+#    i =
+#      array_i(k, false)
+#    i =
+#      if i.nil?
+#        -1
+#      elsif i < 0
+#        a.length + i
+#      else
+#        i
+#      end
+#
+#    i > -1 && i < a.length
+#  end
+#
+#  def hash_has_key?(h, k)
+#
+#    return true if k.is_a?(Integer) && h.has_key?(k.to_s)
+#    h.has_key?(k)
+#  end
 end; end # Dense
 
