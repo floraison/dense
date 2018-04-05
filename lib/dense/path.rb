@@ -111,6 +111,11 @@ class Dense::Path
     self.class.make(subtract(@path.dup, path.to_a.dup))
   end
 
+  def narrow(outcome)
+
+    single? ? outcome.first : outcome
+  end
+
   def gather(data)
 
     _gather(0, [], nil, data, @path, [])

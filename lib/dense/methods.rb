@@ -3,17 +3,31 @@ module Dense; class << self
 
   def get(o, path)
 
-    #Dense::Path.new(path).walk(o) { nil }
-
     path = Dense::Path.new(path)
-    r = path.gather(o).inject([]) { |a, m| a << m[1][m[3]] if m[0]; a }
+    r = path.gather(o).inject([]) { |a, e| a << e[1][e[3]] if e.first; a }
 
     path.single? ? r.first : r
   end
 
-  def fetch(o, path, default=IndexError, &block)
+  def fetch(o, path, default=::KeyError, &block)
 
-    Dense::Path.new(path).walk(o, default, &block)
+    pa = Dense::Path.new(path)
+    r = pa.gather(o).partition(&:first)
+
+    if r[0].empty?
+
+      return pa.narrow(
+        r[1].collect { |m| call_default_block(o, path, block, m) }
+      ) if block
+
+      return pa.narrow(
+        r[1].collect { |m| default }
+      ) if default != KeyError
+
+      fail key_error(path, r[1])
+    end
+
+    pa.narrow(r[0].collect { |e| e[1][e[3]] })
   end
 
   def set(o, path, value)
@@ -58,19 +72,32 @@ module Dense; class << self
 
   def has_key?(o, path)
 
-#    path = Dense::Path.new(path)
-#    key = path.pop
-#
-#    case c = path.walk(o)
-#    when Array then array_has_key?(c, key)
-#    when Hash then hash_has_key?(c, key)
-#    else fail IndexError.new("Found no collection at #{path.to_s.inspect}")
-#    end
-
     !! Dense::Path.new(path).gather(o).find { |m| m[0] }
   end
 
   protected
+
+  def key_error(path, misses)
+
+    miss = misses.first
+
+    path0 = Dense::Path.make(miss[1] + miss[3][0, 1]).to_s.inspect
+    path1 = Dense::Path.make(miss[3][1..-1]).to_s.inspect
+
+    msg = "Found nothing at #{path0}"
+    msg = "#{msg} (#{path1} remains)" if path1 != '""'
+
+    KeyError.new(msg)
+  end
+
+  def call_default_block(o, path, block, miss)
+
+    args = [
+      o, path, Dense::Path.make(miss[1]), miss[2], Dense::Path.make(miss[3])
+    ][0, block.arity]
+
+    block.call(*args)
+  end
 
   def array_i(k, may_fail=true)
 

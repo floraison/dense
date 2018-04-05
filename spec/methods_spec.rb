@@ -117,22 +117,22 @@ describe Dense do
     [
 
       [ 'a.0.b',
-        Dense::Path::NotIndexableError,
+        Dense::Path::KeyError,
         'Found nothing at "a" ("0.b" remains)' ],
       [ 'store.0.b',
-        Dense::Path::NotIndexableError,
+        Dense::Path::KeyError,
         'Found nothing at "store.0" ("b" remains)' ],
       [ 'store.bike.b',
-        Dense::Path::NotIndexableError,
+        Dense::Path::KeyError,
         'Found nothing at "store.bike" ("b" remains)' ],
       [ 'store.bicycle.seven',
-        Dense::Path::NotIndexableError,
+        Dense::Path::KeyError,
         'Found nothing at "store.bicycle.seven"' ],
       [ 'store.bicycle[seven]',
-        Dense::Path::NotIndexableError,
+        Dense::Path::KeyError,
         'Found nothing at "store.bicycle.seven"' ],
       [ 'store.bicycle["seven"]',
-        Dense::Path::NotIndexableError,
+        Dense::Path::KeyError,
         'Found nothing at "store.bicycle.seven"' ],
 
     ].each do |path, error_klass, error_message|
@@ -182,10 +182,12 @@ describe Dense do
     it 'returns the given block default' do
 
       expect(
-        Dense.fetch(@data, 'store.bicycle.otto') do |coll, path|
-          "len:#{coll.length},path:#{path}"
+        Dense.fetch(@data, 'store.bicycle.otto') do |c, p, p0, c0, p1|
+          "c:#{c.length},p:#{p},p0:#{p0.to_s},c0:#{c0.length},p1:#{p1.to_s}"
         end
-      ).to eq('len:18,path:store.bicycle.otto')
+      ).to eq(
+        'c:1,p:store.bicycle.otto,p0:store.bicycle,c0:4,p1:otto'
+      )
     end
   end
 
