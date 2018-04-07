@@ -4,7 +4,7 @@ module Dense; class << self
   def get(o, path)
 
     path = Dense::Path.new(path)
-    r = path.gather(o).inject([]) { |a, e| a << e[1][e[3]] if e.first; a }
+    r = path.gather(o).inject([]) { |a, e| a << e[2][e[4]] if e.first; a }
 
     path.single? ? r.first : r
   end
@@ -27,21 +27,33 @@ module Dense; class << self
       fail key_error(path, r[1])
     end
 
-    pa.narrow(r[0].collect { |e| e[1][e[3]] })
+    pa.narrow(r[0].collect { |e| e[2][e[4]] })
   end
 
   def set(o, path, value)
 
-    path = Dense::Path.new(path)
-    key = path.pop
-
-    case c = path.walk(o)
-    when Array then array_set(c, key, value)
-    when Hash then c[key.to_s] = value
-    else fail KeyError.new("Found no collection at #{path.to_s.inspect}")
-    end
+    Dense::Path.new(path)
+      .gather(o)
+      .each { |e|
+p e
+        if e[0]
+          e[2][e[3]] = value
+        else
+          e[2][e[3].first] = value
+        end }
 
     value
+
+#    path = Dense::Path.new(path)
+#    key = path.pop
+#
+#    case c = path.walk(o)
+#    when Array then array_set(c, key, value)
+#    when Hash then c[key.to_s] = value
+#    else fail KeyError.new("Found no collection at #{path.to_s.inspect}")
+#    end
+#
+#    value
   end
 
   def unset(o, path)

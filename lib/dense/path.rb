@@ -199,7 +199,7 @@ class Dense::Path
     return acc.concat(r) if r.find { |e| e[0] }
 #puts ind + "| r: #{r.inspect}"
 
-    acc.push([ true, data, :star, :star ]) if path == [ :star ]
+    acc.push([ true, path0, data, :star, :star ]) if path == [ :star ]
 
     return acc.concat(
       _sub_dot_gather(d1, path0, data, path)
@@ -233,7 +233,7 @@ class Dense::Path
     ) if key.is_a?(Array)
 
     return acc.push([ false, path0, data, path ]) unless _has_key?(data, key)
-    return acc.push([ true, data, k, key ]) if path.length == 1
+    return acc.push([ true, path0, data, k, key ]) if path.length == 1
 
     _gather(d1, path0.push(k), data, data[key], path[1..-1], acc)
   end
