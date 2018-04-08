@@ -41,17 +41,6 @@ module Dense; class << self
         e[2][k] = value }
 
     value
-
-#    path = Dense::Path.new(path)
-#    key = path.pop
-#
-#    case c = path.walk(o)
-#    when Array then array_set(c, key, value)
-#    when Hash then c[key.to_s] = value
-#    else fail KeyError.new("Found no collection at #{path.to_s.inspect}")
-#    end
-#
-#    value
   end
 
   def unset(o, path)
@@ -154,14 +143,6 @@ module Dense; class << self
     is.reverse
   end
 
-  def array_set(a, k, v)
-
-    array_indexes(a, k)
-      .each { |i| a[i] = v }
-
-    v
-  end
-
   def array_unset(a, k)
 
     r = array_indexes(a, k)
@@ -187,27 +168,5 @@ module Dense; class << self
 
     a.insert(i, v)
   end
-
-#  def array_has_key?(a, k)
-#
-#    i =
-#      array_i(k, false)
-#    i =
-#      if i.nil?
-#        -1
-#      elsif i < 0
-#        a.length + i
-#      else
-#        i
-#      end
-#
-#    i > -1 && i < a.length
-#  end
-#
-#  def hash_has_key?(h, k)
-#
-#    return true if k.is_a?(Integer) && h.has_key?(k.to_s)
-#    h.has_key?(k)
-#  end
 end; end # Dense
 
