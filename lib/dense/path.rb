@@ -205,7 +205,7 @@ class Dense::Path
       _sub_dot_gather(d1, path0, data, path)
     ) if data.is_a?(Hash) || data.is_a?(Array)
 
-    acc.push([ false, path0, data0, path, :d ]) if path != [ :star ]
+    acc.push([ false, path0, data0, path, key, :d ]) if path != [ :star ]
 
     acc
   end
@@ -232,8 +232,10 @@ class Dense::Path
       _range_gather(d1, path0.dup.push(k), data, key, path[1..-1])
     ) if key.is_a?(Array)
 
-    return acc.push([ false, path0, data, path ]) unless _has_key?(data, key)
-    return acc.push([ true, path0, data, k, key ]) if path.length == 1
+    return acc.push([ false, path0, data, path, key ]) \
+      unless _has_key?(data, key)
+    return acc.push([ true, path0, data, k, key ]) \
+      if path.length == 1
 
     _gather(d1, path0.push(k), data, data[key], path[1..-1], acc)
   end

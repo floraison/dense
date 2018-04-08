@@ -359,7 +359,7 @@ describe Dense::Path do
             'price' => 19.95,
             '7' => 'seven',
             '8' => [ 'ei', 'gh', 't' ] },
-          [ 0 ] ]
+          [ 0 ], '0' ]
         ],
 
       'store.book.first.author' => [
@@ -443,21 +443,21 @@ describe Dense::Path do
             'phoneNumbers'=> [
               { 'type'=>'iPhone', 'number'=>'0123-4567-8888' },
               { 'type'=>'home', 'number'=>'0123-4567-8910' } ] },
-          [ 'nickName' ] ] ],
+          [ 'nickName' ], 'nickName' ] ],
 
       'address.country' => [
         [ false,
           [ 'address' ],
           { 'streetAddress'=>'naist street', 'city'=>'Nara',
             'postalCode'=>'630-0192' },
-          [ 'country' ] ] ],
+          [ 'country' ], 'country' ] ],
 
       'phoneNumbers.-3' => [
         [ false,
           [ "phoneNumbers" ],
           [ { "type"=>"iPhone", "number"=>"0123-4567-8888" },
             { "type"=>"home", "number"=>"0123-4567-8910" } ],
-          [ -3 ] ] ],
+          [ -3 ], -3 ] ],
 
     }.each do |path, result|
 

@@ -245,7 +245,7 @@ describe Dense do
       expect {
         Dense.set(c, 'a.b', 1)
       }.to raise_error(
-        IndexError, 'Cannot index array at "b"'
+        KeyError, 'Found nothing at "a" ("b" remains)'
       )
 
       expect(c).to eq({ 'a' => [] })
@@ -267,7 +267,7 @@ describe Dense do
       expect {
         Dense.set(c, 'a.0', 1)
       }.to raise_error(
-        Dense::Path::NotIndexableError, 'Found nothing at "a"'
+        KeyError, 'Found nothing at "a" ("0" remains)'
       )
 
       expect(c).to eq({})

@@ -35,12 +35,10 @@ module Dense; class << self
     Dense::Path.new(path)
       .gather(o)
       .each { |e|
-p e
-        if e[0]
-          e[2][e[3]] = value
-        else
-          e[2][e[3].first] = value
-        end }
+        k = e[4]
+        fail key_error(path, e) \
+          if e[0] == false && (k == nil || e[3].length > 1)
+        e[2][k] = value }
 
     value
 
@@ -91,10 +89,16 @@ p e
 
   def key_error(path, misses)
 
-    miss = misses.first
+    miss = misses.first.is_a?(Array) ? misses.first : misses
 
-    path0 = Dense::Path.make(miss[1] + miss[3][0, 1]).to_s.inspect
-    path1 = Dense::Path.make(miss[3][1..-1]).to_s.inspect
+    path0, path1 =
+      if miss[4]
+        [ Dense::Path.make(miss[1] + miss[3][0, 1]).to_s.inspect,
+          Dense::Path.make(miss[3][1..-1]).to_s.inspect ]
+      else
+        [ Dense::Path.make(miss[1]).to_s.inspect,
+          Dense::Path.make(miss[3]).to_s.inspect ]
+      end
 
     msg = "Found nothing at #{path0}"
     msg = "#{msg} (#{path1} remains)" if path1 != '""'
