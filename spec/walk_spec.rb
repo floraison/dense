@@ -312,6 +312,9 @@ describe Dense::Path do
           'price',
           'price' ] ],
 
+      'store.*' => [
+        ],
+
 #      #'store../^pr/' => [ 8.95, 12.99, 8.99, 22.99, 19.95 ],
 
       '.book.1' => [
@@ -469,6 +472,19 @@ describe Dense::Path do
 #pp pa.gather(@data1)
         expect(pa.gather(@data1)).to eq(result)
       end
+    end
+
+    it 'gathers for h.a[2:4]' do
+
+      data = { 'h' => { 'a' => [ 1, 2, 3, 4, 5, 'six' ] } }
+      pa = Dense::Path.new('h.a[2:4]')
+      r = pa.gather(data)
+
+      expect(r).to eq([
+        [ true, [ 'h', 'a' ], [ 1, 2, 3, 4, 5, 'six' ], 2, 2, :r ],
+        [ true, [ 'h', 'a' ], [ 1, 2, 3, 4, 5, 'six' ], 3, 3, :r ],
+        [ true, [ 'h', 'a' ], [ 1, 2, 3, 4, 5, 'six' ], 4, 4, :r ]
+      ])
     end
   end
 end
