@@ -162,26 +162,26 @@ describe Dense::Path do
 
       'store.book.*.title' => [
         [ true,
-          [ 'store', 'book', :star ],
+          [ 'store', 'book', 0 ],
           { 'category' => 'reference', 'author' => 'Nigel Rees',
             'title' => 'Sayings of the Century', 'price' => 8.95 },
           'title',
           'title' ],
         [ true,
-          [ 'store', 'book', :star ],
+          [ 'store', 'book', 1 ],
           { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
             'title' => 'Sword of Honour', 'price' => 12.99 },
           'title',
           'title' ],
         [ true,
-          [ 'store', 'book', :star ],
+          [ 'store', 'book', 2 ],
           { 'category' => 'fiction', 'author' => 'Herman Melville',
             'title' => 'Moby Dick', 'isbn' => '0-553-21311-3',
             'price' => 8.99 },
           'title',
           'title' ],
         [ true,
-          [ 'store', 'book', :star ],
+          [ 'store', 'book', 3 ],
           { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
             'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
             'price' => 22.99 },
@@ -190,14 +190,14 @@ describe Dense::Path do
 
       'store.book[2:3].author' => [
         [ true,
-          [ 'store', 'book', { start: 2, end: 3, step: nil } ],
+          [ 'store', 'book', 2 ],
           { 'category' => 'fiction', 'author' => 'Herman Melville',
             'title' => 'Moby Dick', 'isbn' => '0-553-21311-3',
             'price' => 8.99 },
           'author',
           'author' ],
         [ true,
-          [ 'store', 'book', { start: 2, end: 3, step: nil } ],
+          [ 'store', 'book', 3 ],
           { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
             'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
             'price' => 22.99 },
@@ -206,13 +206,13 @@ describe Dense::Path do
 
       'store.book[::2].author' => [
         [ true,
-          [ 'store', 'book', { start: nil, end: nil, step: 2 } ],
+          [ 'store', 'book', 0 ],
           { 'category' => 'reference', 'author' => 'Nigel Rees',
             'title' => 'Sayings of the Century', 'price' => 8.95 },
           'author',
           'author' ],
         [ true,
-          [ 'store', 'book', { start: nil, end: nil, step: 2 } ],
+          [ 'store', 'book', 2 ],
           { 'category' => 'fiction', 'author' => 'Herman Melville',
             'title' => 'Moby Dick', 'isbn' => '0-553-21311-3',
             'price' => 8.99 },
@@ -221,7 +221,7 @@ describe Dense::Path do
 
       'store.book[1::2].author' => [
         [ true,
-          [ 'store', 'book', { start: 1, end: nil, step: 2 } ],
+          [ 'store', 'book', 1 ],
           { 'category' => 'fiction',
             'author' => 'Evelyn Waugh',
             'title' => 'Sword of Honour',
@@ -229,7 +229,7 @@ describe Dense::Path do
           'author',
           'author' ],
         [ true,
-          [ 'store', 'book', { start: 1, end: nil, step: 2 } ],
+          [ 'store', 'book', 3 ],
           { 'category' => 'fiction',
             'author' => 'J. R. R. Tolkien',
             'title' => 'The Lord of the Rings',
@@ -249,13 +249,13 @@ describe Dense::Path do
 
       'store.book[-3:-2].title' => [
         [ true,
-          [ 'store', 'book', { start: -3, end: -2, step: nil } ],
+          [ 'store', 'book', -3 ],
           { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
             'title' => 'Sword of Honour', 'price' => 12.99 },
           'title',
           'title' ],
         [ true,
-          [ 'store', 'book', { start: -3, end: -2, step: nil } ],
+          [ 'store', 'book', -2 ],
           { 'category' => 'fiction', 'author' => 'Herman Melville',
             'title' => 'Moby Dick', 'isbn' => '0-553-21311-3',
             'price' => 8.99 },
@@ -406,7 +406,7 @@ describe Dense::Path do
         pa = Dense::Path.new(path)
 
         expect(pa).not_to eq(nil)
-#pp pa.gather(@data0)
+pp pa.gather(@data0)
         expect(pa.gather(@data0)).to eq(result)
       end
     end

@@ -155,14 +155,14 @@ class Dense::Path
     return _resolve_star_key(o) if k == :star
     return _resolve_hash_key(o, k) if k.is_a?(Hash)
 
-    return k.to_s if o.is_a?(Hash)
+    return [ k.to_s ] if o.is_a?(Hash)
     return nil unless o.is_a?(Array)
 
-    return k if k.is_a?(Integer)
+    return [ k ] if k.is_a?(Integer)
     return nil unless k.is_a?(String)
 
-    return 0 if k.match(/\Afirst\z/i)
-    return -1 if k.match(/\Alast\z/i)
+    return [ 0 ] if k.match(/\Afirst\z/i)
+    return [ -1 ] if k.match(/\Alast\z/i)
 
     nil
   end
@@ -240,8 +240,8 @@ puts ind + "| k: " + k.inspect
 #    return _dot_gather(d1, path0.push(k), data0, data, path[1..-1], acc) \
 #      if k == :dot
 
-    key = _resolve_key(data, k)
-puts ind + "| key: " + key.inspect
+    keys = _resolve_key(data, k)
+puts ind + "| keys: " + keys.inspect
 
 #    return acc.concat(
 #      _range_gather(d1, path0.dup.push(k), data, key, path[1..-1])
@@ -252,7 +252,11 @@ puts ind + "| key: " + key.inspect
 #    return acc.push([ true, path0, data, k, key ]) \
 #      if path.length == 1
 
-    _gather(depth + 1, path0.push(key), data, k, data[key], path[1..-1], acc)
+#    _gather(depth + 1, path0.push(key), data, k, data[key], path[1..-1], acc)
+    keys.each { |kk|
+      _gather(depth + 1, path0 + [ kk ], data, k, data[kk], path[1..-1], acc) }
+
+    acc
   end
 
   def subtract(apath0, apath1)
