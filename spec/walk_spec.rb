@@ -7,50 +7,50 @@
 
 require 'spec_helper'
 
+DATA0 = # taken from http://goessner.net/articles/JsonPath/
+  { 'store' => {
+      'book' => [
+        { 'category' => 'reference',
+          'author' => 'Nigel Rees',
+          'title' => 'Sayings of the Century',
+          'price' => 8.95 },
+        { 'category' => 'fiction',
+          'author' => 'Evelyn Waugh',
+          'title' => 'Sword of Honour',
+          'price' => 12.99 },
+        { 'category' => 'fiction',
+          'author' => 'Herman Melville',
+          'title' => 'Moby Dick',
+          'isbn' => '0-553-21311-3',
+          'price' => 8.99 },
+        { 'category' => 'fiction',
+          'author' => 'J. R. R. Tolkien',
+          'title' => 'The Lord of the Rings',
+          'isbn' => '0-395-19395-8',
+          'price' => 22.99 } ],
+      'bicycle' => {
+        'color' => 'red',
+        'price' => 19.95,
+        '7' => 'seven',
+        '8' => [ 'ei', 'gh', 't' ] } } }
+STORE = DATA0['store']
+BOOK = STORE['book']
+BIKE = STORE['bicycle']
+
+DATA1 = { # taken from http://jsonpath.com/
+  'firstName' => 'John',
+  'lastName' => 'doe',
+  'age' => 26,
+  'address' => {
+    'streetAddress' => 'naist street',
+    'city' => 'Nara',
+    'postalCode' => '630-0192' },
+  'phoneNumbers' => [
+    { 'type' => 'iPhone', 'number' => '0123-4567-8888' },
+    { 'type' => 'home', 'number' => '0123-4567-8910' } ] }
+
 
 describe Dense::Path do
-
-  before :all do
-
-    @data0 = # taken from http://goessner.net/articles/JsonPath/
-      { 'store' => {
-          'book' => [
-            { 'category' => 'reference',
-              'author' => 'Nigel Rees',
-              'title' => 'Sayings of the Century',
-              'price' => 8.95 },
-            { 'category' => 'fiction',
-              'author' => 'Evelyn Waugh',
-              'title' => 'Sword of Honour',
-              'price' => 12.99 },
-            { 'category' => 'fiction',
-              'author' => 'Herman Melville',
-              'title' => 'Moby Dick',
-              'isbn' => '0-553-21311-3',
-              'price' => 8.99 },
-            { 'category' => 'fiction',
-              'author' => 'J. R. R. Tolkien',
-              'title' => 'The Lord of the Rings',
-              'isbn' => '0-395-19395-8',
-              'price' => 22.99 } ],
-          'bicycle' => {
-            'color' => 'red',
-            'price' => 19.95,
-            '7' => 'seven',
-            '8' => [ 'ei', 'gh', 't' ] } } }
-
-    @data1 = { # taken from http://jsonpath.com/
-      'firstName' => 'John',
-      'lastName' => 'doe',
-      'age' => 26,
-      'address' => {
-        'streetAddress' => 'naist street',
-        'city' => 'Nara',
-        'postalCode' => '630-0192' },
-      'phoneNumbers' => [
-        { 'type' => 'iPhone', 'number' => '0123-4567-8888' },
-        { 'type' => 'home', 'number' => '0123-4567-8910' } ] }
-  end
 
   describe '#walk' do
 
@@ -112,7 +112,7 @@ describe Dense::Path do
         pa = Dense::Path.new(path)
 
         expect(pa).not_to eq(nil)
-        expect(pa.walk(@data0)).to eq(result)
+        expect(pa.walk(DATA0)).to eq(result)
       end
     end
 
@@ -120,14 +120,14 @@ describe Dense::Path do
 
       pa = Dense::Path.new('store..*')
 
-      r = pa.walk(@data0)
+      r = pa.walk(DATA0)
 #pp r
 
       expect(r).not_to eq(nil)
 
       expect(r.size).to eq(32)
 
-      expect(r[0]).to eq(@data0['store'])
+      expect(r[0]).to eq(DATA0['store'])
       expect(r[26]).to eq(19.95)
       expect(r[31]).to eq('t')
     end
@@ -138,137 +138,44 @@ describe Dense::Path do
     {
 
       'store.bicycle.color' => [
-        [ true,
-          [ 'store', 'bicycle' ],
-          { 'color' => 'red', 'price' => 19.95, '7' => 'seven',
-            '8' => %w[ ei gh t ] },
-          'color',
-          'color' ] ],
+        [ true, [ 'store', 'bicycle' ], BIKE, 'color', 'color' ] ],
       'store.bicycle.price' => [
-        [ true,
-          [ 'store', 'bicycle' ],
-          { 'color' => 'red', 'price' => 19.95, '7' => 'seven',
-            '8' => %w[ ei gh t ] },
-          'price',
-          'price' ] ],
+        [ true, [ 'store', 'bicycle' ], BIKE, 'price', 'price' ] ],
 
       'store.book.1.author' => [
-        [ true,
-          [ 'store', 'book', 1 ],
-          { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
-            'title' => 'Sword of Honour', 'price' => 12.99 },
-          'author',
-          'author' ] ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'author', 'author' ] ],
 
       'store.book.*.title' => [
-        [ true,
-          [ 'store', 'book', 0 ],
-          { 'category' => 'reference', 'author' => 'Nigel Rees',
-            'title' => 'Sayings of the Century', 'price' => 8.95 },
-          'title',
-          'title' ],
-        [ true,
-          [ 'store', 'book', 1 ],
-          { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
-            'title' => 'Sword of Honour', 'price' => 12.99 },
-          'title',
-          'title' ],
-        [ true,
-          [ 'store', 'book', 2 ],
-          { 'category' => 'fiction', 'author' => 'Herman Melville',
-            'title' => 'Moby Dick', 'isbn' => '0-553-21311-3',
-            'price' => 8.99 },
-          'title',
-          'title' ],
-        [ true,
-          [ 'store', 'book', 3 ],
-          { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
-            'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
-            'price' => 22.99 },
-          'title',
-          'title' ] ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'title', 'title' ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'title', 'title' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'title', 'title' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'title', 'title' ] ],
 
       'store.book[2:3].author' => [
-        [ true,
-          [ 'store', 'book', 2 ],
-          { 'category' => 'fiction', 'author' => 'Herman Melville',
-            'title' => 'Moby Dick', 'isbn' => '0-553-21311-3',
-            'price' => 8.99 },
-          'author',
-          'author' ],
-        [ true,
-          [ 'store', 'book', 3 ],
-          { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
-            'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
-            'price' => 22.99 },
-          'author',
-          'author' ] ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'author', 'author' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'author', 'author' ] ],
 
       'store.book[::2].author' => [
-        [ true,
-          [ 'store', 'book', 0 ],
-          { 'category' => 'reference', 'author' => 'Nigel Rees',
-            'title' => 'Sayings of the Century', 'price' => 8.95 },
-          'author',
-          'author' ],
-        [ true,
-          [ 'store', 'book', 2 ],
-          { 'category' => 'fiction', 'author' => 'Herman Melville',
-            'title' => 'Moby Dick', 'isbn' => '0-553-21311-3',
-            'price' => 8.99 },
-          'author',
-          'author' ] ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'author', 'author' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'author', 'author' ] ],
 
       'store.book[1::2].author' => [
-        [ true,
-          [ 'store', 'book', 1 ],
-          { 'category' => 'fiction',
-            'author' => 'Evelyn Waugh',
-            'title' => 'Sword of Honour',
-            'price' => 12.99 },
-          'author',
-          'author' ],
-        [ true,
-          [ 'store', 'book', 3 ],
-          { 'category' => 'fiction',
-            'author' => 'J. R. R. Tolkien',
-            'title' => 'The Lord of the Rings',
-            'isbn' => '0-395-19395-8',
-            'price' => 22.99 },
-          'author',
-          'author' ] ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'author', 'author' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'author', 'author' ] ],
 
       'store.book.-1.title' => [
-        [ true,
-          [ 'store', 'book', -1 ],
-          { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
-            'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
-            'price' => 22.99 },
-          'title',
-          'title' ] ],
+        [ true, [ 'store', 'book', -1 ], BOOK[-1], 'title', 'title' ] ],
 
       'store.book[-3:-2].title' => [
-        [ true,
-          [ 'store', 'book', -3 ],
-          { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
-            'title' => 'Sword of Honour', 'price' => 12.99 },
-          'title',
-          'title' ],
-        [ true,
-          [ 'store', 'book', -2 ],
-          { 'category' => 'fiction', 'author' => 'Herman Melville',
-            'title' => 'Moby Dick', 'isbn' => '0-553-21311-3',
-            'price' => 8.99 },
-          'title',
-          'title' ] ],
+        [ true, [ 'store', 'book', -3 ], BOOK[-3], 'title', 'title' ],
+        [ true, [ 'store', 'book', -2 ], BOOK[-2], 'title', 'title' ] ],
 
       'store.book.1.price' => [
-        [ true,
-          [ 'store', 'book', 1 ],
-          { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
-            'title' => 'Sword of Honour', 'price' => 12.99 },
-          'price',
-          'price' ] ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'price', 'price' ] ],
+
+      'store.*' => [
+        [ true, [ 'store' ], STORE, 'book', 'book' ],
+        [ true, [ 'store' ], STORE, 'bicycle', 'bicycle' ] ],
 
       'store.book.1..price' => [
         [ true,
@@ -311,9 +218,6 @@ describe Dense::Path do
             '8' => %w[ ei gh t ] },
           'price',
           'price' ] ],
-
-      'store.*' => [
-        ],
 
 #      #'store../^pr/' => [ 8.95, 12.99, 8.99, 22.99, 19.95 ],
 
@@ -406,8 +310,8 @@ describe Dense::Path do
         pa = Dense::Path.new(path)
 
         expect(pa).not_to eq(nil)
-pp pa.gather(@data0)
-        expect(pa.gather(@data0)).to eq(result)
+pp pa.gather(DATA0)
+        expect(pa.gather(DATA0)).to eq(result)
       end
     end
 
@@ -415,7 +319,7 @@ pp pa.gather(@data0)
 
       pa = Dense::Path.new('store..*')
 
-      r = pa.gather(@data0)
+      r = pa.gather(DATA0)
 #pp r
 
       expect(r.size).to eq(32)
@@ -423,7 +327,7 @@ pp pa.gather(@data0)
       expect(
         r[0]
       ).to eq(
-        [ true, [ 'store', :dot ], @data0['store'], :star, :star ]
+        [ true, [ 'store', :dot ], DATA0['store'], :star, :star ]
       )
       expect(
         r[31]
@@ -469,8 +373,8 @@ pp pa.gather(@data0)
         pa = Dense::Path.new(path)
 
         expect(pa).not_to eq(nil)
-#pp pa.gather(@data1)
-        expect(pa.gather(@data1)).to eq(result)
+#pp pa.gather(DATA1)
+        expect(pa.gather(DATA1)).to eq(result)
       end
     end
 
