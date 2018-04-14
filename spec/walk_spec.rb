@@ -177,6 +177,19 @@ describe Dense::Path do
         [ true, [ 'store' ], STORE, 'book', 'book' ],
         [ true, [ 'store' ], STORE, 'bicycle', 'bicycle' ] ],
 
+      'store.book.first.author' => [
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'author', 'author' ] ],
+      'store.book.First.author' => [
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'author', 'author' ] ],
+      'store.book.last.author' => [
+        [ true, [ 'store', 'book', -1 ], BOOK[-1], 'author', 'author' ] ],
+
+      'store.bicycle.7' => [
+        [ true, %w[ store bicycle ], BIKE, '7', '7' ] ],
+
+      'store.bicycle.8.1' => [
+        [ true, [ 'store', 'bicycle', 8 ], %w[ ei gh t ], 1, 1 ] ],
+
       'store.book.1..price' => [
         [ true,
           [ 'store', 'book', 1, :dot ],
@@ -268,40 +281,6 @@ describe Dense::Path do
             '8' => [ 'ei', 'gh', 't' ] },
           [ 0 ], '0' ]
         ],
-
-      'store.book.first.author' => [
-        [ true,
-          %w[ store book first ],
-          { 'category' => 'reference', 'author' => 'Nigel Rees',
-            'title' => 'Sayings of the Century', 'price' => 8.95 },
-          'author',
-          'author' ] ],
-      'store.book.First.author' => [
-        [ true,
-          %w[ store book First ],
-          { 'category' => 'reference', 'author' => 'Nigel Rees',
-            'title' => 'Sayings of the Century', 'price' => 8.95 },
-          'author',
-          'author' ] ],
-      'store.book.last.author' => [
-        [ true,
-          %w[ store book last ],
-          { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
-            'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
-            'price' => 22.99 },
-          'author',
-          'author' ] ],
-
-      'store.bicycle.7' => [
-        [ true,
-          %w[ store bicycle ],
-          { 'color' => 'red', 'price' => 19.95, '7' => 'seven',
-            '8' => %w[ ei gh t ] },
-          7,
-          '7' ] ],
-
-      'store.bicycle.8.1' => [
-        [ true, [ 'store', 'bicycle', 8 ], %w[ ei gh t ], 1, 1 ] ],
 
     }.each do |path, result|
 
