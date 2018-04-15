@@ -188,7 +188,7 @@ describe Dense::Path do
         [ true, %w[ store bicycle ], BIKE, '7', '7' ] ],
 
       'store.bicycle.8.1' => [
-        [ true, [ 'store', 'bicycle', 8 ], %w[ ei gh t ], 1, 1 ] ],
+        [ true, [ 'store', 'bicycle', '8' ], %w[ ei gh t ], 1, 1 ] ],
 
       'store.book.1..price' => [
         [ true,
