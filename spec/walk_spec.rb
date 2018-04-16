@@ -194,56 +194,16 @@ describe Dense::Path do
         [ true, [ 'store', 'book', 1 ], BOOK[1], 'price', 'price' ] ],
 
       'store..price' => [
-        [ true,
-          [ 'store', :dot ],
-          { 'category' => 'reference', 'author' => 'Nigel Rees',
-            'title' => 'Sayings of the Century', 'price' => 8.95 },
-          'price',
-          'price' ],
-        [ true,
-          [ 'store', :dot ],
-          { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
-            'title' => 'Sword of Honour', 'price' => 12.99 },
-          'price',
-          'price' ],
-        [ true,
-          [ 'store', :dot ],
-          { 'category' => 'fiction', 'author' => 'Herman Melville',
-            'title' => 'Moby Dick', 'isbn' => '0-553-21311-3',
-            'price' => 8.99 },
-          'price',
-          'price' ],
-        [ true,
-          [ 'store', :dot ],
-          { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
-            'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
-            'price' => 22.99 },
-          'price',
-          'price' ],
-        [ true,
-          [ 'store', :dot ],
-          { 'color' => 'red', 'price' => 19.95, '7' => 'seven',
-            '8' => %w[ ei gh t ] },
-          'price',
-          'price' ] ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'price', 'price' ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'price', 'price' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'price', 'price' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'price', 'price' ],
+        [ true, [ 'store', 'bicycle' ], BIKE, 'price', 'price' ] ],
 
 #      #'store../^pr/' => [ 8.95, 12.99, 8.99, 22.99, 19.95 ],
 
       '.book.1' => [
-        [ true,
-          [ :dot, 'book' ],
-          [ { 'category' => 'reference', 'author' => 'Nigel Rees',
-              'title' => 'Sayings of the Century', 'price' => 8.95 },
-            { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
-              'title' => 'Sword of Honour', 'price' => 12.99 },
-            { 'category' => 'fiction', 'author' => 'Herman Melville',
-              'title' => 'Moby Dick', 'isbn' => '0-553-21311-3',
-              'price' => 8.99 },
-            { 'category' => 'fiction', 'author' => 'J. R. R. Tolkien',
-              'title' => 'The Lord of the Rings', 'isbn' => '0-395-19395-8',
-              'price' => 22.99 } ],
-          1,
-          1 ] ],
+        [ true, [ 'store', 'book' ], BOOK, 1, 1 ] ],
 
       '.*[0]' => [
         [ true,
@@ -285,7 +245,7 @@ describe Dense::Path do
 
         expect(pa).not_to eq(nil)
         r = pa.gather(DATA0)
-#pp r
+pp r
         expect(r).to eq(result)
       end
     end

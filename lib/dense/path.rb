@@ -230,8 +230,13 @@ puts ind + "| data: #{data.inspect}"
 puts ind + "| depth: #{depth} / path: #{path.inspect}"
 
     a = _gather(depth, path0, data0, data, path, []).select { |r| r.first }
-
     return acc.concat(a) if a.any?
+
+    keys = _resolve_key(data, :star)
+
+    keys.each { |k|
+      _dot_gather(depth + 1, path0 + [ k ], data, data[k], path, acc) }
+
     acc
   end
 
@@ -245,8 +250,11 @@ puts ind + "| data: #{data.inspect}"
 puts ind + "| depth: #{depth} / path: #{path.inspect}"
 puts ind + "| k: " + k.inspect
 
+    return acc.push([ false, path0[0..-2], data0, path0.last, path0.last ]) \
+      if k.nil? && data.nil?
+
     return acc.push([ true, path0[0..-2], data0, path0.last, path0.last ]) \
-      unless k
+      if k.nil?
 
 #    return acc.push([ true, path0[0..-2], data0, path0.last, path0.last ]) \
 #      if path.empty?
@@ -257,6 +265,9 @@ puts ind + "| k: " + k.inspect
 
     keys = _resolve_key(data, k)
 puts ind + "| keys: " + keys.inspect
+
+    return acc.push([ false, path0[0..-2], data0, path0.last, path0.last ]) \
+      if keys.nil?
 
 #    return acc.concat(
 #      _range_gather(d1, path0.dup.push(k), data, key, path[1..-1])
