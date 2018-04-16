@@ -118,7 +118,7 @@ class Dense::Path
 
   def gather(data)
 
-    _gather(0, [], nil, nil, data, @path, [])
+    _gather(0, [], nil, data, @path, [])
   end
 
   protected
@@ -152,7 +152,7 @@ class Dense::Path
 
   def _resolve_key(o, k)
 
-    return _resolve_star_key(o) if k == :star || k == :dot
+    return _resolve_star_key(o) if k == :star
     return _resolve_hash_key(o, k) if k.is_a?(Hash)
 
     return [ k.to_s ] if o.is_a?(Hash)
@@ -221,7 +221,21 @@ class Dense::Path
 #    acc
 #  end
 
-  def _gather(depth, path0, data0, key, data, path, acc)
+  def _dot_gather(depth, path0, data0, data, path, acc)
+
+ind = '  ' * depth
+puts ind + "+--- _dot_gather()"
+puts ind + "| path0: #{path0.inspect}"
+puts ind + "| data: #{data.inspect}"
+puts ind + "| depth: #{depth} / path: #{path.inspect}"
+
+    a = _gather(depth, path0, data0, data, path, []).select { |r| r.first }
+
+    return acc.concat(a) if a.any?
+    acc
+  end
+
+  def _gather(depth, path0, data0, data, path, acc)
 
     k = path.first
 ind = '  ' * depth
@@ -238,17 +252,11 @@ puts ind + "| k: " + k.inspect
 #      if path.empty?
 #    return _dot_gather(d1, path0.push(k), data0, data, path[1..-1], acc) \
 #      if k == :dot
+    return _dot_gather(depth, path0, data0, data, path[1..-1], acc) \
+      if k == :dot
 
     keys = _resolve_key(data, k)
 puts ind + "| keys: " + keys.inspect
-
-#    if k == :dot
-#      keys.each { |key|
-#        a = _gather(depth + 1, path0.dup(push(key)), data, key, data[key], path[1..-1], [])
-#p a
-#fail
-#      }
-#    end
 
 #    return acc.concat(
 #      _range_gather(d1, path0.dup.push(k), data, key, path[1..-1])
@@ -261,7 +269,7 @@ puts ind + "| keys: " + keys.inspect
 
 #    _gather(depth + 1, path0.push(key), data, k, data[key], path[1..-1], acc)
     keys.each { |kk|
-      _gather(depth + 1, path0 + [ kk ], data, k, data[kk], path[1..-1], acc) }
+      _gather(depth + 1, path0 + [ kk ], data, data[kk], path[1..-1], acc) }
 
     acc
   end

@@ -191,12 +191,7 @@ describe Dense::Path do
         [ true, [ 'store', 'bicycle', '8' ], %w[ ei gh t ], 1, 1 ] ],
 
       'store.book.1..price' => [
-        [ true,
-          [ 'store', 'book', 1, :dot ],
-          { 'category' => 'fiction', 'author' => 'Evelyn Waugh',
-            'title' => 'Sword of Honour', 'price' => 12.99 },
-          'price',
-          'price' ] ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'price', 'price' ] ],
 
       'store..price' => [
         [ true,
@@ -289,8 +284,9 @@ describe Dense::Path do
         pa = Dense::Path.new(path)
 
         expect(pa).not_to eq(nil)
-pp pa.gather(DATA0)
-        expect(pa.gather(DATA0)).to eq(result)
+        r = pa.gather(DATA0)
+#pp r
+        expect(r).to eq(result)
       end
     end
 
