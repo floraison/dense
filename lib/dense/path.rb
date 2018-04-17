@@ -234,6 +234,8 @@ puts ind + "| depth: #{depth} / path: #{path.inspect}"
 
     keys = _resolve_key(data, :star)
 
+    return acc unless keys
+
     keys.each { |k|
       _dot_gather(depth + 1, path0 + [ k ], data, data[k], path, acc) }
 
