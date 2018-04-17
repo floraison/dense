@@ -175,7 +175,12 @@ describe Dense::Path do
 
       'store.*' => [
         [ true, [ 'store' ], STORE, 'book', 'book' ],
-        [ true, [ 'store' ], STORE, 'bicycle', 'bicycle' ] ],
+        [ true, [ 'store', 'book' ], BOOK[0], 0, 0 ],
+        [ true, [ 'store', 'book' ], BOOK[1], 1, 1 ],
+        [ true, [ 'store', 'book' ], BOOK[2], 2, 2 ],
+        [ true, [ 'store', 'book' ], BOOK[3], 3, 3 ],
+        [ true, [ 'store' ], STORE, 'bicycle', 'bicycle' ],
+        [ true, [ 'store', 'bicycle' ], BIKE, '8', '8' ] ],
 
       'store.book.first.author' => [
         [ true, [ 'store', 'book', 0 ], BOOK[0], 'author', 'author' ] ],
