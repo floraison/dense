@@ -24,6 +24,8 @@ describe Dense::Path do
 
     {
 
+      '0'              => [ 0 ],
+      'name'           => [ 'name' ],
       '0.name'         => [ 0, 'name' ],
       'name.0'         => [ 'name', 0 ],
       '11[0]'          => [ 11, 0 ],
@@ -42,6 +44,8 @@ describe Dense::Path do
       'book[*].title'  => [ 'book', :star, 'title' ],
 
       'name.*' => [ 'name', :star ],
+      #'name..' => [ 'name', :dot ],
+      #'name..*' => [ 'name', :dotstar ],
 
       '[\'name\',"age"]'   => [ [ 'name', 'age' ] ],
       'x[\'name\',"age"]'  => [ 'x', [ 'name', 'age' ] ],
