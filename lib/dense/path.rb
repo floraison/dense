@@ -11,7 +11,8 @@ class Dense::Path
       "Argument is a #{s.class}, not a String"
     ) unless s.is_a?(String)
 
-    s = ".#{s}" unless s[0, 1] == '[' || s[0, 2] == '.['
+    s = ".#{s}" \
+      unless s[0, 1] == '[' || s[0, 2] == '.['
 
 #Raabro.pp(Parser.parse(s, debug: 3))
     @path = Parser.parse(s)
