@@ -175,12 +175,7 @@ describe Dense::Path do
 
       'store.*' => [
         [ true, [ 'store' ], STORE, 'book', 'book' ],
-        [ true, [ 'store', 'book' ], BOOK[0], 0, 0 ],
-        [ true, [ 'store', 'book' ], BOOK[1], 1, 1 ],
-        [ true, [ 'store', 'book' ], BOOK[2], 2, 2 ],
-        [ true, [ 'store', 'book' ], BOOK[3], 3, 3 ],
-        [ true, [ 'store' ], STORE, 'bicycle', 'bicycle' ],
-        [ true, [ 'store', 'bicycle' ], BIKE, '8', '8' ] ],
+        [ true, [ 'store' ], STORE, 'bicycle', 'bicycle' ] ],
 
       'store.book.first.author' => [
         [ true, [ 'store', 'book', 0 ], BOOK[0], 'author', 'author' ] ],
@@ -205,6 +200,9 @@ describe Dense::Path do
         [ true, [ 'store', 'book', 3 ], BOOK[3], 'price', 'price' ],
         [ true, [ 'store', 'bicycle' ], BIKE, 'price', 'price' ] ],
 
+      'store..*' => [
+        ],
+
 #      #'store../^pr/' => [ 8.95, 12.99, 8.99, 22.99, 19.95 ],
 
       '.book.1' => [
@@ -218,41 +216,37 @@ describe Dense::Path do
         [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 0, 0 ] ],
 
       '.*[0]' => [
+        [ false, [ 'store' ], DATA0['store'], '0', '0' ],
         [ true, [ 'store', 'book' ], BOOK, 0, 0 ],
+        [ false, [ 'store', 'book', 0 ], BOOK[0], '0', '0' ],
+        [ false, [ 'store', 'book', 1 ], BOOK[1], '0', '0' ],
+        [ false, [ 'store', 'book', 2 ], BOOK[2], '0', '0' ],
+        [ false, [ 'store', 'book', 3 ], BOOK[3], '0', '0' ],
+        [ false, [ 'store', 'bicycle' ], BIKE, '0', '0' ],
         [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 0, 0 ] ],
 
-    }.each do |path, result|
+    }.each do |path, expected|
+
+      def summarize_h2(h2)
+        j = h2.to_json.gsub('"', '')
+        [ h2.class, h2.length.to_s, j[0, 14], j.length.to_s ].join('|')
+      end
+      def summarize(hits)
+        hits.collect { |h| [ h[0], h[1], summarize_h2(h[2]), h[3] ] }
+      end
 
       it "gathers leaves for #{path.inspect}" do
 
         pa = Dense::Path.new(path)
 
         expect(pa).not_to eq(nil)
+
         r = pa.gather(DATA0)
-pp r
-        expect(r).to eq(result)
+
+        expect(summarize(r).to_pp).to eq(summarize(expected).to_pp)
+        expect(r.to_pp).to eq(expected.to_pp)
+        #expect(r).to eq(expected)
       end
-    end
-
-    it 'gathers for "store..*"' do
-
-      pa = Dense::Path.new('store..*')
-
-      r = pa.gather(DATA0)
-#pp r
-
-      expect(r.size).to eq(32)
-
-      expect(
-        r[0]
-      ).to eq(
-        [ true, [ 'store', :dot ], DATA0['store'], :star, :star ]
-      )
-      expect(
-        r[31]
-      ).to eq(
-        [ true, [ 'store', :dot ], 't', :star, :star ]
-      )
     end
 
     {
