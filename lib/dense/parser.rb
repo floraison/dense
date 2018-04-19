@@ -51,13 +51,16 @@ module Dense::Path::Parser include ::Raabro
 
   def bindex(i); alt(:index, i, :dqname, :sqname, :star, :ses, :name, :blank); end
   def bindexes(i); jseq(:bindexes, i, :bindex, :comma); end
-  def bracket_index(i); seq(nil, i, :bstart, :bindexes, :bend); end
   def simple_index(i); alt(:index, i, :off, :escape, :star, :name); end
 
   def dotdot(i); str(:dotdot, i, '.'); end
-
+  def dotdotstar(i); str(:dotdotstar, i, '..*'); end
+  def bracket_index(i); seq(nil, i, :bstart, :bindexes, :bend); end
   def dot_then_index(i); seq(nil, i, :dot, :simple_index); end
-  def index(i); alt(nil, i, :dot_then_index, :bracket_index, :dotdot); end
+
+  def index(i)
+    alt(nil, i, :dot_then_index, :bracket_index, :dotdotstar, :dotdot)
+  end
 
   def path(i); rep(:path, i, :index, 1); end # it starts here
 
@@ -71,6 +74,7 @@ module Dense::Path::Parser include ::Raabro
   def rewrite_esc(t); t.string[1, 1]; end
   def rewrite_star(t); :star; end
   def rewrite_dotdot(t); :dot; end
+  def rewrite_dotdotstar(t); :dotstar; end
   def rewrite_off(t); t.string.to_i; end
   def rewrite_index(t); rewrite(t.sublookup); end
   def rewrite_bindexes(t);

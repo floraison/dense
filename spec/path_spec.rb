@@ -45,7 +45,7 @@ describe Dense::Path do
 
       'name.*' => [ 'name', :star ],
       #'name..' => [ 'name', :dot ],
-      #'name..*' => [ 'name', :dotstar ],
+      'name..*' => [ 'name', :dotstar ],
 
       '[\'name\',"age"]'   => [ [ 'name', 'age' ] ],
       'x[\'name\',"age"]'  => [ 'x', [ 'name', 'age' ] ],
@@ -81,8 +81,8 @@ describe Dense::Path do
 
       '*.0' => [ :star, 0 ],
       '*[0]' => [ :star, 0 ],
-      '.*.0' => [ :dot, :star, 0 ],
-      '.*[0]' => [ :dot, :star, 0 ],
+      '.*.0' => [ :dotstar, 0 ],
+      '.*[0]' => [ :dotstar, 0 ],
 
       'aAbZ/\0-9^' => [ 'aAbZ/\0-9^' ],
 

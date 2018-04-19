@@ -14,7 +14,7 @@ class Dense::Path
     s = ".#{s}" \
       unless s[0, 1] == '[' || s[0, 2] == '.['
 
-#Raabro.pp(Parser.parse(s, debug: 3))
+#Raabro.pp(Parser.parse(s, debug: 3), colors: true)
     @path = Parser.parse(s)
 
 #Raabro.pp(Parser.parse(s, debug: 3), colors: true) unless @path
