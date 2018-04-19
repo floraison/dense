@@ -10,3 +10,10 @@ require 'json'
 
 require 'dense'
 
+
+class Object
+  def to_pp
+    PP.pp(self, StringIO.new).string
+  end
+end
+
