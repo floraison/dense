@@ -120,6 +120,8 @@ class Dense::Path
   def gather(data)
 
     _gather(0, [], nil, data, @path, [])
+      .inject({}) { |h, hit| h[(hit[1] + [ hit[3] ]).inspect] ||= hit; h }
+      .values
   end
 
   protected
@@ -144,7 +146,6 @@ class Dense::Path
 
   def _resolve_key(o, k)
 
-#    return _resolve_star_key(o) if k == :star
     return _resolve_hash_key(o, k) if k.is_a?(Hash)
 
     return [ k.to_s ] if o.is_a?(Hash)
@@ -203,6 +204,7 @@ class Dense::Path
 
     k = path.first
 #ind = '  ' * depth
+#print [ LG, DG, LB ][depth % 3]
 #puts ind + "+--- _gather()"
 #puts ind + "| path0: #{path0.inspect}"
 #puts ind + "| data: #{data.inspect}"
@@ -212,12 +214,13 @@ class Dense::Path
     return _dot_gather(depth, path0, data0, data, path[1..-1], acc) \
       if k == :dot
 
-#puts ind + "| stars: " + _stars(data0, data, k).collect(&:first).inspect if k == :star || k == :dotstar
+#puts ind + "| stars:\n" + _stars(data0, data, k).collect(&:first).to_pp if k == :star || k == :dotstar
     return _stars(data0, data, k).inject(acc) { |a, (pa, da0, da)|
       _gather(depth + 1, path0 + pa, da0, da, path[1..-1], a)
     } if k == :star || k == :dotstar
 
-#puts ind + "| -> " + [ false, path0[0..-2], data0, path0.last ].inspect if k.nil? && data.nil?
+#print data.nil? ? RD : GN if k.nil?
+#puts ind + "| -> " + [ ! data.nil?, path0[0..-2], data0, path0.last ].inspect if k.nil?
     return acc.push([ false, path0[0..-2], data0, path0.last ]) \
       if k.nil? && data.nil?
 
@@ -227,6 +230,8 @@ class Dense::Path
     keys = _resolve_key(data, k)
 #puts ind + "| keys: " + keys.inspect
 
+#print RD if keys.nil?
+#puts ind + "| -> " + [ false, path0[0..-2], data0, path0.last ].inspect if keys.nil?
     return acc.push([ false, path0[0..-2], data0, path0.last ]) \
       if keys.nil?
 
