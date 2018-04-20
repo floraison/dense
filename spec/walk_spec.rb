@@ -138,145 +138,145 @@ describe Dense::Path do
     {
 
       'store.bicycle.color' => [
-        [ true, [ 'store', 'bicycle' ], BIKE, 'color', 'color' ] ],
+        [ true, [ 'store', 'bicycle' ], BIKE, 'color' ] ],
       'store.bicycle.price' => [
-        [ true, [ 'store', 'bicycle' ], BIKE, 'price', 'price' ] ],
+        [ true, [ 'store', 'bicycle' ], BIKE, 'price' ] ],
 
       'store.book.1.author' => [
-        [ true, [ 'store', 'book', 1 ], BOOK[1], 'author', 'author' ] ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'author' ] ],
 
       'store.book.*.title' => [
-        [ true, [ 'store', 'book', 0 ], BOOK[0], 'title', 'title' ],
-        [ true, [ 'store', 'book', 1 ], BOOK[1], 'title', 'title' ],
-        [ true, [ 'store', 'book', 2 ], BOOK[2], 'title', 'title' ],
-        [ true, [ 'store', 'book', 3 ], BOOK[3], 'title', 'title' ] ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'title' ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'title' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'title' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'title' ] ],
 
       'store.book[2:3].author' => [
-        [ true, [ 'store', 'book', 2 ], BOOK[2], 'author', 'author' ],
-        [ true, [ 'store', 'book', 3 ], BOOK[3], 'author', 'author' ] ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'author' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'author' ] ],
 
       'store.book[::2].author' => [
-        [ true, [ 'store', 'book', 0 ], BOOK[0], 'author', 'author' ],
-        [ true, [ 'store', 'book', 2 ], BOOK[2], 'author', 'author' ] ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'author' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'author' ] ],
 
       'store.book[1::2].author' => [
-        [ true, [ 'store', 'book', 1 ], BOOK[1], 'author', 'author' ],
-        [ true, [ 'store', 'book', 3 ], BOOK[3], 'author', 'author' ] ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'author' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'author' ] ],
 
       'store.book.-1.title' => [
-        [ true, [ 'store', 'book', -1 ], BOOK[-1], 'title', 'title' ] ],
+        [ true, [ 'store', 'book', -1 ], BOOK[-1], 'title' ] ],
 
       'store.book[-3:-2].title' => [
-        [ true, [ 'store', 'book', -3 ], BOOK[-3], 'title', 'title' ],
-        [ true, [ 'store', 'book', -2 ], BOOK[-2], 'title', 'title' ] ],
+        [ true, [ 'store', 'book', -3 ], BOOK[-3], 'title' ],
+        [ true, [ 'store', 'book', -2 ], BOOK[-2], 'title' ] ],
 
       'store.book.1.price' => [
-        [ true, [ 'store', 'book', 1 ], BOOK[1], 'price', 'price' ] ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'price' ] ],
 
       'store.*' => [
-        [ true, [ 'store' ], STORE, 'book', 'book' ],
-        [ true, [ 'store' ], STORE, 'bicycle', 'bicycle' ] ],
+        [ true, [ 'store' ], STORE, 'book' ],
+        [ true, [ 'store' ], STORE, 'bicycle' ] ],
 
       'store.book.first.author' => [
-        [ true, [ 'store', 'book', 0 ], BOOK[0], 'author', 'author' ] ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'author' ] ],
       'store.book.First.author' => [
-        [ true, [ 'store', 'book', 0 ], BOOK[0], 'author', 'author' ] ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'author' ] ],
       'store.book.last.author' => [
-        [ true, [ 'store', 'book', -1 ], BOOK[-1], 'author', 'author' ] ],
+        [ true, [ 'store', 'book', -1 ], BOOK[-1], 'author' ] ],
 
       'store.bicycle.7' => [
-        [ true, %w[ store bicycle ], BIKE, '7', '7' ] ],
+        [ true, %w[ store bicycle ], BIKE, '7' ] ],
 
       'store.bicycle.8.1' => [
-        [ true, [ 'store', 'bicycle', '8' ], %w[ ei gh t ], 1, 1 ] ],
+        [ true, [ 'store', 'bicycle', '8' ], %w[ ei gh t ], 1 ] ],
 
       'store.book.1..price' => [
-        [ true, [ 'store', 'book', 1 ], BOOK[1], 'price', 'price' ] ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'price' ] ],
 
       'store..price' => [
-        [ true, [ 'store', 'book', 0 ], BOOK[0], 'price', 'price' ],
-        [ true, [ 'store', 'book', 1 ], BOOK[1], 'price', 'price' ],
-        [ true, [ 'store', 'book', 2 ], BOOK[2], 'price', 'price' ],
-        [ true, [ 'store', 'book', 3 ], BOOK[3], 'price', 'price' ],
-        [ true, [ 'store', 'bicycle' ], BIKE, 'price', 'price' ] ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'price' ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'price' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'price' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'price' ],
+        [ true, [ 'store', 'bicycle' ], BIKE, 'price' ] ],
 
       'store..*' => [
-        [ true, [ 'store' ], STORE, 'book', 'book' ],
-        [ true, [ 'store', 'book' ], BOOK, 0, 0 ],
-        [ true, [ 'store', 'book', 0 ], BOOK[0], 'category', 'category' ],
-        [ true, [ 'store', 'book', 0 ], BOOK[0], 'author', 'author' ],
-        [ true, [ 'store', 'book', 0 ], BOOK[0], 'title', 'title' ],
-        [ true, [ 'store', 'book', 0 ], BOOK[0], 'price', 'price' ],
-        [ true, [ 'store', 'book' ], BOOK, 1, 1 ],
-        [ true, [ 'store', 'book', 1 ], BOOK[1], 'category', 'category' ],
-        [ true, [ 'store', 'book', 1 ], BOOK[1], 'author', 'author' ],
-        [ true, [ 'store', 'book', 1 ], BOOK[1], 'title', 'title' ],
-        [ true, [ 'store', 'book', 1 ], BOOK[1], 'price', 'price' ],
-        [ true, [ 'store', 'book' ], BOOK, 2, 2 ],
-        [ true, [ 'store', 'book', 2 ], BOOK[2], 'category', 'category' ],
-        [ true, [ 'store', 'book', 2 ], BOOK[2], 'author', 'author' ],
-        [ true, [ 'store', 'book', 2 ], BOOK[2], 'title', 'title' ],
-        [ true, [ 'store', 'book', 2 ], BOOK[2], 'isbn', 'isbn' ],
-        [ true, [ 'store', 'book', 2 ], BOOK[2], 'price', 'price' ],
-        [ true, [ 'store', 'book' ], BOOK, 3, 3 ],
-        [ true, [ 'store', 'book', 3 ], BOOK[3], 'category', 'category' ],
-        [ true, [ 'store', 'book', 3 ], BOOK[3], 'author', 'author' ],
-        [ true, [ 'store', 'book', 3 ], BOOK[3], 'title', 'title' ],
-        [ true, [ 'store', 'book', 3 ], BOOK[3], 'isbn', 'isbn' ],
-        [ true, [ 'store', 'book', 3 ], BOOK[3], 'price', 'price' ],
-        [ true, [ 'store' ], STORE, 'bicycle', 'bicycle' ],
-        [ true, [ 'store', 'bicycle' ], BIKE, 'color', 'color' ],
-        [ true, [ 'store', 'bicycle' ], BIKE, 'price', 'price' ],
-        [ true, [ 'store', 'bicycle' ], BIKE, '7', '7' ],
-        [ true, [ 'store', 'bicycle' ], BIKE, '8', '8' ],
-        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 0, 0 ],
-        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 1, 1 ],
-        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 2, 2 ] ],
+        [ true, [ 'store' ], STORE, 'book' ],
+        [ true, [ 'store', 'book' ], BOOK, 0 ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'category' ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'author' ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'title' ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'price' ],
+        [ true, [ 'store', 'book' ], BOOK, 1 ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'category' ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'author' ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'title' ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'price' ],
+        [ true, [ 'store', 'book' ], BOOK, 2 ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'category' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'author' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'title' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'isbn' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'price' ],
+        [ true, [ 'store', 'book' ], BOOK, 3 ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'category' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'author' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'title' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'isbn' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'price' ],
+        [ true, [ 'store' ], STORE, 'bicycle' ],
+        [ true, [ 'store', 'bicycle' ], BIKE, 'color' ],
+        [ true, [ 'store', 'bicycle' ], BIKE, 'price' ],
+        [ true, [ 'store', 'bicycle' ], BIKE, '7' ],
+        [ true, [ 'store', 'bicycle' ], BIKE, '8' ],
+        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 0 ],
+        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 1 ],
+        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 2 ] ],
 
 #      #'store../^pr/' => [ 8.95, 12.99, 8.99, 22.99, 19.95 ],
 
       '.book.1' => [
-        [ true, [ 'store', 'book' ], BOOK, 1, 1 ] ],
+        [ true, [ 'store', 'book' ], BOOK, 1 ] ],
 
       '.0' => [
-        [ true, [ 'store', 'book' ], BOOK, 0, 0 ],
-        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 0, 0 ] ],
+        [ true, [ 'store', 'book' ], BOOK, 0 ],
+        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 0 ] ],
       '.[0]' => [
-        [ true, [ 'store', 'book' ], BOOK, 0, 0 ],
-        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 0, 0 ] ],
+        [ true, [ 'store', 'book' ], BOOK, 0 ],
+        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 0 ] ],
 
       '.*[0]' => [
-        [ false, [ 'store' ], DATA0['store'], '0', '0' ],
-        [ true, [ 'store', 'book' ], BOOK, 0, 0 ],
-        [ false, [ 'store', 'book', 0 ], BOOK[0], '0', '0' ],
-        [ false, [ 'store', 'book', 0 ], BOOK[0], 'category', 'category' ],
-        [ false, [ 'store', 'book', 0 ], BOOK[0], 'author', 'author' ],
-        [ false, [ 'store', 'book', 0 ], BOOK[0], 'title', 'title' ],
-        [ false, [ 'store', 'book', 0 ], BOOK[0], 'price', 'price' ],
-        [ false, [ 'store', 'book', 1 ], BOOK[1], '0', '0' ],
-        [ false, [ 'store', 'book', 1 ], BOOK[1], 'category', 'category' ],
-        [ false, [ 'store', 'book', 1 ], BOOK[1], 'author', 'author' ],
-        [ false, [ 'store', 'book', 1 ], BOOK[1], 'title', 'title' ],
-        [ false, [ 'store', 'book', 1 ], BOOK[1], 'price', 'price' ],
-        [ false, [ 'store', 'book', 2 ], BOOK[2], '0', '0' ],
-        [ false, [ 'store', 'book', 2 ], BOOK[2], 'category', 'category' ],
-        [ false, [ 'store', 'book', 2 ], BOOK[2], 'author', 'author' ],
-        [ false, [ 'store', 'book', 2 ], BOOK[2], 'title', 'title' ],
-        [ false, [ 'store', 'book', 2 ], BOOK[2], 'isbn', 'isbn' ],
-        [ false, [ 'store', 'book', 2 ], BOOK[2], 'price', 'price' ],
-        [ false, [ 'store', 'book', 3 ], BOOK[3], '0', '0' ],
-        [ false, [ 'store', 'book', 3 ], BOOK[3], 'category', 'category' ],
-        [ false, [ 'store', 'book', 3 ], BOOK[3], 'author', 'author' ],
-        [ false, [ 'store', 'book', 3 ], BOOK[3], 'title', 'title' ],
-        [ false, [ 'store', 'book', 3 ], BOOK[3], 'isbn', 'isbn' ],
-        [ false, [ 'store', 'book', 3 ], BOOK[3], 'price', 'price' ],
-        [ false, [ 'store', 'bicycle' ], BIKE, '0', '0' ],
-        [ false, [ 'store', 'bicycle', ], BIKE, 'color', 'color' ],
-        [ false, [ 'store', 'bicycle', ], BIKE, 'price', 'price' ],
-        [ false, [ 'store', 'bicycle', ], BIKE, '7', '7' ],
-        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 0, 0 ],
-        [ false, [ 'store', 'bicycle', '8' ], BIKE['8'], 1, 1 ],
-        [ false, [ 'store', 'bicycle', '8' ], BIKE['8'], 2, 2 ] ],
+        [ false, [ 'store' ], DATA0['store'], '0' ],
+        [ true, [ 'store', 'book' ], BOOK, 0 ],
+        [ false, [ 'store', 'book', 0 ], BOOK[0], '0' ],
+        [ false, [ 'store', 'book', 0 ], BOOK[0], 'category' ],
+        [ false, [ 'store', 'book', 0 ], BOOK[0], 'author' ],
+        [ false, [ 'store', 'book', 0 ], BOOK[0], 'title' ],
+        [ false, [ 'store', 'book', 0 ], BOOK[0], 'price' ],
+        [ false, [ 'store', 'book', 1 ], BOOK[1], '0' ],
+        [ false, [ 'store', 'book', 1 ], BOOK[1], 'category' ],
+        [ false, [ 'store', 'book', 1 ], BOOK[1], 'author' ],
+        [ false, [ 'store', 'book', 1 ], BOOK[1], 'title' ],
+        [ false, [ 'store', 'book', 1 ], BOOK[1], 'price' ],
+        [ false, [ 'store', 'book', 2 ], BOOK[2], '0' ],
+        [ false, [ 'store', 'book', 2 ], BOOK[2], 'category' ],
+        [ false, [ 'store', 'book', 2 ], BOOK[2], 'author' ],
+        [ false, [ 'store', 'book', 2 ], BOOK[2], 'title' ],
+        [ false, [ 'store', 'book', 2 ], BOOK[2], 'isbn' ],
+        [ false, [ 'store', 'book', 2 ], BOOK[2], 'price' ],
+        [ false, [ 'store', 'book', 3 ], BOOK[3], '0' ],
+        [ false, [ 'store', 'book', 3 ], BOOK[3], 'category' ],
+        [ false, [ 'store', 'book', 3 ], BOOK[3], 'author' ],
+        [ false, [ 'store', 'book', 3 ], BOOK[3], 'title' ],
+        [ false, [ 'store', 'book', 3 ], BOOK[3], 'isbn' ],
+        [ false, [ 'store', 'book', 3 ], BOOK[3], 'price' ],
+        [ false, [ 'store', 'bicycle' ], BIKE, '0' ],
+        [ false, [ 'store', 'bicycle', ], BIKE, 'color' ],
+        [ false, [ 'store', 'bicycle', ], BIKE, 'price' ],
+        [ false, [ 'store', 'bicycle', ], BIKE, '7' ],
+        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 0 ],
+        [ false, [ 'store', 'bicycle', '8' ], BIKE['8'], 1 ],
+        [ false, [ 'store', 'bicycle', '8' ], BIKE['8'], 2 ] ],
 
     }.each do |path, expected|
 

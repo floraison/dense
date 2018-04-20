@@ -217,16 +217,17 @@ class Dense::Path
       _gather(depth + 1, path0 + pa, da0, da, path[1..-1], a)
     } if k == :star || k == :dotstar
 
-    return acc.push([ false, path0[0..-2], data0, path0.last, path0.last ]) \
+#puts ind + "| -> " + [ false, path0[0..-2], data0, path0.last ].inspect if k.nil? && data.nil?
+    return acc.push([ false, path0[0..-2], data0, path0.last ]) \
       if k.nil? && data.nil?
 
-    return acc.push([ true, path0[0..-2], data0, path0.last, path0.last ]) \
+    return acc.push([ true, path0[0..-2], data0, path0.last ]) \
       if k.nil?
 
     keys = _resolve_key(data, k)
 #puts ind + "| keys: " + keys.inspect
 
-    return acc.push([ false, path0[0..-2], data0, path0.last, path0.last ]) \
+    return acc.push([ false, path0[0..-2], data0, path0.last ]) \
       if keys.nil?
 
     keys.inject(acc) { |a, kk|
