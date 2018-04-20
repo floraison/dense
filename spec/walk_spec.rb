@@ -201,7 +201,37 @@ describe Dense::Path do
         [ true, [ 'store', 'bicycle' ], BIKE, 'price', 'price' ] ],
 
       'store..*' => [
-        ],
+        [ true, [ 'store' ], STORE, 'book', 'book' ],
+        [ true, [ 'store', 'book' ], BOOK, 0, 0 ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'category', 'category' ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'author', 'author' ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'title', 'title' ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'price', 'price' ],
+        [ true, [ 'store', 'book' ], BOOK, 1, 1 ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'category', 'category' ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'author', 'author' ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'title', 'title' ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'price', 'price' ],
+        [ true, [ 'store', 'book' ], BOOK, 2, 2 ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'category', 'category' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'author', 'author' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'title', 'title' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'isbn', 'isbn' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'price', 'price' ],
+        [ true, [ 'store', 'book' ], BOOK, 3, 3 ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'category', 'category' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'author', 'author' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'title', 'title' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'isbn', 'isbn' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'price', 'price' ],
+        [ true, [ 'store' ], STORE, 'bicycle', 'bicycle' ],
+        [ true, [ 'store', 'bicycle' ], BIKE, 'color', 'color' ],
+        [ true, [ 'store', 'bicycle' ], BIKE, 'price', 'price' ],
+        [ true, [ 'store', 'bicycle' ], BIKE, '7', '7' ],
+        [ true, [ 'store', 'bicycle' ], BIKE, '8', '8' ],
+        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 0, 0 ],
+        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 1, 1 ],
+        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 2, 2 ] ],
 
 #      #'store../^pr/' => [ 8.95, 12.99, 8.99, 22.99, 19.95 ],
 
@@ -219,17 +249,41 @@ describe Dense::Path do
         [ false, [ 'store' ], DATA0['store'], '0', '0' ],
         [ true, [ 'store', 'book' ], BOOK, 0, 0 ],
         [ false, [ 'store', 'book', 0 ], BOOK[0], '0', '0' ],
+        [ false, [ 'store', 'book', 0 ], BOOK[0], 'category', 'category' ],
+        [ false, [ 'store', 'book', 0 ], BOOK[0], 'author', 'author' ],
+        [ false, [ 'store', 'book', 0 ], BOOK[0], 'title', 'title' ],
+        [ false, [ 'store', 'book', 0 ], BOOK[0], 'price', 'price' ],
         [ false, [ 'store', 'book', 1 ], BOOK[1], '0', '0' ],
+        [ false, [ 'store', 'book', 1 ], BOOK[1], 'category', 'category' ],
+        [ false, [ 'store', 'book', 1 ], BOOK[1], 'author', 'author' ],
+        [ false, [ 'store', 'book', 1 ], BOOK[1], 'title', 'title' ],
+        [ false, [ 'store', 'book', 1 ], BOOK[1], 'price', 'price' ],
         [ false, [ 'store', 'book', 2 ], BOOK[2], '0', '0' ],
+        [ false, [ 'store', 'book', 2 ], BOOK[2], 'category', 'category' ],
+        [ false, [ 'store', 'book', 2 ], BOOK[2], 'author', 'author' ],
+        [ false, [ 'store', 'book', 2 ], BOOK[2], 'title', 'title' ],
+        [ false, [ 'store', 'book', 2 ], BOOK[2], 'isbn', 'isbn' ],
+        [ false, [ 'store', 'book', 2 ], BOOK[2], 'price', 'price' ],
         [ false, [ 'store', 'book', 3 ], BOOK[3], '0', '0' ],
+        [ false, [ 'store', 'book', 3 ], BOOK[3], 'category', 'category' ],
+        [ false, [ 'store', 'book', 3 ], BOOK[3], 'author', 'author' ],
+        [ false, [ 'store', 'book', 3 ], BOOK[3], 'title', 'title' ],
+        [ false, [ 'store', 'book', 3 ], BOOK[3], 'isbn', 'isbn' ],
+        [ false, [ 'store', 'book', 3 ], BOOK[3], 'price', 'price' ],
         [ false, [ 'store', 'bicycle' ], BIKE, '0', '0' ],
-        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 0, 0 ] ],
+        [ false, [ 'store', 'bicycle', ], BIKE, 'color', 'color' ],
+        [ false, [ 'store', 'bicycle', ], BIKE, 'price', 'price' ],
+        [ false, [ 'store', 'bicycle', ], BIKE, '7', '7' ],
+        [ true, [ 'store', 'bicycle', '8' ], BIKE['8'], 0, 0 ],
+        [ false, [ 'store', 'bicycle', '8' ], BIKE['8'], 1, 1 ],
+        [ false, [ 'store', 'bicycle', '8' ], BIKE['8'], 2, 2 ] ],
 
     }.each do |path, expected|
 
       def summarize_h2(h2)
         j = h2.to_json.gsub('"', '')
-        [ h2.class, h2.length.to_s, j[0, 14], j.length.to_s ].join('|')
+        d = Digest::MD5.hexdigest(j)[0, 5]
+        [ h2.class, j[0, 14], j.length, d ].map(&:to_s).join('|')
       end
       def summarize(hits)
         hits.collect { |h| [ h[0], h[1], summarize_h2(h[2]), h[3] ] }
