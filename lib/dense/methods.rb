@@ -3,10 +3,10 @@ module Dense; class << self
 
   def get(o, path)
 
-    path = Dense::Path.new(path)
-    r = path.gather(o).inject([]) { |a, e| a << e[2][e[4]] if e.first; a }
+    pa = Dense::Path.new(path)
+    r = pa.gather(o).inject([]) { |a, e| a << e[2][e[3]] if e.first; a }
 
-    path.single? ? r.first : r
+    pa.single? ? r.first : r
   end
 
   def fetch(o, path, default=::KeyError, &block)
@@ -27,7 +27,7 @@ module Dense; class << self
       fail key_error(path, r[1])
     end
 
-    pa.narrow(r[0].collect { |e| e[2][e[4]] })
+    pa.narrow(r[0].collect { |e| e[2][e[3]] })
   end
 
   def set(o, path, value)
@@ -92,19 +92,24 @@ p e
 
   def key_error(path, misses)
 
-    miss = misses.first.is_a?(Array) ? misses.first : misses
+#    miss = misses.first.is_a?(Array) ? misses.first : misses
+#
+#    path0, path1 =
+#      if miss[4]
+#        [ Dense::Path.make(miss[1] + miss[3][0, 1]).to_s.inspect,
+#          Dense::Path.make(miss[3][1..-1]).to_s.inspect ]
+#      else
+#        [ Dense::Path.make(miss[1]).to_s.inspect,
+#          Dense::Path.make(miss[3]).to_s.inspect ]
+#      end
 
-    path0, path1 =
-      if miss[4]
-        [ Dense::Path.make(miss[1] + miss[3][0, 1]).to_s.inspect,
-          Dense::Path.make(miss[3][1..-1]).to_s.inspect ]
-      else
-        [ Dense::Path.make(miss[1]).to_s.inspect,
-          Dense::Path.make(miss[3]).to_s.inspect ]
-      end
+    miss = misses.first
 
-    msg = "Found nothing at #{path0}"
-    msg = "#{msg} (#{path1} remains)" if path1 != '""'
+    #path0 = Dense::Path.new(path)
+    path1 = Dense::Path.make(miss[1] + [ miss[3] ]).to_s
+
+    msg = "Found nothing at #{path1}"
+    #msg = "#{msg} (#{path1} remains)" if path1 != '""'
 
     KeyError.new(msg)
   end
