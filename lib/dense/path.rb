@@ -221,7 +221,7 @@ class Dense::Path
 
 #print data.nil? ? RD : GN if k.nil?
 #puts ind + "| -> " + [ ! data.nil?, path0[0..-2], data0, path0.last ].inspect if k.nil?
-    return acc.push([ false, path0[0..-2], data0, path0.last ]) \
+    return acc.push([ false, path0[0..-2], data0, path0.last, path ]) \
       if k.nil? && data.nil?
 
     return acc.push([ true, path0[0..-2], data0, path0.last ]) \
@@ -232,7 +232,7 @@ class Dense::Path
 
 #print RD if keys.nil?
 #puts ind + "| -> " + [ false, path0[0..-2], data0, path0.last ].inspect if keys.nil?
-    return acc.push([ false, path0[0..-2], data0, path0.last ]) \
+    return acc.push([ false, path0[0..-2], data0, path0.last, path ]) \
       if keys.nil?
 
     keys.inject(acc) { |a, kk|
