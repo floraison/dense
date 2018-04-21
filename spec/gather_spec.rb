@@ -224,7 +224,7 @@ describe Dense::Path do
 
     {
 
-      'nickName' => [
+      [ 'nickName', DATA1 ] => [
         [ false,
           [],
           { 'firstName'=>'John',
@@ -236,45 +236,41 @@ describe Dense::Path do
             'phoneNumbers'=> [
               { 'type'=>'iPhone', 'number'=>'0123-4567-8888' },
               { 'type'=>'home', 'number'=>'0123-4567-8910' } ] },
-          [ 'nickName' ], 'nickName' ] ],
+          'nickName' ] ],
 
-      'address.country' => [
+      [ 'address.country', DATA1 ] => [
         [ false,
           [ 'address' ],
           { 'streetAddress'=>'naist street', 'city'=>'Nara',
             'postalCode'=>'630-0192' },
-          [ 'country' ], 'country' ] ],
+          'country' ] ],
 
-      'phoneNumbers.-3' => [
+      [ 'phoneNumbers.-3', DATA1 ] => [
         [ false,
           [ "phoneNumbers" ],
           [ { "type"=>"iPhone", "number"=>"0123-4567-8888" },
             { "type"=>"home", "number"=>"0123-4567-8910" } ],
-          [ -3 ], -3 ] ],
+          -3 ] ],
 
-    }.each do |path, result|
+      [ 'h.a[2:4]', { 'h' => { 'a' => [ 1, 2, 3, 4, 5, 'six' ] } } ] => [
+        [ true, [ 'h', 'a' ], [ 1, 2, 3, 4, 5, 'six' ], 2 ],
+        [ true, [ 'h', 'a' ], [ 1, 2, 3, 4, 5, 'six' ], 3 ],
+        [ true, [ 'h', 'a' ], [ 1, 2, 3, 4, 5, 'six' ], 4 ] ],
 
-      it "gathers false leaves for #{path.inspect}" do
+    }.each do |(path, data), expected|
+
+      it "gathers leaves for #{path.inspect}" do
 
         pa = Dense::Path.new(path)
 
         expect(pa).not_to eq(nil)
-#pp pa.gather(DATA1)
-        expect(pa.gather(DATA1)).to eq(result)
+
+        r = pa.gather(data)
+
+        expect(summarize(r).to_pp).to eq(summarize(expected).to_pp)
+        expect(r.to_pp).to eq(expected.to_pp)
+        #expect(r).to eq(expected)
       end
-    end
-
-    it 'gathers for h.a[2:4]' do
-
-      data = { 'h' => { 'a' => [ 1, 2, 3, 4, 5, 'six' ] } }
-      pa = Dense::Path.new('h.a[2:4]')
-      r = pa.gather(data)
-
-      expect(r).to eq([
-        [ true, [ 'h', 'a' ], [ 1, 2, 3, 4, 5, 'six' ], 2, 2, :r ],
-        [ true, [ 'h', 'a' ], [ 1, 2, 3, 4, 5, 'six' ], 3, 3, :r ],
-        [ true, [ 'h', 'a' ], [ 1, 2, 3, 4, 5, 'six' ], 4, 4, :r ]
-      ])
     end
   end
 end
