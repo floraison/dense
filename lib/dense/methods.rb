@@ -24,7 +24,7 @@ module Dense; class << self
         r[1].collect { |m| default }
       ) if default != KeyError
 
-      fail key_error(path, r[1])
+      fail key_error(path, r[1].first)
     end
 
     pa.narrow(r[0].collect { |e| e[2][e[3]] })
@@ -90,26 +90,13 @@ p e
 
   protected
 
-  def key_error(path, misses)
+  def key_error(path, miss)
 
-#    miss = misses.first.is_a?(Array) ? misses.first : misses
-#
-#    path0, path1 =
-#      if miss[4]
-#        [ Dense::Path.make(miss[1] + miss[3][0, 1]).to_s.inspect,
-#          Dense::Path.make(miss[3][1..-1]).to_s.inspect ]
-#      else
-#        [ Dense::Path.make(miss[1]).to_s.inspect,
-#          Dense::Path.make(miss[3]).to_s.inspect ]
-#      end
-
-    miss = misses.first
-
-    #path0 = Dense::Path.new(path)
-    path1 = Dense::Path.make(miss[1] + [ miss[3] ]).to_s
+    path1 = Dense::Path.make(miss[1] + [ miss[3] ]).to_s.inspect
+    path2 = Dense::Path.make(miss[4]).to_s.inspect
 
     msg = "Found nothing at #{path1}"
-    #msg = "#{msg} (#{path1} remains)" if path1 != '""'
+    msg = "#{msg} (#{path2} remains)" if path2 != '""'
 
     KeyError.new(msg)
   end
