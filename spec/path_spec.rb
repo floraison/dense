@@ -39,13 +39,26 @@ describe Dense::Path do
       '.["name"]'    => [ :dot, 'name' ],
       'store..name'  => [ 'store', :dot, 'name' ],
 
+      'name.*'        => [ 'name', :star ],
       'name[*]'        => [ 'name', :star ],
       'name[::1]'      => [ 'name', { start: nil, end: nil, step: 1 } ],
       'book[*].title'  => [ 'book', :star, 'title' ],
 
       'name.*' => [ 'name', :star ],
-      #'name..' => [ 'name', :dot ],
+      'name.[*]' => [ 'name', :dotstar ],
       'name..*' => [ 'name', :dotstar ],
+      #'name..' => [ 'name', :dot ],
+
+      '.*' => [ :dotstar ],
+      '[*]' => [ :star ],
+      '.[*]' => [ :dotstar ],
+      'name..*' => [ 'name', :dotstar ],
+      'name.[*]' => [ 'name', :dotstar ],
+
+      'x..y...z' => [ 'x', :dot, 'y', :dot, 'z' ],
+
+      'name..[*]' => [ 'name', :dotstar ],
+      'name...something' => [ 'name', :dot, 'something' ],
 
       '[\'name\',"age"]'   => [ [ 'name', 'age' ] ],
       'x[\'name\',"age"]'  => [ 'x', [ 'name', 'age' ] ],
@@ -158,6 +171,16 @@ describe Dense::Path do
       'name[::1]'  => 'name[::1]',
 
       'name.*' => 'name.*',
+      'name.[*]' => 'name..*',
+
+      '.*' => '.*',
+      '.[*]' => '.*',
+      'name..*' => 'name..*',
+
+      'name..[*]' => 'name..*',
+      'name...something' => 'name..something',
+
+      'x..y...z' => 'x..y..z',
 
       '[\'name\',"age"]'   => '["name","age"]',
       'x[\'name\',"age"]'  => 'x["name","age"]',

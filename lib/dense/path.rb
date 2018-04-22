@@ -263,6 +263,8 @@ class Dense::Path
       '*'
     when :dot
       '.'
+    when :dotstar
+      '..*'
     else
       elt.to_s
     end

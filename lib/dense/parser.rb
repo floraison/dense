@@ -54,7 +54,7 @@ module Dense::Path::Parser include ::Raabro
   def simple_index(i); alt(:index, i, :off, :escape, :star, :name); end
 
   def dotdot(i); str(:dotdot, i, '.'); end
-  def dotdotstar(i); str(:dotdotstar, i, '..*'); end
+  def dotdotstar(i); rex(:dotdotstar, i, /(\.\.\*|\.\[\*\])/); end
   def bracket_index(i); seq(nil, i, :bstart, :bindexes, :bend); end
   def dot_then_index(i); seq(nil, i, :dot, :simple_index); end
 
@@ -88,7 +88,15 @@ module Dense::Path::Parser include ::Raabro
   def rewrite_name(t); t.string; end
 
   def rewrite_path(t)
-    t.subgather.collect { |tt| rewrite(tt) }
+
+    t.subgather
+      .collect { |tt|
+        rewrite(tt) }
+      .inject([]) { |a, e| # remove double :dot
+        next (a << e) unless a.last == :dot
+        a.pop if e == :dotstar
+        a << e unless e == :dot
+        a }
   end
 end # Dense::Path::Parser
 
