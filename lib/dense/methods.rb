@@ -35,10 +35,8 @@ module Dense; class << self
     Dense::Path.new(path)
       .gather(o)
       .each { |e|
-        k = e[4]
-        fail key_error(path, e) \
-          if e[0] == false && (k == nil || e[3].length > 1)
-        e[2][k] = value }
+        fail key_error(path, e) if e[0] == false && e[4].any?
+        e[2][e[3]] = value }
 
     value
   end
