@@ -43,26 +43,18 @@ module Dense; class << self
 
   def unset(o, path)
 
-#    path = Dense::Path.new(path)
-#    key = path.pop
-#
-#    case c = path.walk(o)
-#    when Array then array_unset(c, key)
-#    when Hash then hash_unset(c, key)
-#    else fail KeyError.new("Found no collection at #{path.to_s.inspect}")
-#    end
-
     pa = Dense::Path.new(path)
 
     r = pa
       .gather(o)
+      .sort_by { |e| "#{e[2].hash}|#{e[3]}" }
+      .reverse
       .inject([]) { |a, e|
 p e
-        k = e[4]
-        #fail key_error(path, e) \
-        #  if e[0] == false && (k == nil || e[3].length > 1)
         next a unless e[0]
+        k = e[3]
         a.push(e[2].is_a?(Array) ? e[2].delete_at(k) : e[2].delete(k)) }
+      .reverse
 
     pa.narrow(r)
   end
