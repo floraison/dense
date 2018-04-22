@@ -103,8 +103,12 @@ p e
 
   def call_default_block(o, path, block, miss)
 
+      # [ collection, path,
+      #   path before miss, collection at miss, key at miss, path after miss ]
+      #
     args = [
-      o, path, Dense::Path.make(miss[1]), miss[2], Dense::Path.make(miss[3])
+      o, path,
+      Dense::Path.make(miss[1]), miss[2], miss[3], Dense::Path.make(miss[4])
     ][0, block.arity]
 
     block.call(*args)
