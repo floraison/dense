@@ -37,7 +37,7 @@ class Dense::Path
 
   def single?
 
-    ! @path.find { |e| e == :star || e == :dot || e.is_a?(Hash) }
+    ! @path.find { |e| e.is_a?(Symbol) || e.is_a?(Hash) || e.is_a?(Array) }
   end
 
   def multiple?

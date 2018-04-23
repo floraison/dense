@@ -50,7 +50,6 @@ module Dense; class << self
       .sort_by { |e| "#{e[2].hash}|#{e[3]}" }
       .reverse
       .inject([]) { |a, e|
-p e
         next a unless e[0]
         k = e[3]
         a.push(e[2].is_a?(Array) ? e[2].delete_at(k) : e[2].delete(k)) }
