@@ -342,31 +342,24 @@ describe Dense do
       end
     end
 
-    it 'fails if it cannot unset in a Hash' do
+    [
 
-      expect {
-        Dense.unset({}, 'a')
-      }.to raise_error(
-        IndexError, 'No key "a" for hash'
-      )
+      [ {}, 'a', KeyError, 'Found nothing at "a"' ],
+      [ [], 'a', KeyError, 'Found nothing at "a"' ],
+      [ [], '1', KeyError, 'Found nothing at "1"' ],
+
+    ].each do |col, path, err_class, err_msg|
+
+      it "fails with #{err_msg.inspect}" do
+
+        expect { Dense.unset(col, path) }
+          .to raise_error(err_class, err_msg)
+      end
     end
 
-    it 'fails if it cannot unset in a Array' do
+    it 'does not fail if nofail=true' do
 
-      expect {
-        Dense.unset([], 'a')
-      }.to raise_error(
-        IndexError, 'Cannot index array at "a"'
-      )
-    end
-
-    it 'fails if it cannot unset in a Array (2)' do
-
-      expect {
-        Dense.unset([], '1')
-      }.to raise_error(
-        IndexError, 'Array has length of 0, index is at 1'
-      )
+fail
     end
   end
 

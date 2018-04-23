@@ -211,13 +211,13 @@ class Dense::Path
   def _gather(depth, path0, data0, data, path, acc)
 
     k = path.first
-ind = '  ' * depth
-print [ LG, DG, LB ][depth % 3]
-puts ind + "+--- _gather()"
-puts ind + "| path0: #{path0.inspect}"
-puts ind + "| data: #{data.inspect}"
-puts ind + "| depth: #{depth} / path: #{path.inspect}"
-puts ind + "| k: " + k.inspect
+#ind = '  ' * depth
+#print [ LG, DG, LB ][depth % 3]
+#puts ind + "+--- _gather()"
+#puts ind + "| path0: #{path0.inspect}"
+#puts ind + "| data: #{data.inspect}"
+#puts ind + "| depth: #{depth} / path: #{path.inspect}"
+#puts ind + "| k: " + k.inspect
 
     return _dot_gather(depth, path0, data0, data, path[1..-1], acc) \
       if k == :dot
@@ -236,7 +236,7 @@ puts ind + "| k: " + k.inspect
       if k.nil?
 
     keys = _resolve_key(data, k)
-puts ind + "| keys: " + keys.inspect
+#puts ind + "| keys: " + keys.inspect
 
 #print RD if keys.nil?
 #puts ind + "| -> " + [ false, path0[0..-2], data0, path0.last ].inspect if keys.nil?

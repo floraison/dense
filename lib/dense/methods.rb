@@ -41,16 +41,18 @@ module Dense; class << self
     value
   end
 
-  def unset(o, path)
+  def unset(o, path, nofail=false)
 
     pa = Dense::Path.new(path)
+    hits = pa.gather(o)
 
-    r = pa
-      .gather(o)
+    hits.each { |h| fail key_error(path, h) unless h[0] } unless nofail
+
+    r = hits
       .sort_by { |e| "#{e[2].hash}|#{e[3]}" }
       .reverse
       .inject([]) { |a, e|
-        next a unless e[0]
+        next a.push(nil) unless e[0]
         k = e[3]
         a.push(e[2].is_a?(Array) ? e[2].delete_at(k) : e[2].delete(k)) }
       .reverse
@@ -83,6 +85,13 @@ module Dense; class << self
 
     path1 = Dense::Path.make(miss[1] + [ miss[3] ]).to_s.inspect
     path2 = Dense::Path.make(miss[4]).to_s.inspect
+    #path1, path2 =
+    #  if miss[1].any? || miss[3]
+    #    [ miss[1] + [ miss[3] ], miss[4] ]
+    #  else
+    #    [ miss[1] + miss[4][0, 1], miss[4][1..-1] ]
+    #  end
+    #    .collect { |a| Dense::Path.make(a).to_s.inspect }
 
     msg = "Found nothing at #{path1}"
     msg = "#{msg} (#{path2} remains)" if path2 != '""'
