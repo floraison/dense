@@ -24,7 +24,7 @@ module Dense; class << self
         r[1].collect { |m| default }
       ) if default != KeyError
 
-      fail key_error(path, r[1].first)
+      fail miss_error(path, r[1].first)
     end
 
     pa.narrow(r[0].collect { |e| e[2][e[3]] })
@@ -34,9 +34,9 @@ module Dense; class << self
 
     Dense::Path.new(path)
       .gather(o)
-      .each { |e|
-        fail key_error(path, e) if e[0] == false && e[4].any?
-        e[2][e[3]] = value }
+      .each { |hit|
+        fail_miss_error(path, hit) if hit[0] == false
+        hit[2][hit[3]] = value }
 
     value
   end
@@ -46,7 +46,7 @@ module Dense; class << self
     pa = Dense::Path.new(path)
     hits = pa.gather(o)
 
-    hits.each { |h| fail key_error(path, h) unless h[0] } unless nofail
+    hits.each { |h| fail miss_error(path, h) unless h[0] } unless nofail
 
     r = hits
       .sort_by { |e| "#{e[2].hash}|#{e[3]}" }
@@ -83,7 +83,6 @@ module Dense; class << self
 
   def key_error(path, miss)
 
-p miss
     path1 = Dense::Path.make(miss[1] + [ miss[3] ]).to_s.inspect
     path2 = Dense::Path.make(miss[4]).to_s.inspect
     #path1, path2 =
@@ -98,6 +97,32 @@ p miss
     msg = "#{msg} (#{path2} remains)" if path2 != '""'
 
     KeyError.new(msg)
+  end
+
+  def type_error(path, miss)
+
+    key = miss[3].inspect
+    cla = miss[2].class
+    pat = miss[1].empty? ? 'root' : Dense::Path.make(miss[1]).to_s.inspect
+
+    TypeError.new("No key #{key} for #{cla} at #{pat}")
+  end
+
+  def miss_error(path, miss)
+
+    if miss[2].is_a?(Array) && ! miss[3].is_a?(Integer)
+      type_error(path, miss)
+    else
+      key_error(path, miss)
+    end
+  end
+
+  def fail_miss_error(path, miss)
+
+    fail miss_error(path, miss) \
+      if miss[4].any?
+    fail type_error(path, miss) \
+      if miss[2].is_a?(Array) && ! miss[2].is_a?(Integer)
   end
 
   def call_default_block(o, path, block, miss)

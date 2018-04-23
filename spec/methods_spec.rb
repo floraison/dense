@@ -245,7 +245,7 @@ describe Dense do
       expect {
         Dense.set(c, 'a.b', 1)
       }.to raise_error(
-        KeyError, 'Found nothing at "a" ("b" remains)'
+        TypeError, 'No key "b" for Array at "a"'
       )
 
       expect(c).to eq({ 'a' => [] })
@@ -345,8 +345,15 @@ describe Dense do
     [
 
       [ {}, 'a', KeyError, 'Found nothing at "a"' ],
-      [ [], 'a', KeyError, 'Found nothing at "a"' ],
+      [ [], 'a', TypeError, 'No key "a" for Array at root' ],
       [ [], '1', KeyError, 'Found nothing at "1"' ],
+
+      [ { 'a' => [] }, 'a.b',
+        TypeError, 'No key "b" for Array at "a"' ],
+      [ { 'a' => {} }, 'a.1',
+        KeyError, 'Found nothing at "a.1"' ],
+      [ { 'a' => {} }, 'a.1.c',
+        KeyError, 'Found nothing at "a.1" ("c" remains)' ],
 
     ].each do |col, path, err_class, err_msg|
 
