@@ -117,23 +117,17 @@ describe Dense do
     [
 
       [ 'a.0.b',
-        Dense::Path::KeyError,
-        'Found nothing at "a" ("0.b" remains)' ],
+        KeyError, 'Found nothing at "a" ("0.b" remains)' ],
       [ 'store.0.b',
-        Dense::Path::KeyError,
-        'Found nothing at "store.0" ("b" remains)' ],
+        KeyError, 'Found nothing at "store.0" ("b" remains)' ],
       [ 'store.bike.b',
-        Dense::Path::KeyError,
-        'Found nothing at "store.bike" ("b" remains)' ],
+        KeyError, 'Found nothing at "store.bike" ("b" remains)' ],
       [ 'store.bicycle.seven',
-        Dense::Path::KeyError,
-        'Found nothing at "store.bicycle.seven"' ],
+        KeyError, 'Found nothing at "store.bicycle.seven"' ],
       [ 'store.bicycle[seven]',
-        Dense::Path::KeyError,
-        'Found nothing at "store.bicycle.seven"' ],
+        KeyError, 'Found nothing at "store.bicycle.seven"' ],
       [ 'store.bicycle["seven"]',
-        Dense::Path::KeyError,
-        'Found nothing at "store.bicycle.seven"' ],
+        KeyError, 'Found nothing at "store.bicycle.seven"' ],
 
     ].each do |path, error_klass, error_message|
 
