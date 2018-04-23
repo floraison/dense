@@ -7,6 +7,17 @@
 
 require 'spec_helper'
 
+
+def summarize_h2(h2)
+  j = h2.to_json.gsub('"', '')
+  d = Digest::MD5.hexdigest(j)[0, 5]
+  [ h2.class, j[0, 7], j.length, d ].map(&:to_s).join('|')
+end
+def summarize(hits)
+  hits.collect { |h| [ h[0], h[1], summarize_h2(h[2]), h[3], h[4] ] }
+end
+
+
 DATA0 = # taken from http://goessner.net/articles/JsonPath/
   { 'store' => {
       'book' => [
@@ -199,15 +210,6 @@ describe Dense::Path do
 
     }.each do |path, expected|
 
-      def summarize_h2(h2)
-        j = h2.to_json.gsub('"', '')
-        d = Digest::MD5.hexdigest(j)[0, 5]
-        [ h2.class, j[0, 14], j.length, d ].map(&:to_s).join('|')
-      end
-      def summarize(hits)
-        hits.collect { |h| [ h[0], h[1], summarize_h2(h[2]), h[3] ] }
-      end
-
       it "gathers leaves for #{path.inspect}" do
 
         pa = Dense::Path.new(path)
@@ -279,6 +281,15 @@ describe Dense::Path do
       [ 'a[1,2]', { 'a' => %w[ A B C D ] } ] => [
         [ true, [ 'a' ], %w[ A B C D ], 1 ],
         [ true, [ 'a' ], %w[ A B C D ], 2 ] ],
+
+      [ 'a', {} ] => [
+        [ false, [], {}, 'a', [] ] ],
+      [ 'a', [] ] => [
+        [ false, [], [], 'a', [] ] ],
+      [ 'a.b', { 'a' => {} } ] => [
+        [ false, [ 'a' ], {}, 'b', [] ] ],
+      [ 'a.b', { 'a' => [] } ] => [
+        [ false, [ 'a' ], [], 'b', [] ] ],
 
     }.each do |(path, data), expected|
 

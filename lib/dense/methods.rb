@@ -83,6 +83,7 @@ module Dense; class << self
 
   def key_error(path, miss)
 
+p miss
     path1 = Dense::Path.make(miss[1] + [ miss[3] ]).to_s.inspect
     path2 = Dense::Path.make(miss[4]).to_s.inspect
     #path1, path2 =
