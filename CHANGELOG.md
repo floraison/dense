@@ -4,6 +4,8 @@
 
 ## dense 1.0.1  not yet released
 
+* Differentiate between `*` and `.*`
+* Complete ework around Path#gather
 * Straighten Dense.fetch
 
 
