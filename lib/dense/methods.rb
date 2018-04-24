@@ -86,13 +86,6 @@ module Dense; class << self
 
     path1 = Dense::Path.make(miss[1] + [ miss[3] ]).to_s.inspect
     path2 = Dense::Path.make(miss[4]).to_s.inspect
-    #path1, path2 =
-    #  if miss[1].any? || miss[3]
-    #    [ miss[1] + [ miss[3] ], miss[4] ]
-    #  else
-    #    [ miss[1] + miss[4][0, 1], miss[4][1..-1] ]
-    #  end
-    #    .collect { |a| Dense::Path.make(a).to_s.inspect }
 
     msg = "Found nothing at #{path1}"
     msg = "#{msg} (#{path2} remains)" if path2 != '""'
@@ -137,71 +130,6 @@ module Dense; class << self
     ][0, block.arity]
 
     block.call(*args)
-  end
-
-  def array_i(k, may_fail=true)
-
-    case k
-    when 'first' then 0
-    when 'last' then -1
-    when Integer then k
-    else
-      may_fail ?
-        fail(IndexError.new("Cannot index array at #{k.inspect}")) :
-        nil
-    end
-  end
-
-  def array_r(k)
-
-    case k
-    when 'first' then { start: 0, end: 0, step: 1 }
-    when 'last' then { start: -1, end: -1, step: 1 }
-    when Integer then { start: k, end: k, step: 1 }
-    when Hash then k
-    else fail(IndexError.new("Cannot index array at #{k.inspect}"))
-    end
-  end
-
-  def array_indexes(a, k)
-
-    r = array_r(k)
-    r = (r[:start]..r[:end]).step(r[:step] || 1)
-
-    is = []
-    r.each { |i| is << i if i < a.length }
-
-    fail IndexError.new(
-      "Array has length of #{a.length}, index is at #{r.to_a.last}"
-    ) if is.empty?
-
-    is.reverse
-  end
-
-  def array_unset(a, k)
-
-    r = array_indexes(a, k)
-      .collect { |i| a.delete_at(i) }
-      .reverse
-
-    k.is_a?(Hash) ? r : r.first
-  end
-
-  def hash_unset(h, k)
-
-    r = Array(k)
-      .collect { |kk|
-        fail KeyError.new("No key #{kk.inspect} for hash") unless h.has_key?(kk)
-        h.delete(kk) }
-
-    k.is_a?(Array) ? r : r.first
-  end
-
-  def array_insert(a, k, v)
-
-    i = array_i(k)
-
-    a.insert(i, v)
   end
 end; end # Dense
 
