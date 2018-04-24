@@ -76,20 +76,6 @@ class Dense::Path
     s[0, 2] == '..' ? s[1..-1] : s
   end
 
-  def walk(data, default=nil, &block)
-
-    _walk(data, @path)
-
-  rescue IndexError => ie
-
-    return yield(@original, self) if block
-    return default if default != nil && default != IndexError
-
-    fail ie.expand(self) if ie.respond_to?(:expand)
-
-    raise
-  end
-
   def [](offset, count=nil)
 
     if count == nil && offset.is_a?(Integer)
@@ -150,17 +136,9 @@ class Dense::Path
 
     return [ k.to_s ] if o.is_a?(Hash)
 
-    #return [ nil ] unless o.is_a?(Array)
-    #return [ k ] if k.is_a?(Integer)
-    #return [ nil ] unless k.is_a?(String)
-    #return [ 0 ] if k.match(/\Afirst\z/i)
-    #return [ -1 ] if k.match(/\Alast\z/i)
-    #[ nil ]
-
     case k
     when /\Afirst\z/i then [ 0 ]
     when /\Alast\z/i then [ -1 ]
-    #when Integer then [ k ]
     else [ k ]
     end
   end
@@ -169,8 +147,6 @@ class Dense::Path
 
     ks = k.is_a?(Hash) ? [ k ] : Array(k)
     ks = ks.inject([]) { |a, kk| a.concat(_resolve_key(o, kk)) }
-
-    #ks.include?(nil) ? nil : ks
   end
 
   def _stars(data0, data, key, path=[], acc=[])
@@ -301,110 +277,6 @@ class Dense::Path
     return "\\#{s}" if s == '.' || s == '*'
     return "[#{elt.inspect}]" if s =~ /["']/
     s
-  end
-
-  def _walk(data, path)
-
-#p [ 'd:', data, 'p:', path ]
-    return data if path.empty?
-
-    case pa = path.first
-    when :dot then _walk_dot(data, pa, path)
-    when :star then _walk_star(data, pa, path)
-    when Hash then _walk_start_end_step(data, pa, path)
-    when String then _walk(_sindex(data, path), path[1..-1])
-    when Integer then _walk_int(data, pa, path)
-    else fail IndexError.new("Unwalkable index in path: #{pa.inspect}")
-    end
-  end
-
-  def _walk_star(data, pa, path)
-
-    case data
-    when Array then data.collect { |d| _walk(d, path[1..-1]) }
-    when Hash then data.values.collect { |d| _walk(d, path[1..-1]) }
-    else data
-    end
-  end
-
-  def _walk_dot(data, pa, path)
-
-    _run(data, path[1])
-      .inject([]) { |a, d|
-        a.concat(
-          begin
-            [ _walk(d, path[2..-1]) ]
-          rescue NotIndexableError
-            []
-          end) }
-  end
-
-  def _walk_start_end_step(data, pa, path)
-
-    be = pa[:start] || 0
-    en = pa[:end] || data.length - 1
-    st = pa[:step] || 1
-    Range.new(be, en).step(st).collect { |i| _walk(data[i], path[1..-1]) }
-  end
-
-  def _walk_int(data, pa, path)
-
-    if data.is_a?(Array)
-      return _walk(data[pa], path[1..-1])
-    end
-
-    if data.is_a?(Hash)
-      return _walk(data[pa], path[1..-1]) if data.has_key?(pa)
-      pa = pa.to_s
-      return _walk(data[pa], path[1..-1]) if data.has_key?(pa)
-    end
-
-    fail NotIndexableError.new(data, nil, path[1..-1])
-  end
-
-  def _sindex(data, path)
-
-    key = path.first
-
-    case data
-    when Hash
-      fail NotIndexableError.new(
-        data, nil, path[1..-1]) unless data.has_key?(key)
-      data[key]
-    when Array
-      case key
-      when /\Afirst\z/i then data[0]
-      when /\Alast\z/i then data[-1]
-      else fail IndexError.new("Cannot index array with #{key.inspect}")
-      end
-    else
-      fail IndexError.new(
-        "Cannot index #{data.class} with #{key.inspect}")
-    end
-  end
-
-  def _run(d, key)
-
-    case d
-    when Hash then _run_hash(d, key)
-    when Array then _run_array(d, key)
-    else key == :star ? [ d ] : []
-    end
-  end
-
-  def _run_hash(d, key)
-
-    if key == :star
-      [ d ] + d.values.inject([]) { |a, v| a.concat(_run(v, key)) }
-    else
-      d.inject([]) { |a, (k, v)| a.concat(k == key ? [ v ] : _run(v, key)) }
-    end
-  end
-
-  def _run_array(d, key)
-
-    (key == :star ? [ d ] : []) +
-    d.inject([]) { |r, e| r.concat(_run(e, key)) }
   end
 end # Dense::Path
 
