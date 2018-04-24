@@ -360,7 +360,19 @@ describe Dense do
 
     it 'does not fail if nofail=true' do
 
-fail
+      data = { 'a' => 'A', 'b' => 'B', 'd' => 'D' }
+
+      expect {
+        Dense.unset(data, '[a,b,c]', false)
+      }.to raise_error(
+        KeyError, 'Found nothing at "c"'
+      )
+      expect(data).to eq({ 'a' => 'A', 'b' => 'B', 'd' => 'D' })
+
+      r = Dense.unset(data, '[a,b,c]', true)
+
+      expect(r).to eq([ 'A', 'B', nil ])
+      expect(data).to eq({ 'd' => 'D' })
     end
   end
 
