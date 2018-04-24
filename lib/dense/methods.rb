@@ -62,14 +62,15 @@ module Dense; class << self
 
   def insert(o, path, value)
 
-    path = Dense::Path.new(path)
-    key = path.pop
-
-    case c = path.walk(o)
-    when Array then array_insert(c, key, value)
-    when Hash then c[key.to_s] = value
-    else fail KeyError.new("Found no collection at #{path.to_s.inspect}")
-    end
+    Dense::Path.new(path)
+      .gather(o)
+      .each { |hit|
+        fail_miss_error(path, hit) if hit[0] == false
+        if hit[2].is_a?(Array)
+          hit[2].insert(hit[3], value)
+        else
+          hit[2][hit[3]] = value
+        end }
 
     value
   end

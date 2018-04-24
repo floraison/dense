@@ -411,7 +411,7 @@ describe Dense do
       expect {
         Dense.insert({}, 'a.b', 1)
       }.to raise_error(
-        Dense::Path::NotIndexableError, 'Found nothing at "a"'
+        KeyError, 'Found nothing at "a" ("b" remains)'
       )
     end
 
@@ -420,7 +420,7 @@ describe Dense do
       expect {
         Dense.insert([], 'a', 1)
       }.to raise_error(
-        IndexError, 'Cannot index array at "a"'
+        TypeError, 'No key "a" for Array at root'
       )
     end
   end
