@@ -8,6 +8,8 @@
 require 'spec_helper'
 
 
+require 'digest'
+
 def summarize_h2(h2)
   j = h2.to_json.gsub('"', '')
   d = Digest::MD5.hexdigest(j)[0, 5]
