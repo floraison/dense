@@ -183,6 +183,36 @@ describe Dense do
         'c:1,p:store.bicycle.otto,p0:store.bicycle,c0:4,p1:otto'
       )
     end
+
+    it 'enhances KeyError' do
+
+      err =
+        begin
+          Dense.fetch({}, 'a')
+        rescue => e
+          e
+        end
+
+      expect(err.class).to eq(KeyError)
+      expect(err.message).to eq('Found nothing at "a"')
+      expect(err.full_path).to eq('a')
+      expect(err.miss).to eq([ false, [], {}, 'a', [] ])
+    end
+
+    it 'enhances TypeError' do
+
+      err =
+        begin
+          Dense.fetch({ 'a' => [] }, 'a.b')
+        rescue => e
+          e
+        end
+
+      expect(err.class).to eq(TypeError)
+      expect(err.message).to eq('No key "b" for Array at "a"')
+      expect(err.full_path).to eq('a.b')
+      expect(err.miss).to eq([ false, [ 'a' ], [], 'b', [] ])
+    end
   end
 
   describe '.set' do
@@ -265,6 +295,36 @@ describe Dense do
       )
 
       expect(c).to eq({})
+    end
+
+    it 'enhances KeyError' do
+
+      err =
+        begin
+          Dense.set({}, 'a.b', 1234)
+        rescue => e
+          e
+        end
+
+      expect(err.class).to eq(KeyError)
+      expect(err.message).to eq('Found nothing at "a" ("b" remains)')
+      expect(err.full_path).to eq('a.b')
+      expect(err.miss).to eq([ false, [], {}, 'a', [ 'b' ] ])
+    end
+
+    it 'enhances TypeError' do
+
+      err =
+        begin
+          Dense.set({ 'a' => [] }, 'a.b', 1234)
+        rescue => e
+          e
+        end
+
+      expect(err.class).to eq(TypeError)
+      expect(err.message).to eq('No key "b" for Array at "a"')
+      expect(err.full_path).to eq('a.b')
+      expect(err.miss).to eq([ false, [ 'a' ], [], 'b', [] ])
     end
   end
 
@@ -374,6 +434,36 @@ describe Dense do
       expect(r).to eq([ 'A', 'B', nil ])
       expect(data).to eq({ 'd' => 'D' })
     end
+
+    it 'enhances KeyError' do
+
+      err =
+        begin
+          Dense.unset({}, 'a')
+        rescue => e
+          e
+        end
+
+      expect(err.class).to eq(KeyError)
+      expect(err.message).to eq('Found nothing at "a"')
+      expect(err.full_path).to eq('a')
+      expect(err.miss).to eq([ false, [], {}, 'a', [] ])
+    end
+
+    it 'enhances TypeError' do
+
+      err =
+        begin
+          Dense.unset({ 'a' => [] }, 'a.b')
+        rescue => e
+          e
+        end
+
+      expect(err.class).to eq(TypeError)
+      expect(err.message).to eq('No key "b" for Array at "a"')
+      expect(err.full_path).to eq('a.b')
+      expect(err.miss).to eq([ false, [ 'a' ], [], 'b', [] ])
+    end
   end
 
   describe '.insert' do
@@ -422,6 +512,36 @@ describe Dense do
       }.to raise_error(
         TypeError, 'No key "a" for Array at root'
       )
+    end
+
+    it 'enhances KeyError' do
+
+      err =
+        begin
+          Dense.insert({}, 'a.b', 1234)
+        rescue => e
+          e
+        end
+
+      expect(err.class).to eq(KeyError)
+      expect(err.message).to eq('Found nothing at "a" ("b" remains)')
+      expect(err.full_path).to eq('a.b')
+      expect(err.miss).to eq([ false, [], {}, 'a', [ 'b' ] ])
+    end
+
+    it 'enhances TypeError' do
+
+      err =
+        begin
+          Dense.insert({ 'a' => [] }, 'a.b', 1234)
+        rescue => e
+          e
+        end
+
+      expect(err.class).to eq(TypeError)
+      expect(err.message).to eq('No key "b" for Array at "a"')
+      expect(err.full_path).to eq('a.b')
+      expect(err.miss).to eq([ false, [ 'a' ], [], 'b', [] ])
     end
   end
 

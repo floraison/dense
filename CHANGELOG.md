@@ -4,6 +4,7 @@
 
 ## dense 1.0.1  not yet released
 
+* Use but enhance KeyError and TypeError
 * Differentiate between `*` and `.*`
 * Complete ework around Path#gather
 * Straighten Dense.fetch

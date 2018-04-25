@@ -82,6 +82,20 @@ module Dense; class << self
 
   protected
 
+  module DenseError
+    attr_accessor :full_path, :miss
+  end
+
+  def make_error(error_class, message, path, miss)
+
+    e = error_class.new(message)
+    class << e; include DenseError; end
+    e.full_path = path
+    e.miss = miss
+
+    e
+  end
+
   def key_error(path, miss)
 
     path1 = Dense::Path.make(miss[1] + [ miss[3] ]).to_s.inspect
@@ -90,7 +104,7 @@ module Dense; class << self
     msg = "Found nothing at #{path1}"
     msg = "#{msg} (#{path2} remains)" if path2 != '""'
 
-    KeyError.new(msg)
+    make_error(KeyError, msg, path, miss)
   end
 
   def type_error(path, miss)
@@ -99,7 +113,7 @@ module Dense; class << self
     cla = miss[2].class
     pat = miss[1].empty? ? 'root' : Dense::Path.make(miss[1]).to_s.inspect
 
-    TypeError.new("No key #{key} for #{cla} at #{pat}")
+    make_error(TypeError, "No key #{key} for #{cla} at #{pat}", path, miss)
   end
 
   def miss_error(path, miss)
