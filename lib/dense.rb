@@ -8,6 +8,5 @@ require 'raabro'
 
 require 'dense/path'
 require 'dense/parser'
-require 'dense/errors'
 require 'dense/methods'
 
