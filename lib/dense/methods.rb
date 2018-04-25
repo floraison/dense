@@ -83,7 +83,21 @@ module Dense; class << self
   protected
 
   module DenseError
+
     attr_accessor :full_path, :miss
+
+    # Used by some "clients" (like flor) to relabel (change the error message)
+    # a reraise.
+    #
+    def relabel(message)
+
+      err = self.class.new(message)
+      err.set_backtrace(self.backtrace)
+      err.full_path = self.full_path
+      err.miss = self.miss
+
+      err
+    end
   end
 
   def make_error(error_class, message, path, miss)
