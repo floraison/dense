@@ -92,6 +92,7 @@ module Dense; class << self
     def relabel(message)
 
       err = self.class.new(message)
+      class << err; include DenseError; end
       err.set_backtrace(self.backtrace)
       err.full_path = self.full_path
       err.miss = self.miss
@@ -102,12 +103,12 @@ module Dense; class << self
 
   def make_error(error_class, message, path, miss)
 
-    e = error_class.new(message)
-    class << e; include DenseError; end
-    e.full_path = path
-    e.miss = miss
+    err = error_class.new(message)
+    class << err; include DenseError; end
+    err.full_path = path
+    err.miss = miss
 
-    e
+    err
   end
 
   def key_error(path, miss)
