@@ -249,7 +249,23 @@ Dense.unset([], '1')
 
 ### KeyError and TypeError
 
-TODO document
+Dense might raise instances of `KeyError` and `TypeError`. Those instances have extra `#full_path` and `#miss` methods.
+
+```ruby
+e =
+  begin
+    Dense.fetch({}, 'a.b')
+  rescue => err
+    err
+  end
+  # => #<KeyError: Found nothing at "a" ("b" remains)>
+e.full_path
+  # => "a"
+e.miss
+  # => [false, [], {}, "a", [ "b" ]]
+```
+
+The "miss" is an array `[ false, path-to-miss, collection-at-miss, key-at-miss, path-post-miss ]`.
 
 
 ## LICENSE
