@@ -2,7 +2,7 @@
 # dense
 
 
-## dense 1.0.1  not yet released
+## dense 1.1.0  not yet released
 
 * Use but enhance KeyError and TypeError
 * Differentiate between `*` and `.*`
