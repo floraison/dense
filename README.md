@@ -189,7 +189,8 @@ r   # => 'three'
 
 c = { 'a' => [] }
 Dense.set(c, 'a.b', 1)
-  # => IndexError 'Cannot index array at "b"'
+  # => TypeError: No key "b" for Array at "a"
+
 
 c = { 'a' => {} }
 r = Dense.set(c, 'a.1', 1)
@@ -198,7 +199,7 @@ r   # => 1
 
 c = {}
 Dense.set(c, 'a.0', 1)
-  # => Dense::Path::NotIndexableError 'Found nothing at "a"'
+  # => KeyError: Found nothing at "a" ("0" remains)
 ```
 
 
@@ -237,14 +238,14 @@ c   # => { 'h' => { 'a' => [ 1, 2 ] } }
 r   # => 3
 ```
 
-It fails with an `IndexError` if it cannot unset.
+It fails with a `KeyError` or a `TypeError` if it cannot unset.
 ```ruby
 Dense.unset({}, 'a')
-  # => IndexError 'No key "a" for hash'
+  # => KeyError: Found nothing at "a"
 Dense.unset([], 'a')
-  # => IndexError 'Cannot index array at "a"'
+  # => TypeError: No key "a" for Array at root
 Dense.unset([], '1')
-  # => IndexError 'Array has length of 0, index is at 1'
+  # => KeyError: Found nothing at "1"
 ```
 
 ### KeyError and TypeError
