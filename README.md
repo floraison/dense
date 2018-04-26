@@ -64,6 +64,8 @@ Dense.get(data, 'store.bicycle.7')
 
 When `Dense.get(collection, path)` doesn't find, it returns `nil`.
 
+As seen above `Dense.get` might return a single value or an array of values. A "single" path like `"store.book.1.title"` will return a single value, while a "multiple" path like `"store.book.*.title"` or `"store.book[1,2].title"` will return an array of values.
+
 
 ### `Dense.has_key?(collection, path)`
 
@@ -202,6 +204,14 @@ Dense.set(c, 'a.0', 1)
   # => KeyError: Found nothing at "a" ("0" remains)
 ```
 
+Setting at multiple places in one go is possible:
+```ruby
+c = { 'h' => {} }
+Dense.set(c, 'h[k0,k1,k2]', 123)
+c
+  # => { 'h' => { 'k0' => 123, 'k1' => 123, 'k2' => 123 } }
+```
+
 
 ### `Dense.insert(collection, path, value)`
 
@@ -246,6 +256,15 @@ Dense.unset([], 'a')
   # => TypeError: No key "a" for Array at root
 Dense.unset([], '1')
   # => KeyError: Found nothing at "1"
+```
+
+Unsetting multiple values is OK:
+
+```ruby
+c = { 'h' => { 'a' => [ 1, 2, 3, 4, 5 ] } }
+r = Dense.unset(c, 'h.a[2,3]')
+c
+  # => { 'h' => { 'a' => [ 1, 2, 5 ] } }
 ```
 
 ### KeyError and TypeError
