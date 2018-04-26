@@ -6,7 +6,7 @@ module Dense; class << self
     pa = Dense::Path.new(path)
     r = pa.gather(o).inject([]) { |a, e| a << e[2][e[3]] if e.first; a }
 
-    pa.single? ? r.first : r
+    pa.narrow(r)
   end
 
   def fetch(o, path, default=::KeyError, &block)
