@@ -94,14 +94,23 @@ Dense.fetch(data, 'store.bicycle[7]')
   # => 'seven'
 ```
 
-When it doesn't find, it raises an instance of `Dense::Path::NotIndexableError`.
+When it doesn't find, it raises an instance of `KeyError`:
 
 ```ruby
-Dense.fetch(data, 'a.0.b')
+Dense.fetch({}, 'a.0.b')
   # raises
-  #   Dense::Path::NotIndexableError
-  #   'Found nothing at "a" ("0.b" remains)'
+  #   KeyError: Found nothing at "a" ("0.b" remains)
 ```
+
+It might instead raise an instance of `TypeError` if a non-integer key is requested of an array:
+
+```ruby
+Dense.fetch({ 'a' => [] }, 'a.k.b')
+  # raises
+  #   TypeError: No key "k" for Array at "a"
+```
+
+See KeyError and TypeError below for more details.
 
 `Dense.fetch(collection, path)` raises when it doesn't find, while `Dense.get(collection, path)` returns `nil`.
 
@@ -237,6 +246,10 @@ Dense.unset([], 'a')
 Dense.unset([], '1')
   # => IndexError 'Array has length of 0, index is at 1'
 ```
+
+### KeyError and TypeError
+
+TODO document
 
 
 ## LICENSE
