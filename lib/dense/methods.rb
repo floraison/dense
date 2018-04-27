@@ -80,6 +80,16 @@ module Dense; class << self
     !! Dense::Path.new(path).gather(o).find { |m| m[0] }
   end
 
+  def path(path)
+
+    Dense::Path.new(path)
+  end
+
+  def gather(o, path)
+
+    Dense::Path.new(path).gather(o)
+  end
+
   protected
 
   module DenseError
