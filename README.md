@@ -231,7 +231,22 @@ c
 
 ### `Dense.insert(collection, path, value)`
 
-TODO document
+```ruby
+c = { 'a' => [ 0, 1, 2, 3 ] }
+r = Dense.insert(c, 'b', 1234)
+c
+  # => { "a" => [ 0, 1, 2, 3 ], "b" => 1234 }
+
+c = { 'a' => [ 0, 1, 2, 3 ] }
+r = Dense.insert(c, 'a.1', 'ONE')
+c
+  # => { "a" => [ 0, "ONE", 1, 2, 3 ] }
+
+c = { 'a' => [ 0, 1, 2, 3 ], 'a1' => [ 0, 1 ] }
+r = Dense.insert(c, '.1', 'ONE')
+c
+  # => { "a" => [ 0, "ONE", 1, 2, 3 ], "a1" => [ 0, "ONE", 1 ] }
+```
 
 
 ### `Dense.unset(collection, path)`
