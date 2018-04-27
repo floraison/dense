@@ -45,6 +45,18 @@ Let
     }
 ```
 
+### paths
+
+```ruby
+"store.book.1.title"            # the title of the second book in the store
+"store.book[1].title"           # the title of the second book in the store
+"store.book.1['french title']"  # the french title of the 2nd book
+"store.book.1[title,author]"    # the title and the author of the 2nd book
+"store.*.price"                 # the price of everything directly in the store
+"store..price"                  # the price of everything in the store
+# ...
+```
+
 ### `Dense.get(collection, path)`
 
 ```ruby
