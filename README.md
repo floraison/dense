@@ -52,6 +52,10 @@ Let
 "store.book[1].title"           # the title of the second book in the store
 "store.book.1['french title']"  # the french title of the 2nd book
 "store.book.1[title,author]"    # the title and the author of the 2nd book
+"store.book[1,3].title"         # the titles of the 2nd and 4th books
+"store.book[1:8:2].title"       # titles of books at offset 1, 3, 5, 7
+"store.book[::3].title"         # titles of books at offset 0, 3, 6, 9, ...
+"store.book[:3].title"          # titles of books at offset 0, 1, 2, 3
 "store.*.price"                 # the price of everything directly in the store
 "store..price"                  # the price of everything in the store
 # ...
