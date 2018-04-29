@@ -3,6 +3,17 @@ module Dense::Path::Parser include ::Raabro
 
   # piece parsers bottom to top
 
+  def rxnames(i)
+
+    rex(:rxnames, i, %r{
+      /(
+        \\[\/bfnrt] |
+        \\u[0-9a-fA-F]{4} |
+        [^/\b\f\n\r\t]
+      )*/[imxouesn]*
+    }x)
+  end
+
   def dqname(i)
 
     rex(:qname, i, %r{
@@ -49,9 +60,16 @@ module Dense::Path::Parser include ::Raabro
 
   def escape(i); rex(:esc, i, /\\[.*]/); end
 
-  def bindex(i); alt(:index, i, :dqname, :sqname, :star, :ses, :name, :blank); end
-  def bindexes(i); jseq(:bindexes, i, :bindex, :comma); end
-  def simple_index(i); alt(:index, i, :off, :escape, :star, :name); end
+  def bindex(i)
+    alt(:index, i, :dqname, :sqname, :star, :ses, :rxnames, :name, :blank)
+  end
+  def bindexes(i)
+    jseq(:bindexes, i, :bindex, :comma)
+  end
+
+  def simple_index(i)
+    alt(:index, i, :off, :escape, :star, :rxnames, :name)
+  end
 
   def dotdot(i); str(:dotdot, i, '.'); end
   def dotdotstar(i); rex(:dotdotstar, i, /(\.\.\*|\.\[\*\])/); end
@@ -83,6 +101,26 @@ module Dense::Path::Parser include ::Raabro
   end
 
   def rewrite_blank(t); nil; end
+
+  def rewrite_rxnames(t)
+
+    m = t.string.match(/\A\/(.+)\/([imxouesn]*)\z/)
+
+    s = m[1]
+    case m[2]
+    when /u/ then s.force_encoding('UTF-8')
+    when /e/ then s.force_encoding('EUC-JP')
+    when /s/ then s.force_encoding('Windows-31J')
+    when /n/ then s.force_encoding('ASCII-8BIT')
+    end
+
+    flags = 0
+    flags = flags | Regexp::EXTENDED if m[2].index('x')
+    flags = flags | Regexp::IGNORECASE if m[2].index('i')
+    #flags = flags | Regexp::MULTILINE if m[2].index('m')
+
+    Regexp.new(s, flags)
+  end
 
   def rewrite_qname(t); t.string[1..-2]; end
   def rewrite_name(t); t.string; end

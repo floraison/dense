@@ -99,6 +99,8 @@ describe Dense::Path do
 
       'aAbZ/\0-9^' => [ 'aAbZ/\0-9^' ],
 
+      'x./(id|name)/' => [ 'x', /(id|name)/ ],
+      'x[/(id|name)/,y]' => [ 'x', [ /(id|name)/, 'y' ] ],
 
     }.each do |s, a|
 

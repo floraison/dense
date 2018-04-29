@@ -17,7 +17,7 @@ class Dense::Path
 #Raabro.pp(Parser.parse(s, debug: 3), colors: true)
     @path = Parser.parse(s)
 
-#Raabro.pp(Parser.parse(s, debug: 3), colors: true) unless @path
+Raabro.pp(Parser.parse(s, debug: 3), colors: true) unless @path
     fail ArgumentError.new(
       "couldn't determine path from #{s.inspect}"
     ) unless @path
