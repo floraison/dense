@@ -2,7 +2,7 @@
 # dense
 
 
-## dense 1.1.0  not yet released
+## dense 1.1.0  released 2018-04-29
 
 * Add Dense.path(path) and Dense.gather(collection, path)
 * Use but enhance KeyError and TypeError
