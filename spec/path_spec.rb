@@ -95,6 +95,8 @@ describe Dense::Path do
 
       'x./(id|name)/' => [ 'x', /(id|name)/ ],
       'x[/(id|name)/,y]' => [ 'x', [ /(id|name)/, 'y' ] ],
+      #'x./(id|name)/xn' => [ 'x', /(id|name)/x ], # no worky, diff-lcs?
+      'x./(id|name)/x' => [ 'x', /(id|name)/x ],
 
     }.each do |s, a|
 
@@ -207,6 +209,12 @@ describe Dense::Path do
       '\.' => '\.',
 
       'aAbZ/\0-9^' => 'aAbZ/\0-9^',
+
+      'x./(id|name)/' => 'x./(id|name)/',
+      'x[/(id|name)/,y]' => 'x[/(id|name)/,"y"]',
+      'x./(id|name)/xu' => 'x./(id|name)/xu',
+      'x./(id|name)/xn' => 'x./(id|name)/xn',
+      'x./(id|名前)/x' => 'x./(id|名前)/xu',
 
     }.each do |path, result|
 

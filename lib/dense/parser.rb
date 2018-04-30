@@ -102,22 +102,25 @@ module Dense::Path::Parser include ::Raabro
 
   def rewrite_blank(t); nil; end
 
+  ENCODINGS = {
+    'u' => 'UTF-8', 'e' => 'EUC-JP', 's' => 'Windows-31J', 'n' => 'ASCII-8BIT' }
+  R_ENCODINGS = ENCODINGS
+    .inject({}) { |h, (k, v)| h[v] = k; h }
+
   def rewrite_rxnames(t)
 
-    m = t.string.match(/\A\/(.+)\/([imxouesn]*)\z/)
+    m = t.string.match(/\A\/(.+)\/([imxuesn]*)\z/)
 
     s = m[1]
-    case m[2]
-    when /u/ then s.force_encoding('UTF-8')
-    when /e/ then s.force_encoding('EUC-JP')
-    when /s/ then s.force_encoding('Windows-31J')
-    when /n/ then s.force_encoding('ASCII-8BIT')
-    end
+
+    e = ENCODINGS[(m[2].match(/[uesn]/) || [])[0]]
+    s.force_encoding(e) if e
 
     flags = 0
     flags = flags | Regexp::EXTENDED if m[2].index('x')
     flags = flags | Regexp::IGNORECASE if m[2].index('i')
     #flags = flags | Regexp::MULTILINE if m[2].index('m')
+    flags = flags | Regexp::FIXEDENCODING if e
 
     Regexp.new(s, flags)
   end

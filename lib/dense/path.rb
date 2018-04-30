@@ -17,7 +17,7 @@ class Dense::Path
 #Raabro.pp(Parser.parse(s, debug: 3), colors: true)
     @path = Parser.parse(s)
 
-Raabro.pp(Parser.parse(s, debug: 3), colors: true) unless @path
+#Raabro.pp(Parser.parse(s, debug: 3), colors: true) unless @path
     fail ArgumentError.new(
       "couldn't determine path from #{s.inspect}"
     ) unless @path
@@ -257,6 +257,8 @@ Raabro.pp(Parser.parse(s, debug: 3), colors: true) unless @path
       "[#{elt.map { |e| _to_s(e, true) }.join(',')}#{elt.size < 2 ? ',' : ''}]"
     when String
       _str_to_s(elt, in_array)
+    when Regexp
+      _rex_to_s(elt)
     when :star
       '*'
     when :dot
@@ -277,6 +279,13 @@ Raabro.pp(Parser.parse(s, debug: 3), colors: true) unless @path
     return "\\#{s}" if s == '.' || s == '*'
     return "[#{elt.inspect}]" if s =~ /["']/
     s
+  end
+
+  def _rex_to_s(r)
+
+    r.fixed_encoding? ?
+      r.inspect + (Dense::Path::Parser::R_ENCODINGS[r.encoding.name] || '') :
+      r.inspect
   end
 end # Dense::Path
 
