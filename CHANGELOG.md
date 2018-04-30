@@ -4,6 +4,8 @@
 
 ## dense 1.1.1  not yet released
 
+* Accept regular expressions for object keys
+
 
 ## dense 1.1.0  released 2018-04-29
 

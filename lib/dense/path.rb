@@ -134,12 +134,18 @@ class Dense::Path
 
     return _resolve_hash_key(o, k) if k.is_a?(Hash)
 
-    return [ k.to_s ] if o.is_a?(Hash)
+    if o.is_a?(Hash)
 
-    case k
-    when /\Afirst\z/i then [ 0 ]
-    when /\Alast\z/i then [ -1 ]
-    else [ k ]
+      return o.keys.select { |ok| ok =~ k } if k.is_a?(Regexp)
+      [ k.to_s ]
+
+    else # o is a Array
+
+      case k
+      when /\Afirst\z/i then [ 0 ]
+      when /\Alast\z/i then [ -1 ]
+      else [ k ]
+      end
     end
   end
 

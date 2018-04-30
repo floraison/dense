@@ -210,6 +210,25 @@ describe Dense::Path do
         [ false, [ 'store', 'bicycle', '8' ], BIKE['8'], 1, [ 0 ] ],
         [ false, [ 'store', 'bicycle', '8' ], BIKE['8'], 2, [ 0 ] ] ],
 
+      'store.book.*./^ti/' => [
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'title' ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'title' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'title' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'title' ] ],
+      'store.book.*[/(title|author)/,isbn]' => [
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'author' ],
+        [ true, [ 'store', 'book', 0 ], BOOK[0], 'title' ],
+        [ false, [ 'store', 'book', 0 ], BOOK[0], 'isbn', [] ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'author' ],
+        [ true, [ 'store', 'book', 1 ], BOOK[1], 'title' ],
+        [ false, [ 'store', 'book', 1 ], BOOK[1], 'isbn', [] ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'author' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'title' ],
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'isbn' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'author' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'title' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'isbn' ] ],
+
     }.each do |path, expected|
 
       it "gathers leaves for #{path.inspect}" do
