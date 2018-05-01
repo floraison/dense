@@ -114,7 +114,8 @@ module Dense::Path::Parser include ::Raabro
     s = m[1]
 
     e = ENCODINGS[(m[2].match(/[uesn]/) || [])[0]]
-    s.force_encoding(e) if e
+    #s = s.force_encoding(e) if e
+    s = s.encode(e) if e
 
     flags = 0
     flags = flags | Regexp::EXTENDED if m[2].index('x')
