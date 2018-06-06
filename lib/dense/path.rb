@@ -8,7 +8,7 @@ class Dense::Path
     @original = s
 
     fail ArgumentError.new(
-      "Argument is a #{s.class}, not a String"
+      "argument is a #{s.class}, not a String"
     ) unless s.is_a?(String)
 
     s = ".#{s}" \

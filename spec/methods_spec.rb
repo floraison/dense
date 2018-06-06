@@ -117,17 +117,17 @@ describe Dense do
     [
 
       [ 'a.0.b',
-        KeyError, 'Found nothing at "a" ("0.b" remains)' ],
+        KeyError, 'found nothing at "a" ("0.b" remains)' ],
       [ 'store.0.b',
-        KeyError, 'Found nothing at "store.0" ("b" remains)' ],
+        KeyError, 'found nothing at "store.0" ("b" remains)' ],
       [ 'store.bike.b',
-        KeyError, 'Found nothing at "store.bike" ("b" remains)' ],
+        KeyError, 'found nothing at "store.bike" ("b" remains)' ],
       [ 'store.bicycle.seven',
-        KeyError, 'Found nothing at "store.bicycle.seven"' ],
+        KeyError, 'found nothing at "store.bicycle.seven"' ],
       [ 'store.bicycle[seven]',
-        KeyError, 'Found nothing at "store.bicycle.seven"' ],
+        KeyError, 'found nothing at "store.bicycle.seven"' ],
       [ 'store.bicycle["seven"]',
-        KeyError, 'Found nothing at "store.bicycle.seven"' ],
+        KeyError, 'found nothing at "store.bicycle.seven"' ],
 
     ].each do |path, error_klass, error_message|
 
@@ -194,7 +194,7 @@ describe Dense do
         end
 
       expect(err.class).to eq(KeyError)
-      expect(err.message).to eq('Found nothing at "a"')
+      expect(err.message).to eq('found nothing at "a"')
       expect(err.full_path).to eq('a')
       expect(err.miss).to eq([ false, [], {}, 'a', [] ])
     end
@@ -209,7 +209,7 @@ describe Dense do
         end
 
       expect(err.class).to eq(TypeError)
-      expect(err.message).to eq('No key "b" for Array at "a"')
+      expect(err.message).to eq('no key "b" for Array at "a"')
       expect(err.full_path).to eq('a.b')
       expect(err.miss).to eq([ false, [ 'a' ], [], 'b', [] ])
     end
@@ -269,7 +269,7 @@ describe Dense do
       expect {
         Dense.set(c, 'a.b', 1)
       }.to raise_error(
-        TypeError, 'No key "b" for Array at "a"'
+        TypeError, 'no key "b" for Array at "a"'
       )
 
       expect(c).to eq({ 'a' => [] })
@@ -291,7 +291,7 @@ describe Dense do
       expect {
         Dense.set(c, 'a.0', 1)
       }.to raise_error(
-        KeyError, 'Found nothing at "a" ("0" remains)'
+        KeyError, 'found nothing at "a" ("0" remains)'
       )
 
       expect(c).to eq({})
@@ -307,7 +307,7 @@ describe Dense do
         end
 
       expect(err.class).to eq(KeyError)
-      expect(err.message).to eq('Found nothing at "a" ("b" remains)')
+      expect(err.message).to eq('found nothing at "a" ("b" remains)')
       expect(err.full_path).to eq('a.b')
       expect(err.miss).to eq([ false, [], {}, 'a', [ 'b' ] ])
     end
@@ -322,7 +322,7 @@ describe Dense do
         end
 
       expect(err.class).to eq(TypeError)
-      expect(err.message).to eq('No key "b" for Array at "a"')
+      expect(err.message).to eq('no key "b" for Array at "a"')
       expect(err.full_path).to eq('a.b')
       expect(err.miss).to eq([ false, [ 'a' ], [], 'b', [] ])
     end
@@ -398,16 +398,16 @@ describe Dense do
 
     [
 
-      [ {}, 'a', KeyError, 'Found nothing at "a"' ],
-      [ [], 'a', TypeError, 'No key "a" for Array at root' ],
-      [ [], '1', KeyError, 'Found nothing at "1"' ],
+      [ {}, 'a', KeyError, 'found nothing at "a"' ],
+      [ [], 'a', TypeError, 'no key "a" for Array at root' ],
+      [ [], '1', KeyError, 'found nothing at "1"' ],
 
       [ { 'a' => [] }, 'a.b',
-        TypeError, 'No key "b" for Array at "a"' ],
+        TypeError, 'no key "b" for Array at "a"' ],
       [ { 'a' => {} }, 'a.1',
-        KeyError, 'Found nothing at "a.1"' ],
+        KeyError, 'found nothing at "a.1"' ],
       [ { 'a' => {} }, 'a.1.c',
-        KeyError, 'Found nothing at "a.1" ("c" remains)' ],
+        KeyError, 'found nothing at "a.1" ("c" remains)' ],
 
     ].each do |col, path, err_class, err_msg|
 
@@ -425,7 +425,7 @@ describe Dense do
       expect {
         Dense.unset(data, '[a,b,c]', false)
       }.to raise_error(
-        KeyError, 'Found nothing at "c"'
+        KeyError, 'found nothing at "c"'
       )
       expect(data).to eq({ 'a' => 'A', 'b' => 'B', 'd' => 'D' })
 
@@ -445,7 +445,7 @@ describe Dense do
         end
 
       expect(err.class).to eq(KeyError)
-      expect(err.message).to eq('Found nothing at "a"')
+      expect(err.message).to eq('found nothing at "a"')
       expect(err.full_path).to eq('a')
       expect(err.miss).to eq([ false, [], {}, 'a', [] ])
     end
@@ -460,7 +460,7 @@ describe Dense do
         end
 
       expect(err.class).to eq(TypeError)
-      expect(err.message).to eq('No key "b" for Array at "a"')
+      expect(err.message).to eq('no key "b" for Array at "a"')
       expect(err.full_path).to eq('a.b')
       expect(err.miss).to eq([ false, [ 'a' ], [], 'b', [] ])
     end
@@ -501,7 +501,7 @@ describe Dense do
       expect {
         Dense.insert({}, 'a.b', 1)
       }.to raise_error(
-        KeyError, 'Found nothing at "a" ("b" remains)'
+        KeyError, 'found nothing at "a" ("b" remains)'
       )
     end
 
@@ -510,7 +510,7 @@ describe Dense do
       expect {
         Dense.insert([], 'a', 1)
       }.to raise_error(
-        TypeError, 'No key "a" for Array at root'
+        TypeError, 'no key "a" for Array at root'
       )
     end
 
@@ -524,7 +524,7 @@ describe Dense do
         end
 
       expect(err.class).to eq(KeyError)
-      expect(err.message).to eq('Found nothing at "a" ("b" remains)')
+      expect(err.message).to eq('found nothing at "a" ("b" remains)')
       expect(err.full_path).to eq('a.b')
       expect(err.miss).to eq([ false, [], {}, 'a', [ 'b' ] ])
     end
@@ -539,7 +539,7 @@ describe Dense do
         end
 
       expect(err.class).to eq(TypeError)
-      expect(err.message).to eq('No key "b" for Array at "a"')
+      expect(err.message).to eq('no key "b" for Array at "a"')
       expect(err.full_path).to eq('a.b')
       expect(err.miss).to eq([ false, [ 'a' ], [], 'b', [] ])
     end
