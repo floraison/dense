@@ -117,7 +117,7 @@ When it doesn't find, it raises an instance of `KeyError`:
 ```ruby
 Dense.fetch({}, 'a.0.b')
   # raises
-  #   KeyError: Found nothing at "a" ("0.b" remains)
+  #   KeyError: found nothing at "a" ("0.b" remains)
 ```
 
 It might instead raise an instance of `TypeError` if a non-integer key is requested of an array:
@@ -125,7 +125,7 @@ It might instead raise an instance of `TypeError` if a non-integer key is reques
 ```ruby
 Dense.fetch({ 'a' => [] }, 'a.k.b')
   # raises
-  #   TypeError: No key "k" for Array at "a"
+  #   TypeError: no key "k" for Array at "a"
 ```
 
 See KeyError and TypeError below for more details.
@@ -207,7 +207,7 @@ r   # => 'three'
 
 c = { 'a' => [] }
 Dense.set(c, 'a.b', 1)
-  # => TypeError: No key "b" for Array at "a"
+  # => TypeError: no key "b" for Array at "a"
 
 
 c = { 'a' => {} }
@@ -217,7 +217,7 @@ r   # => 1
 
 c = {}
 Dense.set(c, 'a.0', 1)
-  # => KeyError: Found nothing at "a" ("0" remains)
+  # => KeyError: found nothing at "a" ("0" remains)
 ```
 
 Setting at multiple places in one go is possible:
@@ -282,11 +282,11 @@ r   # => 3
 It fails with a `KeyError` or a `TypeError` if it cannot unset.
 ```ruby
 Dense.unset({}, 'a')
-  # => KeyError: Found nothing at "a"
+  # => KeyError: found nothing at "a"
 Dense.unset([], 'a')
-  # => TypeError: No key "a" for Array at root
+  # => TypeError: no key "a" for Array at root
 Dense.unset([], '1')
-  # => KeyError: Found nothing at "1"
+  # => KeyError: found nothing at "1"
 ```
 
 Unsetting multiple values is OK:
@@ -309,7 +309,7 @@ e =
   rescue => err
     err
   end
-  # => #<KeyError: Found nothing at "a" ("b" remains)>
+  # => #<KeyError: found nothing at "a" ("b" remains)>
 e.full_path
   # => "a"
 e.miss
