@@ -124,8 +124,13 @@ class Dense::Path
     return [ nil ] unless o.is_a?(Array)
 
     be = k[:start] || 0
-    en = k[:end] || o.length - 1
-    st = k[:step] || 1
+
+    en, st =
+      if co = k[:count]
+        [ be + co - 1, 1 ]
+      else
+        [ k[:end] || o.length - 1, k[:step] || 1 ]
+      end
 
     Range.new(be, en).step(st).to_a
   end
@@ -257,10 +262,15 @@ class Dense::Path
 
     case elt
     when Hash
-      s = [ "#{elt[:start]}:#{elt[:end]}", elt[:step] ].compact.join(':')
+      s =
+        if elt[:count]
+          [ elt[:start], elt[:count] ].collect(&:to_s).join(',')
+        else
+          [ "#{elt[:start]}:#{elt[:end]}", elt[:step] ].compact.join(':')
+        end
       in_array ? s : "[#{s}]"
     when Array
-      "[#{elt.map { |e| _to_s(e, true) }.join(',')}#{elt.size < 2 ? ',' : ''}]"
+      "[#{elt.map { |e| _to_s(e, true) }.join(';')}#{elt.size < 2 ? ';' : ''}]"
     when String
       _str_to_s(elt, in_array)
     when Regexp

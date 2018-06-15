@@ -299,6 +299,9 @@ describe Dense::Path do
         #
         # TODO
 
+      [ 'a[1;2]', { 'a' => %w[ A B C D ] } ] => [
+        [ true, [ 'a' ], %w[ A B C D ], 1 ],
+        [ true, [ 'a' ], %w[ A B C D ], 2 ] ],
       [ 'a[1,2]', { 'a' => %w[ A B C D ] } ] => [
         [ true, [ 'a' ], %w[ A B C D ], 1 ],
         [ true, [ 'a' ], %w[ A B C D ], 2 ] ],

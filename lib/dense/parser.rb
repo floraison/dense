@@ -37,7 +37,8 @@ module Dense::Path::Parser include ::Raabro
   end
 
   def dot(i); str(nil, i, '.'); end
-  def comma(i); rex(nil, i, / *, */); end
+  def comma_or_semicolon(i); rex(nil, i, / *[,;] */); end
+
   def bend(i); str(nil, i, ']'); end
   def bstart(i); str(nil, i, '['); end
   def blank(i); str(:blank, i, ''); end
@@ -54,6 +55,7 @@ module Dense::Path::Parser include ::Raabro
       /(
         (-?\d+)?:(-?\d+)?:(-?\d+)? |
         (-?\d+)?:(-?\d+)? |
+        (-?\d+)?,(\d+)? |
         -?\d+
       )/x)
   end
@@ -64,7 +66,7 @@ module Dense::Path::Parser include ::Raabro
     alt(:index, i, :dqname, :sqname, :star, :ses, :rxnames, :name, :blank)
   end
   def bindexes(i)
-    jseq(:bindexes, i, :bindex, :comma)
+    jseq(:bindexes, i, :bindex, :comma_or_semicolon)
   end
 
   def simple_index(i)
@@ -85,10 +87,21 @@ module Dense::Path::Parser include ::Raabro
   # rewrite parsed tree
 
   def rewrite_ses(t)
-    a = t.string.split(':').collect { |e| e.empty? ? nil : e.to_i }
-    return a[0] if a[1] == nil && a[2] == nil
-    { start: a[0], end: a[1], step: a[2] }
+
+    s = t.string
+
+    if (a = s.split(',')).length == 2
+      { start: a[0].to_i, count: a[1].to_i }
+    else
+      a = s.split(':').collect { |e| e.empty? ? nil : e.to_i }
+      if a[1] == nil && a[2] == nil
+        a[0]
+      else
+        { start: a[0], end: a[1], step: a[2] }
+      end
+    end
   end
+
   def rewrite_esc(t); t.string[1, 1]; end
   def rewrite_star(t); :star; end
   def rewrite_dotdot(t); :dot; end

@@ -63,12 +63,23 @@ describe Dense::Path do
       '11[age]'       => [ 11, 'age' ],
       '11[name,age]'  => [ 11, [ 'name', 'age' ] ],
       '11["name",]'   => [ 11, [ 'name' ] ],
-      '11[0,]'        => [ 11, [ 0 ] ],
+      '11[0,]'        => [ 11, 0 ],
+      '11[0,2]'        => [ 11, { start: 0, count: 2 } ],
+      '11[0,;3]'        => [ 11, [ 0, 3 ] ],
 
       '[1:2,10:20,99]' => [
         [ { start: 1, end: 2, step: nil },
           { start: 10, end: 20, step: nil },
           99 ] ],
+      '[1:2;10:20;99]' => [
+        [ { start: 1, end: 2, step: nil },
+          { start: 10, end: 20, step: nil },
+          99 ] ],
+      '[1:2;10:20;99;1,2]' => [
+        [ { start: 1, end: 2, step: nil },
+          { start: 10, end: 20, step: nil },
+          99,
+          { start: 1, count: 2 } ] ],
 
       'x["name\'+-.nada"]' => [ 'x', 'name\'+-.nada' ],
       "x['name\"+-.nada']" => [ 'x', 'name"+-.nada' ],
@@ -180,17 +191,25 @@ describe Dense::Path do
 
       'x..y...z' => 'x..y..z',
 
-      '[\'name\',"age"]'   => '["name","age"]',
-      'x[\'name\',"age"]'  => 'x["name","age"]',
+      '[\'name\',"age"]'   => '["name";"age"]',
+      'x[\'name\',"age"]'  => 'x["name";"age"]',
+      '[\'name\';"age"]'   => '["name";"age"]',
+      'x[\'name\';"age"]'  => 'x["name";"age"]',
 
       '11.name'       => '11.name',
       '11["name"]'    => '11.name',
       '11[age]'       => '11.age',
-      '11[name,age]'  => '11["name","age"]',
-      '11["name",]'   => '11["name",]',
-      '11[0,]'        => '11[0,]',
+      '11[name,age]'  => '11["name";"age"]',
+      '11["name",]'   => '11["name";]',
+      '11["name";]'   => '11["name";]',
+      '11[0,]'        => '11.0',
+      '11[0;]'        => '11[0;]',
+      '11[0,;]'        => '11[0;]',
+      '11[0,2]'        => '11[0,2]',
+      '11[0;2]'        => '11[0;2]',
 
-      '[1:2,10:20,99]' => '[1:2,10:20,99]',
+      '[1:2,10:20,99]' => '[1:2;10:20;99]',
+      '[1:2;10:20;99]' => '[1:2;10:20;99]',
 
       'x["name\'+-.nada"]'  => 'x["name\'+-.nada"]',
       "x['name\"+-.nada']"  => 'x["name\\"+-.nada"]',
@@ -211,7 +230,7 @@ describe Dense::Path do
       'aAbZ/\0-9^' => 'aAbZ/\0-9^',
 
       'x./(id|name)/' => 'x./(id|name)/',
-      'x[/(id|name)/,y]' => 'x[/(id|name)/,"y"]',
+      'x[/(id|name)/,y]' => 'x[/(id|name)/;"y"]',
       'x./(id|name)/xu' => 'x./(id|name)/xu',
       'x./(id|name)/xn' => 'x./(id|name)/xn',
       'x./(id|名前)/x' => 'x./(id|名前)/xu',

@@ -4,6 +4,7 @@
 
 ## dense 1.1.1  not yet released
 
+* Accept `[a;b;c]` union keys
 * Accept regular expressions for object keys
 
 
