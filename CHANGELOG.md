@@ -2,7 +2,7 @@
 # dense
 
 
-## dense 1.1.1  not yet released
+## dense 1.1.1  released 2018-06-15
 
 * Accept `[a;b;c]` union keys
 * Accept regular expressions for object keys
