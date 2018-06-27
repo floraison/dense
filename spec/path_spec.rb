@@ -46,6 +46,11 @@ describe Dense::Path do
       'name.[*]'       => [ 'name', :dotstar ],
       'name..*'        => [ 'name', :dotstar ],
 
+      'name[::1;3,4].a' => [
+        'name',
+        [ { start: nil, end: nil, step: 1 }, { start: 3, count: 4 } ],
+        'a' ],
+
       '.*' => [ :dotstar ],
       '[*]' => [ :star ],
       '.[*]' => [ :dotstar ],
@@ -64,8 +69,8 @@ describe Dense::Path do
       '11[name,age]'  => [ 11, [ 'name', 'age' ] ],
       '11["name",]'   => [ 11, [ 'name' ] ],
       '11[0,]'        => [ 11, 0 ],
-      '11[0,2]'        => [ 11, { start: 0, count: 2 } ],
-      '11[0,;3]'        => [ 11, [ 0, 3 ] ],
+      '11[0,2]'       => [ 11, { start: 0, count: 2 } ],
+      '11[0,;3]'      => [ 11, [ 0, 3 ] ],
 
       '[1:2,10:20,99]' => [
         [ { start: 1, end: 2, step: nil },
