@@ -124,6 +124,39 @@ describe Dense::Path do
     end
   end
 
+  describe '.make' do
+
+    {
+
+      [ 'a', 'b', 'c' ] =>
+        'a.b.c',
+      [ 'a', :star, 'c' ] =>
+        'a.*.c',
+
+    }.each do |array, path|
+
+      it "creates a Dense::Path instance from #{array.inspect}" do
+
+        expect(Dense::Path.make(array).to_s).to eq(path)
+      end
+    end
+
+    {
+
+      [ 'a', 'b', { nada: true } ] =>
+         [ TypeError, 'not a path element (@2): {:nada=>true}' ],
+      [ 'a', :deathstar, 'c' ] =>
+         [ TypeError, 'not a path element (@1): :deathstar' ],
+
+    }.each do |array, (klass, message)|
+
+      it "fails for #{array.inspect}" do
+
+        expect { Dense::Path.make(array) }.to raise_error(klass, message)
+      end
+    end
+  end
+
   describe '#[]' do
 
     context '(int)' do
@@ -209,9 +242,9 @@ describe Dense::Path do
       '11["name";]'   => '11["name";]',
       '11[0,]'        => '11.0',
       '11[0;]'        => '11[0;]',
-      '11[0,;]'        => '11[0;]',
-      '11[0,2]'        => '11[0,2]',
-      '11[0;2]'        => '11[0;2]',
+      '11[0,;]'       => '11[0;]',
+      '11[0,2]'       => '11[0,2]',
+      '11[0;2]'       => '11[0;2]',
 
       '[1:2,10:20,99]' => '[1:2;10:20;99]',
       '[1:2;10:20;99]' => '[1:2;10:20;99]',

@@ -3,7 +3,7 @@ module Dense; class << self
 
   def get(o, path)
 
-    pa = Dense::Path.new(path)
+    pa = Dense::Path.make(path)
     r = pa.gather(o).inject([]) { |a, e| a << e[2][e[3]] if e.first; a }
 
     pa.narrow(r)
@@ -11,7 +11,7 @@ module Dense; class << self
 
   def fetch(o, path, default=::KeyError, &block)
 
-    pa = Dense::Path.new(path)
+    pa = Dense::Path.make(path)
     r = pa.gather(o).partition(&:first)
 
     if r[0].empty?
@@ -32,7 +32,7 @@ module Dense; class << self
 
   def set(o, path, value)
 
-    Dense::Path.new(path)
+    Dense::Path.make(path)
       .gather(o)
       .each { |hit|
         fail_miss_error(path, hit) if hit[0] == false
@@ -43,7 +43,7 @@ module Dense; class << self
 
   def unset(o, path, nofail=false)
 
-    pa = Dense::Path.new(path)
+    pa = Dense::Path.make(path)
     hits = pa.gather(o)
 
     hits.each { |h| fail miss_error(path, h) unless h[0] } unless nofail
@@ -62,7 +62,7 @@ module Dense; class << self
 
   def insert(o, path, value)
 
-    Dense::Path.new(path)
+    Dense::Path.make(path)
       .gather(o)
       .each { |hit|
         fail_miss_error(path, hit) if hit[0] == false
@@ -77,17 +77,17 @@ module Dense; class << self
 
   def has_key?(o, path)
 
-    !! Dense::Path.new(path).gather(o).find { |m| m[0] }
+    !! Dense::Path.make(path).gather(o).find { |m| m[0] }
   end
 
   def path(path)
 
-    Dense::Path.new(path)
+    Dense::Path.make(path)
   end
 
   def gather(o, path)
 
-    Dense::Path.new(path).gather(o)
+    Dense::Path.make(path).gather(o)
   end
 
   protected

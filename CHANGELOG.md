@@ -2,6 +2,11 @@
 # dense
 
 
+## dense 1.1.2  not yet released
+
+* Accept path arrays in Dense::Path.make
+
+
 ## dense 1.1.1  released 2018-06-15
 
 * Accept `[a;b;c]` union keys

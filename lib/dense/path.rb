@@ -23,16 +23,58 @@ class Dense::Path
     ) unless @path
   end
 
-  def self.make(path_array)
+  class << self
 
-    return nil if path_array.nil?
-    return path_array if path_array.is_a?(Dense::Path)
+    def make(path_or_array_or_string)
 
-    path = Dense::Path.allocate
-    path.instance_eval { @path = path_array }
-    path.instance_eval { @original = path.to_s }
+      case (pas = path_or_array_or_string)
+      when nil then nil
+      when Dense::Path then pas
+      when Array then make_from_array(pas)
+      when String then Dense::Path.new(pas)
+      else
+        fail ArgumentError.new(
+          "cannot make Dense::Path instance out of #{pas.inspect}")
+      end
+    end
 
-    path
+    def make_from_array(path_array)
+
+      validate(path_array)
+
+      path = Dense::Path.allocate
+      path.instance_eval { @path = path_array }
+      path.instance_eval { @original = path.to_s }
+
+      path
+    end
+
+    protected
+
+    def validate(path_array)
+
+      path_array
+        .each_with_index { |elt, i|
+          (elt.is_a?(Array) ? elt : [ elt ])
+            .each { |e| validate_path_elt(e, i) } }
+
+      true
+    end
+
+    def validate_path_elt(elt, i)
+
+      return if elt.is_a?(Integer)
+      return if elt.is_a?(String)
+      return if [ :dot, :dotstar, :star ].include?(elt)
+
+      if elt.is_a?(Hash)
+        ks = elt.keys.sort
+        return if ks == [ :end, :start, :step ]
+        return if ks == [ :start, :count ]
+      end
+
+      fail TypeError.new("not a path element (@#{i}): #{elt.inspect}")
+    end
   end
 
   def single?

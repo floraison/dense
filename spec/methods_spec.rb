@@ -66,6 +66,9 @@ describe Dense do
       'store.bicycle.8.last' =>
         't',
 
+      [ 'store', 'book', 1, 'title' ] =>
+        'Sword of Honour',
+
     }.each do |path, result|
 
       it "gets #{path.inspect}" do
@@ -75,11 +78,15 @@ describe Dense do
     end
 
     [
+
       'nada.inferno',
       'store.bicycle.seven',
       'store.bicycle[seven]',
       'store.bicycle["seven"]',
       'store.book.999',
+
+      [ 'store', 'book', -999 ],
+
     ].each do |path|
 
       it "returns nil if it cannot find #{path.inspect}" do
@@ -91,22 +98,25 @@ describe Dense do
 
   describe '.fetch' do
 
-    [
+    {
 
-      [ 'store.book.1.title',
-        'Sword of Honour' ],
+      'store.book.1.title' =>
+        'Sword of Honour',
 
-      [ 'store.book.*.title',
+      'store.book.*.title' =>
         [ 'Sayings of the Century', 'Sword of Honour', 'Moby Dick',
-          'The Lord of the Rings' ] ],
+          'The Lord of the Rings' ],
 
-      [ 'store.bicycle.7',
-        'seven' ],
+      'store.bicycle.7' =>
+        'seven',
 
-      [ 'store.bicycle[7]',
-        'seven' ],
+      'store.bicycle[7]' =>
+        'seven',
 
-    ].each do |path, result|
+      [ 'store', 'bicycle', 7 ] =>
+        'seven',
+
+    }.each do |path, result|
 
       it "fetches #{path.inspect}" do
 
@@ -114,22 +124,24 @@ describe Dense do
       end
     end
 
-    [
+    {
 
-      [ 'a.0.b',
-        KeyError, 'found nothing at "a" ("0.b" remains)' ],
-      [ 'store.0.b',
-        KeyError, 'found nothing at "store.0" ("b" remains)' ],
-      [ 'store.bike.b',
-        KeyError, 'found nothing at "store.bike" ("b" remains)' ],
-      [ 'store.bicycle.seven',
-        KeyError, 'found nothing at "store.bicycle.seven"' ],
-      [ 'store.bicycle[seven]',
-        KeyError, 'found nothing at "store.bicycle.seven"' ],
-      [ 'store.bicycle["seven"]',
-        KeyError, 'found nothing at "store.bicycle.seven"' ],
+      'a.0.b' =>
+        [ KeyError, 'found nothing at "a" ("0.b" remains)' ],
+      'store.0.b' =>
+        [ KeyError, 'found nothing at "store.0" ("b" remains)' ],
+      'store.bike.b' =>
+        [ KeyError, 'found nothing at "store.bike" ("b" remains)' ],
+      'store.bicycle.seven' =>
+        [ KeyError, 'found nothing at "store.bicycle.seven"' ],
+      'store.bicycle[seven]' =>
+        [ KeyError, 'found nothing at "store.bicycle.seven"' ],
+      'store.bicycle["seven"]' =>
+        [ KeyError, 'found nothing at "store.bicycle.seven"' ],
+      [ 'store', 'bicycle', 'seven' ] =>
+        [ KeyError, 'found nothing at "store.bicycle.seven"' ],
 
-    ].each do |path, error_klass, error_message|
+    }.each do |path, (error_klass, error_message)|
 
       it "raises a #{error_klass} if it cannot find #{path.inspect}" do
 
@@ -141,16 +153,17 @@ describe Dense do
       end
     end
 
-    [
+    {
 
-      [ 'a.0.b', -1, -1 ],
-      [ 'store.nada', 'x', 'x' ],
-      [ 'a.0.b', lambda { |coll, path| -2 }, -2 ],
-      [ 'store.bicycle.seven', -3, -3 ],
-      [ 'store.bicycle.seven', false, false ],
-      [ 'store.bicycle.seven', lambda { |coll, path| -3 }, -3 ],
+      [ 'a.0.b', -1 ] => -1,
+      [ 'store.nada', 'x' ] => 'x',
+      [ 'a.0.b', lambda { |coll, path| -2 } ] => -2,
+      [ 'store.bicycle.seven', -3 ] => -3,
+      [ 'store.bicycle.seven', false ] => false,
+      [ 'store.bicycle.seven', lambda { |coll, path| -3 } ] => -3,
+      [ [ 'store', 'bicycle', 'seven' ], -3 ] => -3,
 
-    ].each do |path, default, result|
+    }.each do |(path, default), result|
 
       it "returns the given default #{default.inspect}" do
 
@@ -262,6 +275,15 @@ describe Dense do
       expect(r).to eq('three')
     end
 
+    it 'sets with an array path' do
+
+      c = { 'h' => { 'a' => [ 1, 2, 3 ] } }
+      r = Dense.set(c, [ 'h', 'a', 'last' ], 'three')
+
+      expect(c).to eq({ 'h' => { 'a' => [ 1, 2, 'three' ] } })
+      expect(r).to eq('three')
+    end
+
     it 'fails if it cannot set (mismatch)' do
 
       c = { 'a' => [] }
@@ -357,6 +379,11 @@ describe Dense do
         [ 3, 4, 5 ],
         { 'h' => { 'a' => [ 1, 2, 'six' ] } } ],
 
+      [ { 'h' => { 'a' => [ 1, 2, 3, 4, 5, 'six' ] } },
+        [ 'h', 'a', { start: 2, end: 4, step: 1 } ],
+        [ 3, 4, 5 ],
+        { 'h' => { 'a' => [ 1, 2, 'six' ] } } ],
+
     ].each do |col0, path, result, col1|
 
       it "unsets (in array) #{path.inspect}" do
@@ -385,6 +412,11 @@ describe Dense do
         [ 1, 3 ],
         { 'h' => { 'j' => 2 } } ],
 
+      [ { 'h' => { 'i' => 1, 'j' => 2, 'k' => 3 } },
+        [ 'h', [ 'i', 'k' ] ],
+        [ 1, 3 ],
+        { 'h' => { 'j' => 2 } } ],
+
     ].each do |col0, path, result, col1|
 
       it "unsets (in hash) #{path.inspect}" do
@@ -407,6 +439,9 @@ describe Dense do
       [ { 'a' => {} }, 'a.1',
         KeyError, 'found nothing at "a.1"' ],
       [ { 'a' => {} }, 'a.1.c',
+        KeyError, 'found nothing at "a.1" ("c" remains)' ],
+
+      [ { 'a' => {} }, [ 'a', 1, 'c' ],
         KeyError, 'found nothing at "a.1" ("c" remains)' ],
 
     ].each do |col, path, err_class, err_msg|
@@ -485,6 +520,9 @@ describe Dense do
       [ { 'a' => [ 'one', [ 2, 3, 4 ], 'three' ] }, 'a.1.last', 5,
         { 'a' => [ 'one', [ 2, 3, 4, 5 ], 'three' ] } ],
 
+      [ { 'a' => [ 'one', [ 2, 3, 4 ], 'three' ] }, [ 'a', 1, 'last' ], 5,
+        { 'a' => [ 'one', [ 2, 3, 4, 5 ], 'three' ] } ],
+
     ].each do |col, path, value, col1|
 
       it "inserts at #{path.inspect}" do
@@ -561,6 +599,7 @@ describe Dense do
       [ 'bentley.nada', false ],
       [ 'bentley.3', false ],
       [ 'bentley.-4', false ],
+      [ [ 'bentley', -4 ], false ],
 
       [ 'alpha', true ],
       [ 'alpha.id', true ],
@@ -569,6 +608,7 @@ describe Dense do
       [ 'bentley.-1', true ],
       [ 'bentley.first', true ],
       [ 'bentley.last', true ],
+      [ [ 'bentley', 'last' ], true ],
 
     ].each do |path, result|
 
