@@ -102,6 +102,11 @@ describe Dense::Path do
         [ true, [ 'store', 'book', -3 ], BOOK[-3], 'title' ],
         [ true, [ 'store', 'book', -2 ], BOOK[-2], 'title' ] ],
 
+      'store.book[2,3].title' => [
+        [ true, [ 'store', 'book', 2 ], BOOK[2], 'title' ],
+        [ true, [ 'store', 'book', 3 ], BOOK[3], 'title' ],
+        [ false, [ 'store', 'book' ], BOOK, 4, [ 'title' ] ] ],
+
       'store.book.1.price' => [
         [ true, [ 'store', 'book', 1 ], BOOK[1], 'price' ] ],
 
