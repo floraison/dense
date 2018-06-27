@@ -38,6 +38,8 @@ class Dense::Path
       end
     end
 
+    protected
+
     def make_from_array(path_array)
 
       validate(path_array)
@@ -48,8 +50,6 @@ class Dense::Path
 
       path
     end
-
-    protected
 
     def validate(path_array)
 
