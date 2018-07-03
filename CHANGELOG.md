@@ -4,6 +4,7 @@
 
 ## dense 1.1.2  not yet released
 
+* Accept string and symbol keys in path arrays
 * Accept path arrays in Dense::Path.make
 
 

@@ -132,6 +132,10 @@ describe Dense::Path do
         'a.b.c',
       [ 'a', :star, 'c' ] =>
         'a.*.c',
+      [ 'a', { start: 2, count: 3 }, 'c' ] =>
+        'a[2,3].c',
+      [ 'a', { 'start' => 2, 'count' => 3 }, 'c' ] =>
+        'a[2,3].c',
 
     }.each do |array, path|
 

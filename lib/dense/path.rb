@@ -40,8 +40,21 @@ class Dense::Path
 
     protected
 
+    def symbolize!(o)
+
+      if o.is_a?(Array)
+        o
+          .each { |e| symbolize!(e) }
+      elsif o.is_a?(Hash)
+        o.keys
+          .select { |k| k.is_a?(String) }
+          .each { |k| o[k.to_sym] = o.delete(k) }
+      end
+    end
+
     def make_from_array(path_array)
 
+      symbolize!(path_array)
       validate(path_array)
 
       path = Dense::Path.allocate
