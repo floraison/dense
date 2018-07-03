@@ -54,6 +54,8 @@ describe Dense do
 
       'store.book.1.title' =>
         'Sword of Honour',
+      'store.book[1,2].title' =>
+        [ 'Sword of Honour', 'Moby Dick' ],
       'store.book.*.title' =>
         [ 'Sayings of the Century', 'Sword of Honour', 'Moby Dick',
           'The Lord of the Rings' ],

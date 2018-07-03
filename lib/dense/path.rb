@@ -70,7 +70,7 @@ class Dense::Path
       if elt.is_a?(Hash)
         ks = elt.keys.sort
         return if ks == [ :end, :start, :step ]
-        return if ks == [ :start, :count ]
+        return if ks == [ :count, :start ]
       end
 
       fail TypeError.new("not a path element (@#{i}): #{elt.inspect}")
