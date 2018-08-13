@@ -43,7 +43,7 @@ module Dense::Path::Parser include ::Raabro
   def bstart(i); str(nil, i, '['); end
   def blank(i); str(:blank, i, ''); end
 
-  def name(i); rex(:name, i, /[-+%^<>a-zA-Z0-9_\/\\=?]+/); end
+  def name(i); rex(:name, i, /[-+%^<>a-zA-Z0-9_\/\\=?!]+/); end
   def off(i); rex(:off, i, /-?\d+/); end
 
   def star(i); str(:star, i, '*'); end

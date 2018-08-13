@@ -114,6 +114,9 @@ describe Dense::Path do
       #'x./(id|name)/xn' => [ 'x', /(id|name)/x ], # no worky, diff-lcs?
       'x./(id|name)/x' => [ 'x', /(id|name)/x ],
 
+      '==' => [ '==' ],
+      '!=' => [ '!=' ],
+
     }.each do |s, a|
 
       it "parses #{s.inspect}" do
