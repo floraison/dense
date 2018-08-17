@@ -2,6 +2,9 @@
 # dense
 
 
+## dense 1.1.4  not yet released
+
+
 ## dense 1.1.3  released 2018-08-13
 
 * Accept '!' in names
