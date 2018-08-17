@@ -503,6 +503,65 @@ describe Dense do
     end
   end
 
+  describe '.force_set' do
+
+    it 'sets' do
+
+      c = {}
+      r = Dense.force_set(c, 'a', 1)
+
+      expect(c).to eq({ 'a' => 1 })
+      expect(r).to eq(1)
+    end
+
+    it 'creates the necessary arrays' do
+
+      c = {}
+      r = Dense.force_set(c, 'a.0', 1)
+
+      expect(c).to eq({ 'a' => [ 1 ] })
+      expect(r).to eq(1)
+    end
+
+    it 'creates the necessary hashes' do
+
+      c = {}
+      r = Dense.force_set(c, 'a.b', 1)
+
+      expect(c).to eq({ 'a' => { 'b' => 1 } })
+      expect(r).to eq(1)
+    end
+
+    it 'creates the necessary collections' do
+
+      c = {}
+      r = Dense.force_set(c, 'a.b.3.d.0', 1)
+
+      expect(c).to eq(
+        { 'a' => { 'b' => [ nil, nil, nil, { 'd' => [ 1 ] } ] } })
+      expect(r).to eq(
+        1)
+    end
+
+    it 'fails if it cannot set' do
+
+
+      c = { 'a' => [] }
+
+      err =
+        begin
+          Dense.force_set(c, 'a.b', 1)
+        rescue => e
+          e
+        end
+
+      expect(err.class).to eq(TypeError)
+      expect(err.message).to eq('no key "b" for Array at "a"')
+      expect(err.full_path).to eq('a.b')
+      expect(err.miss).to eq([ false, [ 'a' ], [], 'b', [] ])
+    end
+  end
+
   describe '.insert' do
 
     [

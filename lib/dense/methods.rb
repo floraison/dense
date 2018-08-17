@@ -60,6 +60,28 @@ module Dense; class << self
     pa.narrow(r)
   end
 
+  def force_set(o, path, value)
+
+    Dense::Path.make(path)
+      .gather(o)
+      .each { |hit|
+        if hit[0] == false
+          n = hit[4].first
+          fail_miss_error(path, hit) \
+            if n.nil? && ! key_matches_collection?(hit[3], hit[2])
+          hit[2][hit[3]] =
+            if n.is_a?(String)
+              {}
+            else
+              []
+            end
+          return force_set(o, path, value)
+        end
+        hit[2][hit[3]] = value }
+
+    value
+  end
+
   def insert(o, path, value)
 
     Dense::Path.make(path)
@@ -91,6 +113,12 @@ module Dense; class << self
   end
 
   protected
+
+  def key_matches_collection?(k, c)
+
+    (c.is_a?(Hash) && k.is_a?(String)) ||
+    (c.is_a?(Array) && k.is_a?(Integer))
+  end
 
   module DenseError
 

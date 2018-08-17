@@ -228,6 +228,26 @@ c
   # => { 'h' => { 'k0' => 123, 'k1' => 123, 'k2' => 123 } }
 ```
 
+### `Dense.force_set(collection, path, value)`
+
+Creates the necessary collections on the way. A bit like `mkdir -f x/y/z/`
+
+```ruby
+c = {}
+r = Dense.force_set(c, 'a', 1)
+r # => 1
+c # => { 'a' => 1 }
+
+c = {}
+r = Dense.force_set(c, 'a.b.3.d.0', 1)
+r # => 1
+c # => { 'a' => { 'b' => [ nil, nil, nil, { 'd' => [ 1 ] } ] } }
+
+c = { 'a' => [] }
+Dense.force_set(c, 'a.b', 1)
+  # => TypeError: no key "b" for Array at "a"
+```
+
 
 ### `Dense.insert(collection, path, value)`
 
