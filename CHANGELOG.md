@@ -4,6 +4,7 @@
 
 ## dense 1.1.4  not yet released
 
+* Fix `Dense.fetch({ 'a' => nil }, 'a')`
 * Implement Dense.force_set(coll, k, v)
 
 

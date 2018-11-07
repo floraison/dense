@@ -264,39 +264,50 @@ class Dense::Path
     end
   end
 
+  def _has_key?(data, key)
+
+    if data.is_a?(Array)
+      l = data.length
+      key.is_a?(Integer) && (key < 0 ? (key >= -l) : (key < l))
+    else
+      data.has_key?(key)
+    end
+  end
+
   def _gather(depth, path0, data0, data, path, acc)
 
     k = path.first
 #ind = '  ' * depth
-#print [ LG, DG, LB ][depth % 3]
+#col = [ LG, DG, LB ][depth % 3]
+#print col
 #puts ind + "+--- _gather()"
 #puts ind + "| path0: #{path0.inspect}"
 #puts ind + "| data: #{data.inspect}"
 #puts ind + "| depth: #{depth} / path: #{path.inspect}"
 #puts ind + "| k: " + k.inspect
 
-#puts RD + ind + "| -> " + [ false, path0[0..-2], data0, path0.last, path ].inspect if k.nil? && data.nil?
+#puts RD + ind + "| 0-> " + [ false, path0[0..-2], data0, path0.last, path ].inspect if data.nil? && ! _has_key?(data0, path0.last)
     return acc.push([ false, path0[0..-2], data0, path0.last, path ]) \
-      if data.nil?
+      if data.nil? && ! _has_key?(data0, path0.last)
 
-#puts GN + ind + "| -> " + [ true, path0[0..-2], data0, path0.last ].inspect if k.nil? && data.nil?
+#puts GN + ind + "| 1-> " + [ true, path0[0..-2], data0, path0.last ].inspect if k.nil?
     return acc.push([ true, path0[0..-2], data0, path0.last ]) \
       if k.nil?
 
-#puts RD + ind + "| -> " + [ false, path0[0..-2], data0, path0.last, path ].inspect unless data.is_a?(Array) || data.is_a?(Hash)
+#puts RD + ind + "| 2-> " + [ false, path0[0..-2], data0, path0.last, path ].inspect unless data.is_a?(Array) || data.is_a?(Hash)
     return acc.push([ false, path0[0..-2], data0, path0.last, path ]) \
       unless data.is_a?(Array) || data.is_a?(Hash)
 
     return _dot_gather(depth, path0, data0, data, path[1..-1], acc) \
       if k == :dot
 
-#puts ind + "| stars:\n" + _stars(data0, data, k).collect(&:first).to_pp if k == :star || k == :dotstar
+#puts col + ind + "| stars:\n" + _stars(data0, data, k).collect(&:first).to_pp if k == :star || k == :dotstar
     return _stars(data0, data, k).inject(acc) { |a, (pa, da0, da)|
       _gather(depth + 1, path0 + pa, da0, da, path[1..-1], a)
     } if k == :star || k == :dotstar
 
     keys = _resolve_keys(data, k)
-#puts ind + "| keys: " + keys.inspect
+#puts col + ind + "| keys: " + keys.inspect
 
     keys.inject(acc) { |a, kk|
       _gather(

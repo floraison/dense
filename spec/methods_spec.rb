@@ -228,6 +228,13 @@ describe Dense do
       expect(err.full_path).to eq('a.b')
       expect(err.miss).to eq([ false, [ 'a' ], [], 'b', [] ])
     end
+
+    it 'returns nil when the value is nil' do
+
+      r = Dense.fetch({ 'a' => nil }, 'a')
+
+      expect(r).to eq(nil)
+    end
   end
 
   describe '.set' do

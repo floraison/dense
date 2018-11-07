@@ -335,6 +335,58 @@ describe Dense::Path do
         #expect(r).to eq(expected)
       end
     end
+
+    it 'gathers for nil values as well (in objects)' do
+
+      pa = Dense::Path.new('a')
+
+      r = pa.gather({ 'a' => nil })
+
+      expect(
+        r
+      ).to eq([
+        [ true, [], { 'a' => nil }, 'a' ]
+      ])
+    end
+
+    it 'gathers (deep) for nil values as well (in objects)' do
+
+      pa = Dense::Path.new('a.b')
+
+      r = pa.gather({ 'a' => { 'b' => nil } })
+
+      expect(
+        r
+      ).to eq([
+        [ true, [ 'a' ], { 'b' => nil }, 'b' ]
+      ])
+    end
+
+    it 'gathers for nil values as well (in arrays)' do
+
+      pa = Dense::Path.new('2')
+
+      r = pa.gather([ nil, nil, nil ])
+
+      expect(
+        r
+      ).to eq([
+        [ true, [], [ nil, nil, nil ], 2 ]
+      ])
+    end
+
+    it 'gathers (deep) for nil values as well (in arrays)' do
+
+      pa = Dense::Path.new('a.2')
+
+      r = pa.gather({ 'a' => [ nil, nil, nil ] })
+
+      expect(
+        r
+      ).to eq([
+        [ true, [ 'a' ], [ nil, nil, nil ], 2 ]
+      ])
+    end
   end
 end
 
