@@ -4,6 +4,8 @@
 
 ## dense 1.1.4  not yet released
 
+* Implement Dense.force_set(coll, k, v)
+
 
 ## dense 1.1.3  released 2018-08-13
 
