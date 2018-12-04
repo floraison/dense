@@ -295,7 +295,7 @@ class Dense::Path
       if k.nil?
 
 #puts RD + ind + "| 2-> " + [ false, path0[0..-2], data0, path0.last, path ].inspect unless data.is_a?(Array) || data.is_a?(Hash)
-    return acc.push([ false, path0[0..-2], data0, path0.last, path ]) \
+    return acc.push([ false, path0, data, path.first, path[1..-1] ]) \
       unless data.is_a?(Array) || data.is_a?(Hash)
 
     return _dot_gather(depth, path0, data0, data, path[1..-1], acc) \

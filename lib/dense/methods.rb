@@ -149,15 +149,33 @@ module Dense; class << self
     err
   end
 
-  def key_error(path, miss)
+  # IndexError:
+  #   Raised when the given index is invalid.
+  # KeyError:
+  #   Raised when the specified key is not found. It is a subclass of IndexError.
 
-    path1 = Dense::Path.make(miss[1] + [ miss[3] ]).to_s.inspect
-    path2 = Dense::Path.make(miss[4]).to_s.inspect
+  def index_error(path, miss)
 
-    msg = "found nothing at #{path1}"
-    msg = "#{msg} (#{path2} remains)" if path2 != '""'
+    if miss[2].is_a?(Array) || miss[2].is_a?(Hash)
 
-    make_error(KeyError, msg, path, miss)
+      path1 = Dense::Path.make(miss[1] + [ miss[3] ]).to_s.inspect
+      path2 = Dense::Path.make(miss[4]).to_s.inspect
+
+      msg = "found nothing at #{path1}"
+      msg = "#{msg} (#{path2} remains)" if path2 != '""'
+
+      make_error(KeyError, msg, path, miss)
+
+    else
+
+      path1 = Dense::Path.make(miss[1]).to_s.inspect
+      path2 = Dense::Path.make(miss[4]).to_s.inspect
+
+      msg = "found no collection at #{path1} for key #{miss[3].inspect}"
+      msg = "#{msg} (#{path2} remains)" if path2 != '""'
+
+      make_error(IndexError, msg, path, miss)
+    end
   end
 
   def type_error(path, miss)
@@ -174,7 +192,7 @@ module Dense; class << self
     if miss[2].is_a?(Array) && ! miss[3].is_a?(Integer)
       type_error(path, miss)
     else
-      key_error(path, miss)
+      index_error(path, miss)
     end
   end
 

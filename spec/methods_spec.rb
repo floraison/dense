@@ -144,7 +144,7 @@ describe Dense do
         [ KeyError, 'found nothing at "store.bicycle.seven"' ],
 
       'store.bicycle.color.tone' =>
-        [ IndexError, 'xxx' ],
+        [ IndexError, 'found no collection at "store.bicycle.color" for key "tone"' ],
 
     }.each do |path, (error_klass, error_message)|
 

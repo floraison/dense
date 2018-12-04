@@ -4,6 +4,8 @@
 
 ## dense 1.1.5 not yet released
 
+* Differentiate KeyError and IndexError upon miss
+
 
 ## dense 1.1.4  released 2018-11-08
 
