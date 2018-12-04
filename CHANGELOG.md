@@ -2,6 +2,9 @@
 # dense
 
 
+## dense 1.1.5 not yet released
+
+
 ## dense 1.1.4  released 2018-11-08
 
 * Fix `Dense.fetch({ 'a' => nil }, 'a')`
