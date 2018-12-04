@@ -35,7 +35,7 @@ module Dense; class << self
     Dense::Path.make(path)
       .gather(o)
       .each { |hit|
-        fail_miss_error(path, hit) if hit[0] == false
+        validate(path, hit) if hit[0] == false
         hit[2][hit[3]] = value }
 
     value
@@ -67,7 +67,7 @@ module Dense; class << self
       .each { |hit|
         if hit[0] == false
           n = hit[4].first
-          fail_miss_error(path, hit) \
+          validate(path, hit) \
             if n.nil? && ! key_matches_collection?(hit[3], hit[2])
           hit[2][hit[3]] =
             if n.is_a?(String)
@@ -87,7 +87,7 @@ module Dense; class << self
     Dense::Path.make(path)
       .gather(o)
       .each { |hit|
-        fail_miss_error(path, hit) if hit[0] == false
+        validate(path, hit) if hit[0] == false
         if hit[2].is_a?(Array)
           hit[2].insert(hit[3], value)
         else
@@ -178,12 +178,14 @@ module Dense; class << self
     end
   end
 
-  def fail_miss_error(path, miss)
+  def validate(path, miss)
 
     fail miss_error(path, miss) \
       if miss[4].any?
     fail type_error(path, miss) \
       if miss[2].is_a?(Array) && ! miss[2].is_a?(Integer)
+
+    # else, no failure, carry on!
   end
 
   def call_default_block(o, path, block, miss)
