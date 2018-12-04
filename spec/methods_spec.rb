@@ -143,10 +143,14 @@ describe Dense do
       [ 'store', 'bicycle', 'seven' ] =>
         [ KeyError, 'found nothing at "store.bicycle.seven"' ],
 
+      'store.bicycle.color.tone' =>
+        [ IndexError, 'xxx' ],
+
     }.each do |path, (error_klass, error_message)|
 
       it "raises a #{error_klass} if it cannot find #{path.inspect}" do
 
+#p begin; Dense.fetch(@data, path); rescue => e; e.miss; end
         expect {
           Dense.fetch(@data, path)
         }.to raise_error(

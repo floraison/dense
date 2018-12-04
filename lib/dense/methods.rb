@@ -12,22 +12,22 @@ module Dense; class << self
   def fetch(o, path, default=::KeyError, &block)
 
     pa = Dense::Path.make(path)
-    r = pa.gather(o).partition(&:first)
+    hits, misses = pa.gather(o).partition(&:first)
 
-    if r[0].empty?
+    if hits.empty?
 
       return pa.narrow(
-        r[1].collect { |m| call_default_block(o, path, block, m) }
+        misses.collect { |m| call_default_block(o, path, block, m) }
       ) if block
 
       return pa.narrow(
-        r[1].collect { |m| default }
+        misses.collect { |m| default }
       ) if default != KeyError
 
-      fail miss_error(path, r[1].first)
+      fail miss_error(path, misses.first)
     end
 
-    pa.narrow(r[0].collect { |e| e[2][e[3]] })
+    pa.narrow(hits.collect { |e| e[2][e[3]] })
   end
 
   def set(o, path, value)
