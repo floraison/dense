@@ -4,6 +4,8 @@
 
 ## dense 1.1.6 not yet released
 
+* Interpret "replies.0_1_2" as `[ "replies", "0_1_2" ]` not `[ "replies", 0 ]`
+
 
 ## dense 1.1.5 released 2018-12-04
 

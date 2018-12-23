@@ -35,6 +35,7 @@ describe Dense::Path do
       'name["last"]'   => [ 'name', 'last' ],
       'name[0]'        => [ 'name', 0 ],
       '[0].name'       => [ 0, 'name' ],
+      '0_1_2'          => [ '0_1_2' ],
 
       '.name'        => [ :dot, 'name' ],
       '.["name"]'    => [ :dot, 'name' ],

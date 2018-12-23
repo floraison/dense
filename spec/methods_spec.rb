@@ -96,6 +96,13 @@ describe Dense do
         expect(Dense.get(@data, path)).to eq(nil)
       end
     end
+
+    it 'interprets "0_1_2" as a \'name\' index, not as "0"...' do
+
+      data = { 'replies' => { '0_1_2' => { 'lol' => true } } }
+
+      expect(Dense.get(data, 'replies.0_1_2')).to eq({ 'lol' => true })
+    end
   end
 
   describe '.fetch' do

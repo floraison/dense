@@ -44,7 +44,8 @@ module Dense::Path::Parser include ::Raabro
   def blank(i); str(:blank, i, ''); end
 
   def name(i); rex(:name, i, /[-+%^<>a-zA-Z0-9_\/\\=?!]+/); end
-  def off(i); rex(:off, i, /-?\d+/); end
+  def off(i); rex(:off, i, /-?\d+(?=(\.|\[|\z))/); end
+    # positive lookahead so that "0_1_2" is not parsed as "0" and whatever...
 
   def star(i); str(:star, i, '*'); end
 
