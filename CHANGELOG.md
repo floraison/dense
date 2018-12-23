@@ -2,7 +2,7 @@
 # dense
 
 
-## dense 1.1.6 not yet released
+## dense 1.1.6 released 2018-12-24  (Merry Christmas!)
 
 * Interpret "replies.0_1_2" as `[ "replies", "0_1_2" ]` not `[ "replies", 0 ]`
 
