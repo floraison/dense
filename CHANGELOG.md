@@ -2,6 +2,9 @@
 # dense
 
 
+## dense 1.1.6 not yet released
+
+
 ## dense 1.1.5 released 2018-12-04
 
 * Differentiate KeyError and IndexError upon miss
