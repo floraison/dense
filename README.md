@@ -319,18 +319,6 @@ c
 ```
 
 
-### `Dense.deflate(hash)`
-
-Turns a deep Hash into a flat one:
-
-```ruby
-Dense.deflate({
-  'a' => { 'b' => 'c', 'd' => 'e' }, 'a.b' => { 'f' => 'g' } })
-    #
-    # => { 'a.b' => 'c', 'a.b.f' => 'g', 'a.d' => 'e' }
-```
-
-
 ### KeyError and TypeError
 
 Dense might raise instances of `KeyError` and `TypeError`. Those instances have extra `#full_path` and `#miss` methods.

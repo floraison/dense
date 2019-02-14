@@ -704,35 +704,5 @@ describe Dense do
       ).to be true
     end
   end
-
-  describe '.deflate' do
-
-    {
-
-      {} =>
-        {},
-
-      { 'a' => 'b' } =>
-        { 'a' => 'b' },
-
-      { 'a' => { 'b' => 'c' } } =>
-        { 'a.b' => 'c' },
-
-      { 'a' => { 'b' => 'c', 'd' => 'e' } } =>
-        { 'a.b' => 'c', 'a.d' => 'e' },
-
-      { 'a' => { 'b' => 'c', 'd' => 'e' }, 'a.b' => { 'f' => 'g' } } =>
-        { 'a.b' => 'c', 'a.b.f' => 'g', 'a.d' => 'e' },
-
-    }.each do |input, output|
-
-      #it "deflates #{input.inspect}" do
-      #it "deflates #{input.inspect} to #{output.inspect}" do
-      it "deflates to #{output.inspect}" do
-
-        expect(Dense.deflate(input)).to eq(output)
-      end
-    end
-  end
 end
 
