@@ -705,7 +705,7 @@ describe Dense do
     end
   end
 
-  describe '.flatten' do
+  describe '.deflate' do
 
     {
 
@@ -726,11 +726,11 @@ describe Dense do
 
     }.each do |input, output|
 
-      #it "flattens #{input.inspect}" do
-      #it "flattens #{input.inspect} to #{output.inspect}" do
-      it "flattens to #{output.inspect}" do
+      #it "deflates #{input.inspect}" do
+      #it "deflates #{input.inspect} to #{output.inspect}" do
+      it "deflates to #{output.inspect}" do
 
-        expect(Dense.flatten(input)).to eq(output)
+        expect(Dense.deflate(input)).to eq(output)
       end
     end
   end

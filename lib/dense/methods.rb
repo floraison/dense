@@ -112,13 +112,13 @@ module Dense; class << self
     Dense::Path.make(path).gather(o)
   end
 
-  def flatten(h, result={}, path=nil)
+  def deflate(h)
 
     fail ArgumentError.new(
-      "cannot flatten instances of #{h.class}"
+      "cannot deflate instances of #{h.class}"
     ) unless h.is_a?(Hash)
 
-    do_flatten(h, {}, nil)
+    do_deflate(h, {}, nil)
   end
 
   protected
@@ -228,13 +228,13 @@ module Dense; class << self
     block.call(*args)
   end
 
-  def do_flatten(h, result, path)
+  def do_deflate(h, result, path)
 
     h
       .inject(result) { |r, (k, v)|
         pathk = path ? [ path, k ].join('.') : k
         if v.is_a?(Hash)
-          do_flatten(v, r, pathk)
+          do_deflate(v, r, pathk)
         else
           r[pathk] = v
         end

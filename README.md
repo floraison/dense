@@ -319,12 +319,12 @@ c
 ```
 
 
-### `Dense.flatten(hash)`
+### `Dense.deflate(hash)`
 
 Turns a deep Hash into a flat one:
 
 ```ruby
-Dense.flatten({
+Dense.deflate({
   'a' => { 'b' => 'c', 'd' => 'e' }, 'a.b' => { 'f' => 'g' } })
     #
     # => { 'a.b' => 'c', 'a.b.f' => 'g', 'a.d' => 'e' }
