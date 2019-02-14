@@ -4,6 +4,8 @@
 
 ## dense 1.1.7 not yet released
 
+* Implement Dense.flatten(hash)
+
 
 ## dense 1.1.6 released 2018-12-24  (Merry Christmas!)
 

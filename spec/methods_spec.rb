@@ -704,5 +704,35 @@ describe Dense do
       ).to be true
     end
   end
+
+  describe '.flatten' do
+
+    {
+
+      {} =>
+        {},
+
+      { 'a' => 'b' } =>
+        { 'a' => 'b' },
+
+      { 'a' => { 'b' => 'c' } } =>
+        { 'a.b' => 'c' },
+
+      { 'a' => { 'b' => 'c', 'd' => 'e' } } =>
+        { 'a.b' => 'c', 'a.d' => 'e' },
+
+      { 'a' => { 'b' => 'c', 'd' => 'e' }, 'a.b' => { 'f' => 'g' } } =>
+        { 'a.b' => 'c', 'a.b.f' => 'g', 'a.d' => 'e' },
+
+    }.each do |input, output|
+
+      #it "flattens #{input.inspect}" do
+      #it "flattens #{input.inspect} to #{output.inspect}" do
+      it "flattens to #{output.inspect}" do
+
+        expect(Dense.flatten(input)).to eq(output)
+      end
+    end
+  end
 end
 

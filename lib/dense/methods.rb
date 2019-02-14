@@ -112,6 +112,15 @@ module Dense; class << self
     Dense::Path.make(path).gather(o)
   end
 
+  def flatten(h, result={}, path=nil)
+
+    fail ArgumentError.new(
+      "cannot flatten instances of #{h.class}"
+    ) unless h.is_a?(Hash)
+
+    do_flatten(h, {}, nil)
+  end
+
   protected
 
   def key_matches_collection?(k, c)
@@ -217,6 +226,19 @@ module Dense; class << self
     ][0, block.arity]
 
     block.call(*args)
+  end
+
+  def do_flatten(h, result, path)
+
+    h
+      .inject(result) { |r, (k, v)|
+        pathk = path ? [ path, k ].join('.') : k
+        if v.is_a?(Hash)
+          do_flatten(v, r, pathk)
+        else
+          r[pathk] = v
+        end
+        r }
   end
 end; end # Dense
 
