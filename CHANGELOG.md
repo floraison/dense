@@ -2,7 +2,9 @@
 # dense
 
 
-## dense 1.1.7 not yet released
+## dense 1.2.0 not yet released
+
+* Stop fooling around and stick to https://semver.org
 
 
 ## dense 1.1.6 released 2018-12-24  (Merry Christmas!)
