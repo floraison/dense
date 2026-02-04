@@ -153,7 +153,7 @@ describe Dense::Path do
     {
 
       [ 'a', 'b', { nada: true } ] =>
-         [ TypeError, 'not a path element (@2): {:nada=>true}' ],
+         [ TypeError, /not a path element \(@2\): / ],
       [ 'a', :deathstar, 'c' ] =>
          [ TypeError, 'not a path element (@1): :deathstar' ],
 
