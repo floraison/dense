@@ -2,7 +2,7 @@
 # dense
 
 
-## dense 1.2.0 not yet released
+## dense 1.2.0 released 2026-02-07
 
 * Introduce Dense.list(coll, '..author'), like .get but always returns an array
 * Introduce Dense.paths(coll, '..author')
