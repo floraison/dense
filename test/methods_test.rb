@@ -46,6 +46,28 @@ group Dense do
       }
   end
 
+  group '.paths' do
+
+    {
+
+      '..janitor' => [
+        ],
+      '..author' => %w[
+        store.book.0.author store.book.1.author store.book.2.author
+        store.book.3.author ],
+      'store..author' => %w[
+        store.book.0.author store.book.1.author store.book.2.author
+        store.book.3.author ],
+
+    }.each do |glob, result|
+
+      test "for #{glob.inspect} yields #{result.inspect}" do
+
+        assert Dense.paths(@data, glob), result
+      end
+    end
+  end
+
   group '.get' do
 
     {

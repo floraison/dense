@@ -4,6 +4,7 @@
 
 ## dense 1.2.0 not yet released
 
+* Introduce Dense.paths(coll, '..author')
 * Stop fooling around and stick to https://semver.org
 
 

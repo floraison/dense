@@ -113,6 +113,11 @@ module Dense; class << self
     Dense::Path.make(path).gather(o)
   end
 
+  def paths(o, glob)
+
+    Dense::Path.make(glob).list(o)
+  end
+
   protected
 
   def key_matches_collection?(k, c)
