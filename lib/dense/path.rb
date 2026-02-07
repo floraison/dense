@@ -166,7 +166,7 @@ class Dense::Path
       .values
   end
 
-  def list(data)
+  def enumerate(data)
 
     _gather(0, [], nil, data, @path, [])
       .select { |r, _| r }

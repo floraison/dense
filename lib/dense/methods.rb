@@ -115,7 +115,7 @@ module Dense; class << self
 
   def paths(o, glob)
 
-    Dense::Path.make(glob).list(o)
+    Dense::Path.make(glob).enumerate(o)
   end
 
   protected
