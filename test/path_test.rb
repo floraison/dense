@@ -1,26 +1,22 @@
 # encoding: UTF-8
 
 #
-# Specifying dense
+# Testing dense
 #
 # Sun Aug  6 08:04:41 JST 2017
 #
 
-require 'spec_helper'
 
+group Dense::Path do
 
-describe Dense::Path do
+  group '.new' do
 
-  describe '.new' do
+    test "fails if the input path is not a String" do
 
-    it "fails if the input path is not a String" do
-
-      expect {
-        Dense::Path.new(1)
-      }.to raise_error(
-        ArgumentError, /\Aargument is a (Integer|Fixnum), not a String\z/
-      )
-        # >= 2.4 Integer
+      assert_error(
+        lambda { Dense::Path.new(1) },
+        ArgumentError, /\Aargument is a (Integer|Fixnum), not a String\z/)
+          # >= 2.4 Integer
     end
 
     {
@@ -121,15 +117,15 @@ describe Dense::Path do
 
     }.each do |s, a|
 
-      it "parses #{s.inspect}" do
-      #it "parses #{s.inspect} to #{a.inspect}" do
+      test "parses #{s.inspect}" do
+      #test "parses #{s.inspect} to #{a.inspect}" do
 
-        expect(Dense::Path.new(s).to_a).to eq(a)
+        assert Dense::Path.new(s).to_a, a
       end
     end
   end
 
-  describe '.make' do
+  group '.make' do
 
     {
 
@@ -144,9 +140,9 @@ describe Dense::Path do
 
     }.each do |array, path|
 
-      it "creates a Dense::Path instance from #{array.inspect}" do
+      test "creates a Dense::Path instance from #{array.inspect}" do
 
-        expect(Dense::Path.make(array).to_s).to eq(path)
+        assert Dense::Path.make(array).to_s, path
       end
     end
 
@@ -159,54 +155,52 @@ describe Dense::Path do
 
     }.each do |array, (klass, message)|
 
-      it "fails for #{array.inspect}" do
+      test "fails for #{array.inspect}" do
 
-        expect { Dense::Path.make(array) }.to raise_error(klass, message)
+        assert_error(
+          lambda { Dense::Path.make(array) },
+          klass, message)
       end
     end
   end
 
-  describe '#[]' do
+  group '#[]' do
 
-    context '(int)' do
+    group '(int)' do
 
-      it 'returns a key' do
+      test 'returns a key' do
 
-        expect(Dense::Path.new('a.b.c.d')[1]).to eq('b')
+        assert Dense::Path.new('a.b.c.d')[1], 'b'
       end
 
-      it 'returns a key' do
+      test 'returns a key' do
 
-        expect(Dense::Path.new('a["b","B"].c.d')[1]).to eq(%w[ b B ])
-      end
-    end
-
-    context '(int..int)' do
-
-      it 'returns a Path instance' do
-
-        expect(
-          Dense::Path.new('a.b.c.d')[1..2]
-        ).to eq(
-          Dense::Path.new('b.c')
-        )
+        assert Dense::Path.new('a["b","B"].c.d')[1], %w[ b B ]
       end
     end
 
-    context '(int, int)' do
+    group '(int..int)' do
 
-      it 'returns a Path instance' do
+      test 'returns a Path instance' do
 
-        expect(
-          Dense::Path.new('a["b","B"].c.d')[1, 1]
-        ).to eq(
-          Dense::Path.new('["b","B"]')
-        )
+        assert(
+          Dense::Path.new('a.b.c.d')[1..2],
+          Dense::Path.new('b.c'))
+      end
+    end
+
+    group '(int, int)' do
+
+      test 'returns a Path instance' do
+
+        assert(
+          Dense::Path.new('a["b","B"].c.d')[1, 1],
+          Dense::Path.new('["b","B"]'))
       end
     end
   end
 
-  describe '#to_s' do
+  group '#to_s' do
 
     {
 
@@ -284,11 +278,11 @@ describe Dense::Path do
 
     }.each do |path, result|
 
-      it "turns #{path} into #{result}" do
+      test "turns #{path} into #{result}" do
 
         pa = Dense::Path.new(path)
 
-        expect(pa.to_s).to eq(result)
+        assert pa.to_s, result
       end
     end
   end

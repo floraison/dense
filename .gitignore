@@ -14,10 +14,8 @@ pkg/
 .viminfo
 *.swp
 
-.errors
-.rspec.out
-.bxsinfo.yaml
-.bxsenvs.yaml
+.test-point
+.probatio-output.rb
 
 .todo.md
 

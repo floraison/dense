@@ -1,24 +1,24 @@
 
 #
-# Specifying dense
+# Testing dense
 #
 # Sun Aug 20 06:58:44 JST 2017
 #
 
-require 'spec_helper'
-
-
 require 'digest'
 
-def summarize_h2(h2)
-  j = h2.to_json.gsub('"', '')
-  d = Digest::MD5.hexdigest(j)[0, 5]
-  [ h2.class, j[0, 7], j.length, d ].map(&:to_s).join('|')
-end
-def summarize(hits)
-  hits.collect { |h| [ h[0], h[1], summarize_h2(h[2]), h[3], h[4] ] }
-end
+class Probatio::Context
 
+  def summarize_h2(h2)
+    j = h2.to_json.gsub('"', '')
+    d = Digest::MD5.hexdigest(j)[0, 5]
+    [ h2.class, j[0, 7], j.length, d ].map(&:to_s).join('|')
+  end
+
+  def summarize(hits)
+    hits.collect { |h| [ h[0], h[1], summarize_h2(h[2]), h[3], h[4] ] }
+  end
+end
 
 DATA0 = # taken from http://goessner.net/articles/JsonPath/
   { 'store' => {
@@ -63,9 +63,9 @@ DATA1 = { # taken from http://jsonpath.com/
     { 'type' => 'home', 'number' => '0123-4567-8910' } ] }
 
 
-describe Dense::Path do
+group Dense::Path do
 
-  describe '#gather' do
+  group '#gather' do
 
     {
 
@@ -237,17 +237,16 @@ describe Dense::Path do
 
     }.each do |path, expected|
 
-      it "gathers leaves for #{path.inspect}" do
+      test "gathers leaves for #{path.inspect}" do
 
         pa = Dense::Path.new(path)
 
-        expect(pa).not_to eq(nil)
+        assert_not_nil pa
 
         r = pa.gather(DATA0)
 
-        expect(summarize(r).to_pp).to eq(summarize(expected).to_pp)
-        expect(r.to_pp).to eq(expected.to_pp)
-        #expect(r).to eq(expected)
+        assert summarize(r).to_pp, summarize(expected).to_pp
+        assert r.to_pp, expected.to_pp
       end
     end
 
@@ -323,70 +322,53 @@ describe Dense::Path do
 
     }.each do |(path, data), expected|
 
-      it "gathers leaves for #{path.inspect}" do
+      test "gathers leaves for #{path.inspect}" do
 
         pa = Dense::Path.new(path)
 
-        expect(pa).not_to eq(nil)
+        assert_not_nil pa
 
         r = pa.gather(data)
 
-        expect(summarize(r).to_pp).to eq(summarize(expected).to_pp)
-        expect(r.to_pp).to eq(expected.to_pp)
-        #expect(r).to eq(expected)
+        assert summarize(r).to_pp, summarize(expected).to_pp
+        assert r.to_pp, expected.to_pp
       end
     end
 
-    it 'gathers for nil values as well (in objects)' do
+    test 'gathers for nil values as well (in objects)' do
 
       pa = Dense::Path.new('a')
 
       r = pa.gather({ 'a' => nil })
 
-      expect(
-        r
-      ).to eq([
-        [ true, [], { 'a' => nil }, 'a' ]
-      ])
+      assert r, [ [ true, [], { 'a' => nil }, 'a' ] ]
     end
 
-    it 'gathers (deep) for nil values as well (in objects)' do
+    test 'gathers (deep) for nil values as well (in objects)' do
 
       pa = Dense::Path.new('a.b')
 
       r = pa.gather({ 'a' => { 'b' => nil } })
 
-      expect(
-        r
-      ).to eq([
-        [ true, [ 'a' ], { 'b' => nil }, 'b' ]
-      ])
+      assert r, [ [ true, [ 'a' ], { 'b' => nil }, 'b' ] ]
     end
 
-    it 'gathers for nil values as well (in arrays)' do
+    test 'gathers for nil values as well (in arrays)' do
 
       pa = Dense::Path.new('2')
 
       r = pa.gather([ nil, nil, nil ])
 
-      expect(
-        r
-      ).to eq([
-        [ true, [], [ nil, nil, nil ], 2 ]
-      ])
+      assert r, [ [ true, [], [ nil, nil, nil ], 2 ] ]
     end
 
-    it 'gathers (deep) for nil values as well (in arrays)' do
+    test 'gathers (deep) for nil values as well (in arrays)' do
 
       pa = Dense::Path.new('a.2')
 
       r = pa.gather({ 'a' => [ nil, nil, nil ] })
 
-      expect(
-        r
-      ).to eq([
-        [ true, [ 'a' ], [ nil, nil, nil ], 2 ]
-      ])
+      assert r, [ [ true, [ 'a' ], [ nil, nil, nil ], 2 ] ]
     end
   end
 end
