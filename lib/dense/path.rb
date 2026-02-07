@@ -168,9 +168,16 @@ class Dense::Path
 
   def enumerate(data)
 
+# FIXME is the select necessary?
     _gather(0, [], nil, data, @path, [])
       .select { |r, _| r }
       .collect { |_, p0, _, k| p0.dup.concat([ k ]).map(&:to_s).join('.') }
+  end
+
+  def list(data)
+
+    _gather(0, [], nil, data, @path, [])
+      .collect { |_, _, coll, k| coll[k] }
   end
 
   protected

@@ -46,6 +46,26 @@ group Dense do
       }
   end
 
+  group '.list' do
+
+    {
+
+      '..janitor' => [
+        ],
+      '..author' => [
+        "Nigel Rees", "Evelyn Waugh", "Herman Melville", "J. R. R. Tolkien" ],
+      '..price' => [
+        8.95, 12.99, 8.99, 22.99, 19.95 ],
+
+    }.each do |path, result|
+
+      test "for #{path.inspect} returns #{result.inspect}" do
+
+        assert Dense.list(@data, path), result
+      end
+    end
+  end
+
   group '.paths' do
 
     {
