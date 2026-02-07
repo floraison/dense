@@ -127,7 +127,7 @@ Dense.fetch({ 'a' => [] }, 'a.k.b')
   #   TypeError: no key "k" for Array at "a"
 ```
 
-See KeyError and TypeError below for more details.
+See `KeyError` and `TypeError` below for more details.
 
 `Dense.fetch(collection, path)` raises when it doesn't find, while `Dense.get(collection, path)` returns `nil`.
 
@@ -315,6 +315,31 @@ c = { 'h' => { 'a' => [ 1, 2, 3, 4, 5 ] } }
 r = Dense.unset(c, 'h.a[2,3]')
 c
   # => { 'h' => { 'a' => [ 1, 2, 5 ] } }
+```
+
+
+### `Dense.list(collection, path)`
+
+Like `Dense.get` but returns an array of match. Returns an empty array if no match.
+
+
+### `Dense.paths(collection, path)`
+
+Given a "glob" path, returns the list of paths to the matching leaves (or an empty array instead).
+
+```ruby
+Dense.paths(data, '..author')
+  # => %w[
+  #   store.book.0.author store.book.1.author store.book.2.author
+  #   store.book.3.author ]
+
+Dense.paths(data, '..price')
+  # => %w[
+  #  store.book.0.price store.book.1.price store.book.2.price
+  #  store.book.3.price store.bicycle.price ]
+
+Dense.paths(data, '..nada')
+  # => []
 ```
 
 

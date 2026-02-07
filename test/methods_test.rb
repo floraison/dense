@@ -78,6 +78,9 @@ group Dense do
       'store..author' => %w[
         store.book.0.author store.book.1.author store.book.2.author
         store.book.3.author ],
+      '..price' => %w[
+        store.book.0.price store.book.1.price store.book.2.price
+        store.book.3.price store.bicycle.price ],
 
     }.each do |glob, result|
 
